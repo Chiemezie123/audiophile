@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ../node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[2].use[1]!../node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[13].oneOf[2].use[2]!../node_modules/next/font/google/target.css?{"path":"app\\layout.tsx","import":"Geist","arguments":[{"variable":"--font-geist-sans","subsets":["latin"]}],"variableName":"geistSans"} ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-=======
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[13].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app\\layout.tsx","import":"Manrope","arguments":[{"variable":"--font-manrope","subsets":["latin"]}],"variableName":"manrope"} ***!
   \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
@@ -15,7 +10,6 @@
   src: url(/_next/static/media/438aa629764e75f3-s.woff2) format('woff2');
   unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
->>>>>>> main
 /* cyrillic */
 @font-face {
   font-family: 'Manrope';
@@ -60,54 +54,14 @@
   font-display: swap;
   src: url(/_next/static/media/4c9affa5bc8f420e-s.p.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-<<<<<<< HEAD
-}@font-face {font-family: 'Geist Fallback';src: local("Arial");ascent-override: 95.94%;descent-override: 28.16%;line-gap-override: 0.00%;size-adjust: 104.76%
-}.__className_5cfdac {font-family: 'Geist', 'Geist Fallback';font-style: normal
-}.__variable_5cfdac {--font-geist-sans: 'Geist', 'Geist Fallback'
-}
-
-/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ../node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[2].use[1]!../node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[13].oneOf[2].use[2]!../node_modules/next/font/google/target.css?{"path":"app\\layout.tsx","import":"Geist_Mono","arguments":[{"variable":"--font-geist-mono","subsets":["latin"]}],"variableName":"geistMono"} ***!
-  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/* cyrillic */
-@font-face {
-  font-family: 'Geist Mono';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url(/_next/static/media/9610d9e46709d722-s.woff2) format('woff2');
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-}
-/* latin-ext */
-@font-face {
-  font-family: 'Geist Mono';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url(/_next/static/media/747892c23ea88013-s.woff2) format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-/* latin */
-@font-face {
-  font-family: 'Geist Mono';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url(/_next/static/media/93f479601ee12b01-s.p.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}@font-face {font-family: 'Geist Mono Fallback';src: local("Arial");ascent-override: 74.67%;descent-override: 21.92%;line-gap-override: 0.00%;size-adjust: 134.59%
-}.__className_9a8899 {font-family: 'Geist Mono', 'Geist Mono Fallback';font-style: normal
-}.__variable_9a8899 {--font-geist-mono: 'Geist Mono', 'Geist Mono Fallback'
-=======
 }@font-face {font-family: 'Manrope Fallback';src: local("Arial");ascent-override: 103.31%;descent-override: 29.07%;line-gap-override: 0.00%;size-adjust: 103.19%
 }.__className_73ee6c {font-family: 'Manrope', 'Manrope Fallback';font-style: normal
 }.__variable_73ee6c {--font-manrope: 'Manrope', 'Manrope Fallback'
->>>>>>> main
 }
 
-/*!***************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ../node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!../node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./app/globals.css ***!
-  \***************************************************************************************************************************************************************************************************************************************************************/
+/*!*************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./app/globals.css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************/
 /*! tailwindcss v4.1.11 | MIT License | https://tailwindcss.com */
 @layer properties;
 @layer theme, base, components, utilities;
@@ -116,8 +70,6 @@
     --color-orange-50: oklch(98% 0.016 73.684);
     --color-orange-500: oklch(70.5% 0.213 47.604);
     --color-gray-200: oklch(92.8% 0.006 264.531);
-    --color-gray-500: oklch(55.1% 0.027 264.364);
-    --color-gray-900: oklch(21% 0.034 264.665);
     --color-black: oklch(0 0 0);
     --color-white: oklch(1 0 0);
     --spacing: 0.25rem;
@@ -125,15 +77,12 @@
     --text-xs--line-height: calc(1 / 0.75);
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
-    --text-base: 1rem;
-    --text-base--line-height: calc(1.5 / 1);
     --text-lg: 1.125rem;
     --text-lg--line-height: calc(1.75 / 1.125);
     --font-weight-medium: 500;
     --font-weight-bold: 700;
     --leading-normal: 1.5;
     --radius-md: 0.5rem;
-    --radius-lg: 0.625rem;
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -164,9 +113,7 @@
     --text-xs-line-height: 1.5625rem;
     --tracking-xs: 0.0625rem;
     --color-warm-orange-brown: oklch(0.67 0.10 45);
-    --color-very-dark-gray: oklch(0.09 0.00 0);
     --color-light-gray: oklch(0.96 0.00 0);
-    --color-very-light-gray: oklch(0.98 0.00 0);
     --color-peachy-orange: oklch(0.79 0.08 55);
     --font-manrope: "manrope", sans-serif;
   }
@@ -354,9 +301,6 @@
   .h-\[18px\] {
     height: 18px;
   }
-  .h-\[36px\] {
-    height: 36px;
-  }
   .h-\[52px\] {
     height: 52px;
   }
@@ -417,9 +361,6 @@
   .gap-\[13\.322px\] {
     gap: 13.322px;
   }
-  .rounded-lg {
-    border-radius: var(--radius-lg);
-  }
   .rounded-md {
     border-radius: var(--radius-md);
   }
@@ -441,12 +382,6 @@
   }
   .bg-transparent {
     background-color: transparent;
-  }
-  .bg-very-dark-gray {
-    background-color: var(--color-very-dark-gray);
-  }
-  .bg-very-light-gray {
-    background-color: var(--color-very-light-gray);
   }
   .bg-warm-orange-brown {
     background-color: var(--color-warm-orange-brown);
@@ -486,10 +421,6 @@
   }
   .text-center {
     text-align: center;
-  }
-  .text-base {
-    font-size: var(--text-base);
-    line-height: var(--tw-leading, var(--text-base--line-height));
   }
   .text-lg {
     font-size: var(--text-lg);
@@ -539,12 +470,6 @@
   }
   .text-black {
     color: var(--color-black);
-  }
-  .text-gray-500 {
-    color: var(--color-gray-500);
-  }
-  .text-gray-900 {
-    color: var(--color-gray-900);
   }
   .text-orange-500 {
     color: var(--color-orange-500);
@@ -681,11 +606,6 @@
   .disabled\:text-gray-200 {
     &:disabled {
       color: var(--color-gray-200);
-    }
-  }
-  .disabled\:opacity-40 {
-    &:disabled {
-      opacity: 40%;
     }
   }
   .disabled\:opacity-50 {
