@@ -6,41 +6,35 @@ import ArrowRight from "@/assets/svg/arrowRightsvg.svg";
 import { Input } from "@/components/ui/textIpnut";
 import RadioButton from "../components/ui/radioButton";
 import SizeInputHandler from "@/components/ui/sizeInputHandler";
+import Header from "@/features/Header";
+import Footer from "@/features/Footer";
+import ActionCard from "@/features/ActionCard";
+import Headphones from "../assets/Headphones.png";
 
 export default function Home() {
-  const [isActive, setIsActive] = useState("e-money");
   return (
-    <div className="flex items-center gap-2">
-      <div className="flex flex-col gap-4">
-        <p className="h1 font-Bold text-black uppercase">AudioPhile</p>
-
-        <p className="h6 text-black opacity-50 max-w-[500px]">
-          Located at the heart of New York City, Audiophile is the premier store
-          for high end headphones, earphones, speakers, and audio accessories.
-          We have a large showroom and luxury demonstration rooms available for
-          you to browse and experience a wide range of our products. Stop by our
-          store to meet some of the fantastic people who make Audiophile the
-          best place to buy your portable audio equipment.
-        </p>
-
-        <Button>See Product</Button>
-        <Button variant={"secondary"}>See Product</Button>
-        <Button variant={"tertiary"} rightIcon={<ArrowRight />}>
-          SHOP
-        </Button>
-
-        <Input placeholder={"Insert your name"} label={"Name"} />
-      </div>
-      <div className="flex flex-col gap-16">
-        <RadioButton
-          label={"e-money"}
-          value={"e-money"}
-          isActive={isActive === "e-money"}
-          onClick={() => setIsActive("e-money")}
-        />
-
-        <SizeInputHandler />
-      </div>
+    <div className="bg-[#141414] h-screen lg:px-[165px] md:px-[100px] sm:px-[50px] px-4">
+      <Header showCart={true} withBorder />
+      <section className="lg:flex items-center justify-between h-[calc(100vh-80px)]">
+        <div className="w-[395px] flex flex-col gap-6 ">
+          <h6 className="text-sm text-[var(--color-white)] opacity-49 tracking-[10px]">
+            NEW PRODUCT
+          </h6>
+          <h1 className="h1 text-[var(--color-white)] uppercase">
+            XX99 Mark II Headphones
+          </h1>
+          <p className="text-sm text-[var(--color-white)] opacity-50 mt-4">
+            Experience the ultimate in audio quality with the XX99 Mark II
+            Headphones. Designed for audiophiles, these headphones deliver
+            exceptional sound clarity and comfort.
+          </p>
+          <Button>See Product</Button>
+        </div>
+        <div className="lg:w-[550px] lg:h-[580px] md:w-[100%] md:h-[screen] sm:w-[100%] sm:h-[8vh] w-[100%] h-[320px]">
+          <img src={Headphones.src} />
+        </div>
+      </section>
+      {/* <Footer /> */}
     </div>
   );
 }

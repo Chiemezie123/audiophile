@@ -3,7 +3,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* body{
+  background: oklch(16.376% 0.00002 271.152);
 
+} */
 
 @theme {
  
@@ -64,7 +67,6 @@
   --color-very-light-gray:oklch(0.98 0.00 0);
   --color-peachy-orange:oklch(0.79 0.08 55);
 
-  
   --font-*: initial;
   --font-manrope: "manrope", sans-serif;
 
