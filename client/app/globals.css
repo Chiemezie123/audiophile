@@ -3,69 +3,61 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* body{
-  background: oklch(16.376% 0.00002 271.152);
-
-} */
-
 @theme {
- 
   --breakpoint-*: initial;
-  --breakpoint-xs: 360px;
+  /* I changed this from 360px to 340px to accomodate the Galaxy Z Fold 5 */
+  --breakpoint-xs: 340px;
   --breakpoint-sm: 430px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
 
-
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semiBold: 600;
-  --font-weight-Bold: 700; 
+  --font-weight-Bold: 700;
   --font-weight-black: 800;
 
-   --text-4xl-font-size: 3.5rem; 
---text-4xl-line-height: 3.625rem;
---tracking-4xl: 0.125rem;
+  --text-4xl-font-size: 3.5rem;
+  --text-4xl-line-height: 3.625rem;
+  --tracking-4xl: 0.125rem;
 
---text-3xl-font-size: 2.5rem; 
---text-3xl-line-height: 2.75rem;
---tracking-3xl: 0.09375rem;
+  --text-3xl-font-size: 2.5rem;
+  --text-3xl-line-height: 2.75rem;
+  --tracking-3xl: 0.09375rem;
 
---text-2xl-font-size: 2rem; 
---text-2xl-line-height: 2.25rem;
---tracking-2xl: 0.071875rem;
+  --text-2xl-font-size: 2rem;
+  --text-2xl-line-height: 2.25rem;
+  --tracking-2xl: 0.071875rem;
 
---text-xl-font-size: 1.75rem; 
---text-xl-line-height: 2.375rem;
---tracking-xl: 0.125rem;
+  --text-xl-font-size: 1.75rem;
+  --text-xl-line-height: 2.375rem;
+  --tracking-xl: 0.125rem;
 
---text-lg-font-size: 1.5rem; 
---text-lg-line-height: 2.0625rem;
---tracking-lg: 0.10625rem;
+  --text-lg-font-size: 1.5rem;
+  --text-lg-line-height: 2.0625rem;
+  --tracking-lg: 0.10625rem;
 
---text-md-font-size: 1.125rem; 
---text-md-line-height: 1.5rem;
---tracking-md: 0.08125rem;
+  --text-md-font-size: 1.125rem;
+  --text-md-line-height: 1.5rem;
+  --tracking-md: 0.08125rem;
 
---text-sm-font-size: 0.9375rem; 
---text-sm-line-height: 1.5625rem;
---tracking-sm: 0.0625rem;
+  --text-sm-font-size: 0.9375rem;
+  --text-sm-line-height: 1.5625rem;
+  --tracking-sm: 0.0625rem;
 
---text-xs-font-size: 0.8125rem; 
---text-xs-line-height: 1.5625rem;
---tracking-xs: 0.0625rem;
-
- 
+  --text-xs-font-size: 0.8125rem;
+  --text-xs-line-height: 1.5625rem;
+  --tracking-xs: 0.0625rem;
 
   --color-black: oklch(0 0 0);
   --color-white: oklch(1 0 0);
-  --color-warm-orange-brown:oklch(0.67 0.10 45);
-  --color-very-dark-gray:oklch(0.09 0.00 0);
-  --color-light-gray: oklch(0.96 0.00 0);
-  --color-very-light-gray:oklch(0.98 0.00 0);
-  --color-peachy-orange:oklch(0.79 0.08 55);
+  --color-warm-orange-brown: oklch(0.67 0.1 45);
+  --color-very-dark-gray: oklch(0.09 0 0);
+  --color-light-gray: oklch(0.96 0 0);
+  --color-very-light-gray: oklch(0.98 0 0);
+  --color-peachy-orange: oklch(0.79 0.08 55);
 
   --font-*: initial;
   --font-manrope: "manrope", sans-serif;
@@ -83,12 +75,9 @@
   --radius-full: 9999px;
 }
 
-
-
 .font-manrope {
   font-family: var(--font-manrope);
 }
-
 
 @layer components {
   .h1 {
@@ -141,8 +130,6 @@
   }
 }
 
-
-
 @layer base {
   *,
   ::after,
@@ -163,19 +150,3 @@
     @apply font-manrope font-regular text-black;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

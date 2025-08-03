@@ -14,7 +14,9 @@ const buttonVariants = cva(
         secondary:
           "bg-transparent text-xs uppercase font-bold leading-normal text-black border shadow-xs hover:bg-black hover:text-white ",
         tertiary:
-          "text-warm-orange-brown uppercase font-bold bg-transparent  leading-normal hover:bg-accent hover:text-accent-foreground ",
+          "text-black uppercase font-bold bg-transparent  leading-normal hover:bg-accent hover:text-warm-orange-brown opacity-50 ",
+          quaternary:
+          "bg-black text-white text-xs uppercase font-bold leading-normal hover:bg-[#4C4C4C] border"
       },
       size: {
         default: "h-12 px-[31.5px] py-[15px]",
