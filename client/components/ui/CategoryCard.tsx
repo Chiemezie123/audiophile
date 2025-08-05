@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "./button";
 
+
 type CategoryCardProps = {
   image: string;
   alt: string;

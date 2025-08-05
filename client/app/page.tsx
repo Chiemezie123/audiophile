@@ -138,7 +138,7 @@ export default function Home() {
               className="rounded-[8px] lg:mt-17 lg:w-[410px] lg:h-[493px] xs:w-[197px] xs:h-[237px] z-10"
             />
             <div className="flex flex-col justify-center lg:items-start xs:items-center lg:text-left xs:text-center lg:gap-8 xs:gap-6 md:w-[339px] w-[280px]">
-              <h2 className="lg:h1 text-4xl text-white font-bold">
+              <h2 className="h1  text-white font-bold">
                 ZX9 SPEAKER
               </h2>
               <p className="text-sm text-white opacity-75">

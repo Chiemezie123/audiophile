@@ -130,6 +130,8 @@
   }
 }
 
+
+
 @layer base {
   *,
   ::after,
@@ -147,6 +149,6 @@
   }
 
   body {
-    @apply font-manrope font-regular text-black;
+    @apply  font-manrope font-regular text-black;
   }
 }
