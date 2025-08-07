@@ -66,7 +66,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {leftIcon && <span>{leftIcon}</span>}
         {props.children}
         {rightIcon && (
-          <span className="transform duration-200 ease-in-out group-hover:translate-x-[4px]">
+          <span className=" flex items-center justify-center transform duration-200 ease-in-out group-hover:translate-x-[4px]">
             {rightIcon}
           </span>
         )}

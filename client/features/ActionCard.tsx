@@ -2,6 +2,7 @@ import React from "react";
 import audiomodel from "../assets/Audio Model.png";
 import audiomodeltablet from "../assets/AudioModelTablet.png";
 import audiomodelmobile from "../assets/AudioModelMobile.png";
+import Image from "next/image";
 
 type ActionCardProps = {
   screenSize: "small" | "medium" | "large";
@@ -28,7 +29,8 @@ const ActionCard = ({ screenSize }: ActionCardProps) => {
             </p>
           </div>
           <div>
-            <img
+            <Image
+              alt="Audio Model"
               src={
                 screenSize === "small"
                   ? audiomodelmobile.src
@@ -37,6 +39,14 @@ const ActionCard = ({ screenSize }: ActionCardProps) => {
                   : audiomodel.src
               }
               className="rounded-[8px] lg:w-[540px] lg:h-[588px]"
+              width={
+                screenSize === "small"
+                  ? 327
+                  : screenSize === "medium"
+                  ? 689
+                  : 540
+              }
+              height={screenSize === "small" ? 588 : 300}
             />
           </div>
         </div>
