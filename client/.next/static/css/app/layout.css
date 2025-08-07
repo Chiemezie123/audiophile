@@ -79,8 +79,6 @@
     --text-sm--line-height: calc(1.25 / 0.875);
     --text-lg: 1.125rem;
     --text-lg--line-height: calc(1.75 / 1.125);
-    --text-4xl: 2.25rem;
-    --text-4xl--line-height: calc(2.5 / 2.25);
     --font-weight-medium: 500;
     --font-weight-bold: 700;
     --leading-normal: 1.5;
@@ -291,12 +289,6 @@
   .right-0 {
     right: calc(var(--spacing) * 0);
   }
-<<<<<<< HEAD
-  .bottom-30 {
-    bottom: calc(var(--spacing) * 30);
-  }
-=======
->>>>>>> d139aa7ef345700dd4b9da0165d759748b8764ec
   .left-0 {
     left: calc(var(--spacing) * 0);
   }
@@ -361,13 +353,8 @@
   .h-\[600px\] {
     height: 600px;
   }
-<<<<<<< HEAD
-  .h-\[204px\] {
-    height: 204px;
-=======
   .h-full {
     height: 100%;
->>>>>>> d139aa7ef345700dd4b9da0165d759748b8764ec
   }
   .w-6 {
     width: calc(var(--spacing) * 6);
@@ -381,12 +368,6 @@
   .w-\[280px\] {
     width: 280px;
   }
-<<<<<<< HEAD
-  .w-\[327px\] {
-    width: 327px;
-  }
-=======
->>>>>>> d139aa7ef345700dd4b9da0165d759748b8764ec
   .w-\[395px\] {
     width: 395px;
   }
@@ -569,8 +550,6 @@
   .text-center {
     text-align: center;
   }
-<<<<<<< HEAD
-=======
   .h2 {
     @layer components {
       font-size: var(--text-3xl-font-size);
@@ -599,11 +578,6 @@
       letter-spacing: var(--tracking-xs);
     }
   }
-  .text-4xl {
-    font-size: var(--text-4xl);
-    line-height: var(--tw-leading, var(--text-4xl--line-height));
-  }
->>>>>>> d139aa7ef345700dd4b9da0165d759748b8764ec
   .text-lg {
     font-size: var(--text-lg);
     line-height: var(--tw-leading, var(--text-lg--line-height));
@@ -1016,8 +990,6 @@
       left: calc(var(--spacing) * 15.5);
     }
   }
-<<<<<<< HEAD
-=======
   .md\:mt-\[96\.5px\] {
     @media (width >= 768px) {
       margin-top: 96.5px;
@@ -1033,7 +1005,6 @@
       display: block;
     }
   }
->>>>>>> d139aa7ef345700dd4b9da0165d759748b8764ec
   .md\:hidden {
     @media (width >= 768px) {
       display: none;
@@ -1214,8 +1185,6 @@
       display: inline-flex;
     }
   }
-<<<<<<< HEAD
-=======
   .lg\:h-\[126px\] {
     @media (width >= 1024px) {
       height: 126px;
@@ -1236,7 +1205,6 @@
       height: 204px;
     }
   }
->>>>>>> d139aa7ef345700dd4b9da0165d759748b8764ec
   .lg\:h-\[493px\] {
     @media (width >= 1024px) {
       height: 493px;
