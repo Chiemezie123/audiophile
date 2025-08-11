@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { InputHTMLAttributes, ReactNode } from "react";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   type?: string;
   label?: string;

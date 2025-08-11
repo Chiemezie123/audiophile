@@ -11,7 +11,7 @@ const Footer = () => {
       <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] mx-auto px-4">
         <div className="flex xs:flex-col lg:flex-row xs:items-center md:items-start gap-12 lg:justify-between z-1 py-8">
           <div className=" flex items-center gap-10">
-            <LogoIcon />
+            <LogoIcon fill="white"/>
           </div>
           <ul className="flex xs:flex-col md:flex-row lg:inline-flex text-center gap-4 lg:gap-8.5 pr-0.5 justify-center md:items-start text-xs uppercase text-white ">
             <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
