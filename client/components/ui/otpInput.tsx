@@ -61,7 +61,7 @@ const OtpInput = ({ length = 6, onChange }: OtpInputProps) => {
           }}
           onChange={(e) => handleChange(e, i)}
           onKeyDown={(e) => handleKeyDown(e, i)}
-          className="w-[57px w-full h-[64px] text-center border border-[#D0D5DD] rounded-lg text-lg text-base-900 font-semibold bg-white focus:outline-none focus:border-[#DE6A4C] focus:shadow-[0px_1px_2px_0px_#E58870,0px_0px_0px_4px_#F8E1DB] transition"
+          className="w-full h-[64px] text-center border border-[#D0D5DD] rounded-lg text-lg text-base-900 font-semibold bg-white focus:outline-none focus:border-[#DE6A4C] focus:shadow-[0px_1px_2px_0px_#E58870,0px_0px_0px_4px_#F8E1DB] transition"
         />
       ))}
     </div>

@@ -2,6 +2,7 @@ import React from "react";
 import CartIcon from "@/assets/svg/Cart.svg?react";
 import LogoIcon from "@/assets/svg/Logo.svg?react";
 import HamburgerIcon from "@/assets/svg/Hamburger.svg?react";
+import Link from "next/link";
 
 const Header = () => {
   return (
@@ -10,22 +11,30 @@ const Header = () => {
         <div className="flex items-center justify-between py-8 border-b-2 border-[rgba(255,255,255,0.2)]  ">
           <div className=" flex items-center gap-10">
             <HamburgerIcon className="lg:hidden xs:block" />
-            <LogoIcon className="xs:hidden md:block" fill="white"/>
+            <LogoIcon className="xs:hidden md:block" fill="white" />
           </div>
           <LogoIcon className="xs:block md:hidden" fill="white" />
-          <ul className=" xs:hidden md:hidden lg:inline-flex gap-8.5 pr-0.5 justify-center items-start text-xs uppercase text-white ">
-            <li className="cursor-pointer hover:text-[var(--color-warm-orange-brown)]">
-              Home
-            </li>
-            <li className="cursor-pointer hover:text-[var(--color-warm-orange-brown)]">
-              Headphones
-            </li>
-            <li className="cursor-pointer hover:text-[var(--color-warm-orange-brown)]">
-              Speakers
-            </li>
-            <li className="cursor-pointer hover:text-[var(--color-warm-orange-brown)]">
-              Earphones
-            </li>
+          <ul className=" xs:hidden md:hidden lg:inline-flex gap-8.5 pr-0.5 justify-center items-start text-xs uppercase text-white mr-32">
+            <Link href="/" passHref>
+              <li className="cursor-pointer hover:text-[var(--color-warm-orange-brown)]">
+                Home
+              </li>
+            </Link>
+            <Link href="/Categories/Headphones" passHref>
+              <li className="cursor-pointer hover:text-[var(--color-warm-orange-brown)]">
+                Headphones
+              </li>
+            </Link>
+            <Link href="/Categories/Speakers" passHref>
+              <li className="cursor-pointer hover:text-[var(--color-warm-orange-brown)]">
+                Speakers
+              </li>
+            </Link>
+            <Link href="/Categories/Earphones" passHref>
+              <li className="cursor-pointer hover:text-[var(--color-warm-orange-brown)]">
+                Earphones
+              </li>
+            </Link>
           </ul>
           <CartIcon />
         </div>

@@ -21,8 +21,7 @@ const page = () => {
               Enter the 6 digit code that was sent to your email below
             </p>
           </div>
-          <div className="flex flex-col gap-4">
-            <label className="text-gray-900 text-[14px] font-[500]">Code</label>
+          <div >
             <OtpInput />
           </div>
           <div>

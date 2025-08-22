@@ -6,30 +6,35 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
+    ],
+    "/Categories/Headphones/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/Categories/Headphones/page.js"
+    ],
     "/forgotPassword/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/forgotPassword/page.js"
-    ],
-    "/resetPassword/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/resetPassword/page.js"
-    ],
-    "/signUp/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/signUp/page.js"
     ],
     "/logIn/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/logIn/page.js"
     ],
-    "/verifyEmail/page": [
+    "/Categories/Speakers/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/verifyEmail/page.js"
+      "static/chunks/app/Categories/Speakers/page.js"
+    ],
+    "/Categories/Earphones/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/Categories/Earphones/page.js"
     ]
   }
 }
