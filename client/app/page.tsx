@@ -1,7 +1,5 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import  useScreenSize  from "@/hooks/useScreenSize"
 import ArrowRight from "@/assets/svg/arrowRightsvg.svg";
 import { Input } from "@/components/ui/textIpnut";
 import RadioButton from "../components/ui/radioButton";
@@ -26,42 +24,9 @@ import Speakers3Mobile from "../assets/Speakers3Mobile.png";
 import CategoryCard from "@/components/ui/CategoryCard";
 import Image from "next/image";
 
-type ScreenSizeProps = "small" | "medium" | "large";
-
 export default function Home() {
-  const [screenSize, setScreenSize] = useState<ScreenSizeProps>("large");
 
-  useEffect(() => {
-    // const handleResize = () => {
-    //   console.log("innerWidth:", window.innerWidth);
-    //   if (window.innerWidth <= 768) {
-    //     setScreenSize("small");
-    //   } else if (window.innerWidth > 768 && window.innerWidth < 1024) {
-    //     setScreenSize("medium");
-    //   } else {
-    //     setScreenSize("large");
-    //   }
-    // };
-    const handleResize = () => {
-      if (window.matchMedia("(max-width: 767px)").matches) {
-        setScreenSize("small");
-      } else if (
-        window.matchMedia("(min-width: 768px) and (max-width: 1023px)").matches
-      ) {
-        setScreenSize("medium");
-      } else {
-        setScreenSize("large");
-      }
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const screen = useScreenSize();
 
   return (
     <div>
@@ -89,9 +54,9 @@ export default function Home() {
           <div className="absolute inset-0 lg:inset-none md:w-full h-full lg:w-[708px] lg:top-0 lg:left-[400px]">
             <Image
               src={
-                screenSize === "small"
+                screen === "small"
                   ? HeadphonesMobile.src
-                  : screenSize === "medium"
+                  : screen === "medium"
                   ? HeadphonesTablet.src
                   : Headphones.src
               }
@@ -132,24 +97,24 @@ export default function Home() {
         <div className="flex flex-col gap-8 mt-18">
           <Image
             src={
-              screenSize === "small"
+              screen === "small"
                 ? CirclesMobile.src
-                : screenSize === "medium"
+                : screen === "medium"
                 ? CirclesTablet.src
                 : Circles.src
             }
             alt="Circles"
             className="absolute"
-            height={screenSize === "small" ? 588 : 944}
-            width={screenSize === "small" ? 327 : 689}
+            height={screen === "small" ? 588 : 944}
+            width={screen === "small" ? 327 : 944}
           />
           <div className="xs:h-[600px] md:h-[720px] lg:h-[560px] bg-[#D87D4A] flex xs:flex-col lg:flex-row items-center justify-center lg:gap-30 xs:gap-18 px-8 rounded-[8px]">
             <Image
               src={Speakers2.src}
               alt="Speakers"
               className="rounded-[8px] lg:mt-17 lg:w-[410px] lg:h-[493px] xs:w-[197px] xs:h-[237px] z-10"
-              width={screenSize === "large" ? 410 : 197}
-              height={screenSize === "large" ? 493 : 237}
+              width={screen === "large" ? 410 : 197}
+              height={screen === "large" ? 493 : 237}
             />
             <div className="flex flex-col justify-center lg:items-start xs:items-center lg:text-left xs:text-center lg:gap-8 xs:gap-6 md:w-[339px] w-[280px]">
               <h2 className="h1  text-white font-bold">
@@ -174,18 +139,18 @@ export default function Home() {
             </div>
             <Image
               src={
-                screenSize === "small"
+                screen === "small"
                   ? Speakers3Mobile.src
-                  : screenSize === "medium"
+                  : screen === "medium"
                   ? Speakers3Tablet.src
                   : Speakers3.src
               }
               className={"rounded-[8px]"}
               alt="Speakers"
               width={
-                screenSize === "small"
+                screen === "small"
                   ? 327
-                  : screenSize === "medium"
+                  : screen === "medium"
                   ? 689
                   : 1110
               }
@@ -196,14 +161,14 @@ export default function Home() {
             <div className=" lg:w-[540px] md:w-[339px] rounded-[8px]">
               <Image
                 src={
-                  screenSize === "medium"
+                  screen === "medium"
                     ? Earphones2Tablet.src
                     : Earphones2.src
                 }
                 alt="Earphones"
                 className="rounded-[8px] xs:h-[200px] md:h-[320px]"
-                width={screenSize === "medium" ? 689 : 540}
-                height={screenSize === "small" ? 200 : 320}
+                width={screen === "medium" ? 689 : 540}
+                height={screen === "small" ? 200 : 320}
               />
             </div>
             <div className="bg-[#F1F1F1] lg:w-[540px] md:w-[339px] xs:h-[200px] md:h-[320px] flex items-center xs:p-8 lg:p-25 md:p-15 rounded-[8px]">
@@ -216,7 +181,7 @@ export default function Home() {
         </div>
       </section>
 
-      <ActionCard screenSize={screenSize} />
+      <ActionCard />
       <Footer />
     </div>
   );

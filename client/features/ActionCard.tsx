@@ -1,14 +1,16 @@
+"use client";
+
 import React from "react";
+import useScreenSize from "@/hooks/useScreenSize";
 import audiomodel from "../assets/Audio Model.png";
-import audiomodeltablet from "../assets/AudioModelTablet.png";
-import audiomodelmobile from "../assets/AudioModelMobile.png";
+import audiomodeltablet from "@/assets/AudioModelTablet.png";
+import audiomodelmobile from "@/assets/AudioModelMobile.png";
 import Image from "next/image";
 
-type ActionCardProps = {
-  screenSize: "small" | "medium" | "large";
-};
 
-const ActionCard = ({ screenSize }: ActionCardProps) => {
+const ActionCard = () => {
+  const screen = useScreenSize();
+
   return (
     <div>
       <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] mx-auto">
@@ -32,21 +34,15 @@ const ActionCard = ({ screenSize }: ActionCardProps) => {
             <Image
               alt="Audio Model"
               src={
-                screenSize === "small"
+                screen === "small"
                   ? audiomodelmobile.src
-                  : screenSize === "medium"
+                  : screen === "medium"
                   ? audiomodeltablet.src
                   : audiomodel.src
               }
               className="rounded-[8px] lg:w-[540px] lg:h-[588px]"
-              width={
-                screenSize === "small"
-                  ? 327
-                  : screenSize === "medium"
-                  ? 689
-                  : 540
-              }
-              height={screenSize === "small" ? 588 : 300}
+              width={screen === "small" ? 327 : screen === "medium" ? 689 : 540}
+              height={screen === "small" ? 588 : 300}
             />
           </div>
         </div>

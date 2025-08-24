@@ -4,6 +4,7 @@ import FacebookIcon from "@/assets/svg/Facebook.svg?react";
 import TwitterIcon from "@/assets/svg/Twitter.svg?react";
 import InstagramIcon from "@/assets/svg/Instagram.svg?react";
 import LogoIcon from "@/assets/svg/Logo.svg?react";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -11,21 +12,29 @@ const Footer = () => {
       <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] mx-auto px-4">
         <div className="flex xs:flex-col lg:flex-row xs:items-center md:items-start gap-12 lg:justify-between z-1 py-8">
           <div className=" flex items-center gap-10">
-            <LogoIcon />
+            <LogoIcon fill="white"/>
           </div>
           <ul className="flex xs:flex-col md:flex-row lg:inline-flex text-center gap-4 lg:gap-8.5 pr-0.5 justify-center md:items-start text-xs uppercase text-white ">
-            <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
-              Home
-            </li>
-            <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
-              Headphones
-            </li>
-            <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
-              Speakers
-            </li>
-            <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
-              Earphones
-            </li>
+            <Link href="/" passHref>
+              <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
+                Home
+              </li>
+            </Link>
+            <Link href="/Categories/Headphones" passHref>
+              <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
+                Headphones
+              </li>
+            </Link>
+            <Link href="/Categories/Speakers" passHref>
+              <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
+                Speakers
+              </li>
+            </Link>
+            <Link href="/Categories/Earphones" passHref>
+              <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
+                Earphones
+              </li>
+            </Link>
           </ul>
         </div>
         <div className="flex xs:flex-col md:flex-row justify-between xs:items-center md:items-start mt-10">
