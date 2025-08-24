@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import  useScreenSize  from "@/hooks/useScreenSize"
 import ArrowRight from "@/assets/svg/arrowRightsvg.svg";

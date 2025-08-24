@@ -1,8 +1,8 @@
-// File: C:\Users\HP\Desktop\audiophile\client\app\Categories\Earphones\page.tsx
-import * as entry from '../../../../../app/Categories/Earphones/page.js'
+// File: C:\Users\USER\Documents\collaboration\audiophile\client\app\categories\earphones\page.tsx
+import * as entry from '../../../../../app/categories/earphones/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../../app/Categories/Earphones/page.js')
+type TEntry = typeof import('../../../../../app/categories/earphones/page.js')
 
 type SegmentParams<T extends Object = any> = T extends Record<string, any>
   ? { [K in keyof T]: T[K] extends string ? string | string[] | undefined : never }

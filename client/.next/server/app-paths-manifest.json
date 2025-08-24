@@ -1,12 +1,5 @@
 {
-<<<<<<< HEAD
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/page": "app/page.js"
-=======
-  "/Categories/Speakers/page": "app/Categories/Speakers/page.js",
-  "/logIn/page": "app/logIn/page.js",
-  "/Categories/Earphones/page": "app/Categories/Earphones/page.js",
-  "/page": "app/page.js",
-  "/Categories/Headphones/page": "app/Categories/Headphones/page.js"
->>>>>>> b7612b91d8b57a8ad4fc656050e0ebad0d73c2d1
+  "/categories/earphones/page": "app/categories/earphones/page.js",
+  "/categories/headphones/page": "app/categories/headphones/page.js"
 }
