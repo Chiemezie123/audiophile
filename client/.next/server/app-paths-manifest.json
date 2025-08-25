@@ -1,5 +1,6 @@
 {
   "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/categories/earphones/page": "app/categories/earphones/page.js",
-  "/categories/headphones/page": "app/categories/headphones/page.js"
+  "/page": "app/page.js"
 }

@@ -11,10 +11,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/categories/earphones/page.js"
     ],
-    "/categories/headphones/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/categories/headphones/page.js"
+      "static/chunks/app/page.js"
+    ],
+    "/_not-found/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }
