@@ -6,6 +6,36 @@ import morgan from "morgan";
 import path from "path";
 import helmet from "helmet";
 import ExpressMongoSanitize from "express-mongo-sanitize";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+// import userRouter from './routes/userRoutes.js'; // Temporarily commented out
+
+// Simple error classes for now
+class AllError extends Error {
+  statusCode: number;
+  status: string;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+    this.status = statusCode >= 400 && statusCode < 500 ? "fail" : "error";
+  }
+}
+
+// Simple global error handler
+const globalError = (err: any, req: any, res: any, next: any) => {
+  const statusCode = err.statusCode || 500;
+  const status = err.status || "error";
+
+  res.status(statusCode).json({
+    status,
+    message: err.message,
+  });
+};
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 
@@ -34,19 +64,20 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-
-
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url} yhhh`);
   next();
 });
 
 // API ROUTES
+app.get("/api/v1/health", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Server is running!",
+  });
+});
 
-
-app.use("/api/v1/users", userRouter);
-
-
+// app.use("/api/v1/users", userRouter); // Temporarily commented out
 
 app.all("*", (req, res, next) => {
   // const err = new Error(`there is no ${req.url} route from the server`);
@@ -59,14 +90,5 @@ app.all("*", (req, res, next) => {
 });
 
 app.use(globalError);
-
-// app.get('/api/v1/tours',getAllTours)
-
-// app.get('/api/v1/tours/:id',getTour)
-
-// app.post('/api/v1/tours',createTour )
-
-// app.patch('/api/v1/tours/:id' , updateTour )
-
 
 export default app;

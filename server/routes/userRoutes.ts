@@ -1,8 +1,8 @@
-import express from 'express'
+import express from "express";
+import * as userController from "../controller/userController.js";
+import * as authController from "../controller/authController.js";
 
 const router = express.Router();
-const userController = require(`${__dirname}/../controller/userController`);
-const authController = require(`${__dirname}/../controller/authController`);
 
 const {
   getAllUsers,
@@ -13,10 +13,8 @@ const {
   deleteUser,
   getMe,
   updateExistingDocuments,
-  userUploadImage
+  userUploadImage,
 } = userController;
-
-
 
 const {
   signUp,
@@ -26,42 +24,37 @@ const {
   updatePassword,
   protect,
   restriction,
-  logOut
+  logOut,
 } = authController;
 
+router.post("/signup", signUp);
 
+router.post("/login", logIn);
 
+router.get("/logout", logOut);
 
-router.post('/signup', signUp);
+router.patch("/resetPassword/:token", resetPassword);
 
-router.post('/login', logIn);
+router.post("/forgotPassword", forgotPasswords);
 
-router.get('/logout', logOut);
-
-router.patch('/resetPassword/:token', resetPassword);
-
-router.post('/forgotPassword', forgotPasswords);
-
-router.patch('/updateDeleteField', updateExistingDocuments);
+router.patch("/updateDeleteField", updateExistingDocuments);
 // using the protect middleware from his junction
 router.use(protect);
 
-router.patch('/updatePassword', updatePassword);
+router.patch("/updatePassword", updatePassword);
 
-router.patch('/updateMe', restriction('user'), userUploadImage, updateMe);
+router.patch("/updateMe", restriction("user"), userUploadImage, updateMe);
 
-router.delete('/deleteMe', restriction('user'), deleteMe);
+router.delete("/deleteMe", restriction("user"), deleteMe);
 
-router.get('/getMe', getMe, getUser);
+router.get("/getMe", getMe, getUser);
 
-
-
-router.route('/').get(restriction('admin', 'lead-guide'), getAllUsers);
+router.route("/").get(restriction("admin", "lead-guide"), getAllUsers);
 
 router
-  .route('/:id')
-  .get(restriction('admin'), getUser)
-  .patch(restriction('admin'), updateUser)
-  .delete(restriction('admin'), deleteUser);
+  .route("/:id")
+  .get(restriction("admin"), getUser)
+  .patch(restriction("admin"), updateUser)
+  .delete(restriction("admin"), deleteUser);
 
-module.exports = router;
+export default router;
