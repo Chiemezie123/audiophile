@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import app from "./app-minimal"; // Using minimal app for testing
+import app from "./app.js"; // Using main app with full functionality
 
 dotenv.config({ path: "./.env" });
 

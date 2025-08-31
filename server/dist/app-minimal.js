@@ -2,19 +2,32 @@ import express from "express";
 const app = express();
 // Basic middleware
 app.use(express.json());
-// Simple test route
-app.get('/api/v1/health', (req, res) => {
+// Add logging middleware to debug
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url} - ${new Date().toISOString()}`);
+    next();
+});
+// Simple test routes
+app.get("/", (req, res) => {
+    console.log("Root endpoint hit!");
     res.status(200).json({
-        status: 'success',
-        message: 'Server is running!',
-        timestamp: new Date().toISOString()
+        status: "success",
+        message: "Root endpoint working!",
+    });
+});
+app.get("/api/v1/health", (req, res) => {
+    console.log("Health endpoint hit!");
+    res.status(200).json({
+        status: "success",
+        message: "Server is running!",
+        timestamp: new Date().toISOString(),
     });
 });
 // Catch all other routes
-app.all('*', (req, res) => {
+app.all("*", (req, res) => {
     res.status(404).json({
-        status: 'fail',
-        message: `Route ${req.originalUrl} not found`
+        status: "fail",
+        message: `Route ${req.originalUrl} not found ohhhh`,
     });
 });
 export default app;
