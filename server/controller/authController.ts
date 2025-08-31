@@ -1,23 +1,56 @@
+import { Request, Response, NextFunction } from "express";
 import User from "../models/userModel.js";
-import { catchAsync } from "../errrorHandling/error.js";
-import jwt from "jsonwebtoken";
+import { catchAsync, AllError } from "../Errors/errorUtils.js";
+import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
 import { promisify } from "util";
-import { AllError } from "../errrorHandling/error.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import Email from "../utils/emailHandler.js";
-import sendEmail from "../utils/emailHandler.js";
-import { sendTokenGenerated } from "../utils/JwtUtils.js";
-import express from "express";
-import passport from "passport";
-import GoogleStrategy from "passport-google-oidc";
-import { NextFunction, Request, Response } from "express";
+
+const getToken = (id: string): string => {
+  return jwt.sign({ id: id }, process.env.JWT_SECRET_KEY!, { expiresIn: "7d" });
+};
+
+const sendTokenGenerated = (
+  user: any,
+  statusCode: number,
+  res: Response
+): void => {
+  const token = getToken((user._id as any).toString());
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + Number(process.env.JWT_COOKIES_EXPIRE) * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+    secure: false,
+  };
+
+  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+
+  res.cookie("jwt", token, {
+    httpOnly: true, // Cookie cannot be accessed via JavaScript
+    secure: false, // Allow cookies over HTTP (for local development)
+    domain: "localhost", // Explicitly set the domain
+    path: "/", // Cookie is accessible across the entire domain
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+  });
+
+  // remove password from output
+  user.password = undefined;
+
+  res.status(statusCode).json({
+    status: "success",
+    user: user,
+    token,
+  });
+};
 
 export const signUp = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name, email, password, confirmPassword, createdPasswordAt, role } =
       req.body;
 
+      console.log(req.body, 'this is the request body');
+      
     const newUser = {
       name,
       email,
@@ -29,18 +62,26 @@ export const signUp = catchAsync(
 
     const createNewUser = new User(newUser);
     const user = await createNewUser.save();
-
-    // const url = `${req.protocol}://${req.get("host")}/userAccount`;
+    // const url = `${req.protocol}://${req.get('host')}/userAccount`
     // let mail = new Email(user, url);
-    // mail = await mail.sendWelcome();
-
+    // mail = await mail.sendWelcome()
     if (user) {
       sendTokenGenerated(user, 201, res);
+      // res.status(201).json({
+      //     status : 'success',
+      //     token,
+      //     data: {
+      //         user,
+      //     }
+      // })
     }
   }
 );
 
-export const login = catchAsync(
+//a cookie is bascially just a small piece of text that server can send to client
+// then when client receives its stores it and sends it back in all future request to the server
+
+export const logIn = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
@@ -54,7 +95,7 @@ export const login = catchAsync(
 
     if (user === null)
       return next(
-        new AllError("user doesnt exist ,please check email and password ")
+        new AllError("user doesnt exist ,please check email and password ", 401)
       );
 
     const isPassword = await user.correctPassword(password, user.password);
@@ -63,10 +104,15 @@ export const login = catchAsync(
       const message = new AllError(`incorrect password or email`, 401);
       return next(message);
     }
-
+    // const token = getToken(user._id);
     if (user) {
       sendTokenGenerated(user, 200, res);
     }
+    // res.status(200).json({
+    //   message: 'success',
+    //   token,
+    // });
+    // console.log(user, 'user detail')
   }
 );
 
@@ -101,10 +147,7 @@ export const protect = catchAsync(
       const message = new AllError(`user is not logged in`, 401);
       return next(message);
     }
-    const decode = jwt.verify(token, process.env.JWT_SECRET_KEY!) as {
-      id: string;
-      iat: number;
-    };
+    const decode = jwt.verify(token, process.env.JWT_SECRET_KEY!) as JwtPayload;
     // console.log(decode, 'ohhhhh')
     // if user still exist
     const freshUser = await User.findById(decode.id);
@@ -118,7 +161,7 @@ export const protect = catchAsync(
     }
 
     //check if user changed password after token was issued
-    if (freshUser.changedPasswordAfter(decode.iat)) {
+    if (freshUser.changedPasswordAfter(decode.iat || 0)) {
       // const message = ;
       // console.log(message,'from here')
       return next(
@@ -147,11 +190,11 @@ export const isLoggedIn = async (
       return next(); // No token means user is not logged in, proceed without attaching a user
     }
 
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as {
-      id: string;
-      iat: number;
-    };
+    // Verify tokennbgb
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET_KEY!
+    ) as JwtPayload;
 
     // Find the user based on the token's payload
     const freshUser = await User.findById(decoded.id);
@@ -160,7 +203,7 @@ export const isLoggedIn = async (
     }
 
     // Check if user changed password after the token was issued
-    if (freshUser.changedPasswordAfter(decoded.iat)) {
+    if (freshUser.changedPasswordAfter(decoded.iat || 0)) {
       return next(); // Password changed, token is no longer valid
     }
 
@@ -173,8 +216,8 @@ export const isLoggedIn = async (
   }
 };
 
-export const restriction = (...roles) => {
-  return (req, res, next) => {
+export const restriction = (...roles: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     //['admin', 'lead-guide] role = 'user'
     if (!roles.includes(req.user.role)) {
       //   console.log(req.user.role, 'make i sure');
@@ -210,11 +253,9 @@ export const forgotPasswords = catchAsync(
     const message = `if you forgot your password, please on this url : ${resetURl} to get a new, or ignore if you dont need a new password`;
 
     try {
-      const email = new sendEmail(user, resetURl);
-
-      await email.send(
-        "passwordReset",
-        "Please reset your password in 10 minutes"
+      // TODO: Implement email functionality
+      console.log(
+        `Reset token: ${resetToken} (email functionality not implemented yet)`
       );
 
       res.status(200).json({
@@ -226,9 +267,9 @@ export const forgotPasswords = catchAsync(
       user.resetTokenExpiresIn = undefined;
       await user.save({ validateBeforeSave: false });
 
-      return next(
-        new AllError("password reset failed, please try again later", 500)
-      );
+      const message = `password reset failed , please try again later`;
+      const errorMessage = new AllError(message, 500);
+      return next(errorMessage);
     }
   }
 );
@@ -260,7 +301,7 @@ export const resetPassword = catchAsync(
     user.resetTokenExpiresIn = undefined;
     await user.save();
 
-    const jwTtoken = getToken(user._id);
+    const jwTtoken = getToken((user._id as any).toString());
 
     res.status(200).json({
       message: "success",
@@ -296,7 +337,7 @@ export const updatePassword = catchAsync(
       user.password = req.body.updatePassword;
       user.confirmPassword = req.body.updatePassword;
       await user.save();
-      jwTtoken = getToken(user._id);
+      jwTtoken = getToken((user._id as any).toString());
 
       res.cookie("jwt", jwTtoken, {
         httpOnly: true,
