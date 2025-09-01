@@ -13,6 +13,7 @@ import Speakers2 from "@/assets/Speakers2.png";
 import ActionCard from "./ActionCard";
 import Footer from "./Footer";
 import ProductCard from "@/components/ui/ProductCard";
+import Cart from "@/components/ui/Cart";
 
 type ProductDetailProps = {
   items: Array<{
@@ -35,9 +36,12 @@ type ProductDetailProps = {
   displayImage2: string;
   displayImage3: string;
   displayTitle: string;
-  ymalimage: string;
-  ymalimage2: string;
-  ymalimage3: string;
+  ymalImage: string;
+  ymalImage2: string;
+  ymalImage3: string;
+  ymalProductName: string;
+  ymalProductName2: string;
+  ymalProductName3: string;
 };
 
 const ProductDetail = ({
@@ -47,28 +51,31 @@ const ProductDetail = ({
   displayImage2,
   displayImage3,
   displayTitle,
-  ymalimage,
-  ymalimage2,
-  ymalimage3,
+  ymalImage,
+  ymalImage2,
+  ymalImage3,
+  ymalProductName,
+  ymalProductName2,
+  ymalProductName3,
 }: ProductDetailProps) => {
   const screen = useScreenSize();
 
   return (
     <div>
       <Header />
-      <button>Go Back</button>
+      <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] mx-auto md:mt-[33px] xs:mt-4 xs:mb-6 lg:mt-20 lg:mb-14">
+        <Cart />
+        <button className="text-sm opacity-50">Go Back</button>
+      </div>
 
       <section>
-        <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] w-full mx-auto flex flex-col xs:gap-30 lg:gap-40 xs:my-16 lg:my-40">
+        <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] w-full mx-auto flex flex-col xs:gap-30 lg:gap-40 xs:mb-16 lg:mb-40">
           {items.map((item) => (
             <div
               key={item.id}
-              className={`flex lg:flex-row  "lg:flex-row-reverse" : ""
-              } xs:flex-col items-center lg:justify-between md:justify-center h-full w-full gap-13`}
+              className="flex md:flex-row xs:flex-col items-center lg:justify-between md:justify-cente h-full w-full gap-13"
             >
-              <div
-                className={`bg-[#F1F1F1] flex items-center justify-center xs:p-8 lg:p-25 md:p-15 rounded-[8px] relative  w-full h-[352px] lg:w-[540px] lg:h-[560px]`}
-              >
+              <div className="bg-[#F1F1F1] flex items-center justify-center xs:p-8 lg:p-25 rounded-[8px] relative  xs:w-full md:w-[281px] md:h-[480px] xs:h-[352px] lg:w-[540px] lg:h-[560px]">
                 <div className="flex flex-col justify-center gap-8 relative z-10">
                   <Image
                     src={item.image}
@@ -77,9 +84,9 @@ const ProductDetail = ({
                     height={screen === "large" ? item.height : item.smallHeight}
                   />
                 </div>
-                <div className="absolute bottom-[81px] lg:left-[138px] rounded-[262px] blur-2xl bg-[rgba(0,0,0,0.5)] xs:w-[165px] lg:w-[262px] xs:h-[35px] lg:h-[56px] border border-red-500" />
+                <div className="absolute bottom-[81px] lg:left-[138px] rounded-[262px] blur-2xl bg-[rgba(0,0,0,0.5)] xs:w-[136px] lg:w-[262px] xs:h-[29px] lg:h-[56px]" />
               </div>
-              <div className="md:w-[572px] lg:w-[445px] flex flex-col gap-8 lg:text-left xs:text-center md:text-center xs:items-center md:items-center lg:items-start">
+              <div className="md:w-[340px] lg:w-[445px] flex flex-col gap-8 lg:text-left xs:text-cente md:text-cente xs:items-cente md:items-cente lg:items-start">
                 <h6 className="text-sm text-black opacity-49 tracking-[10px]">
                   {item.isNewProduct && (
                     <span className="text-sm text-[#D87D4A] tracking-[10px]">
@@ -105,8 +112,8 @@ const ProductDetail = ({
       </section>
 
       <section>
-        <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] w-full mx-auto flex gap-[125px]">
-          <div className="lg:w-[635px] flex flex-col gap-8">
+        <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] w-full mx-auto flex xs:flex-col lg:flex-row gap-[125px]">
+          <div className="xs:w-full lg:w-[635px] flex flex-col gap-8">
             <h1 className="h3 font-Bold uppercase">Features</h1>
             <p className="text-[15px] opacity-50">
               Featuring a genuine leather head strap and premium earcups, these
@@ -126,8 +133,8 @@ const ProductDetail = ({
               a modern design aesthetic.
             </p>
           </div>
-          <div className="lg:w-[350px] flex flex-col gap-8">
-            <h1 className="h3 font-Bold uppercase">In the Box</h1>
+          <div className="lg:w-[350px] flex xs:flex-col md:flex-row lg:flex-col xs:gap-6 lg:gap-8">
+            <h1 className="h3 font-Bold uppercase w-[339px]">In the Box</h1>
             <ul className="text-[15px] opacity-50 gap-2">
               {boxItems.map((boxItem, index) => (
                 <li key={index} className="flex gap-6 leading-[25px]">
@@ -143,20 +150,20 @@ const ProductDetail = ({
       </section>
 
       <section>
-        <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] w-full mx-auto flex gap-8 my-40">
-          <div className="flex flex-col gap-8">
+        <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] w-full mx-auto flex xs:flex-col md:flex-row xs:gap-5 lg:gap-8 my-40">
+          <div className="flex flex-col xs:gap-5 lg:gap-8">
             <Image
               src={displayImage}
               alt={displayTitle}
-              width={445}
-              height={280}
+              width={screen === "large" ? 445 : screen === "medium" ? 277 : 327}
+              height={screen === "large" ? 280 : 174}
               className="rounded-md"
             />
             <Image
               src={displayImage2}
               alt={displayTitle}
-              width={445}
-              height={280}
+              width={screen === "large" ? 445 : screen === "medium" ? 277 : 327}
+              height={screen === "large" ? 280 : 174}
               className="rounded-md"
             />
           </div>
@@ -164,8 +171,10 @@ const ProductDetail = ({
             <Image
               src={displayImage3}
               alt={displayTitle}
-              width={635}
-              height={592}
+              width={screen === "large" ? 635 : screen === "medium" ? 395 : 327}
+              height={
+                screen === "large" ? 592 : screen === "medium" ? 368 : 240
+              }
               className="rounded-md"
             />
           </div>
@@ -173,11 +182,24 @@ const ProductDetail = ({
       </section>
 
       <section>
-        <h1>You may also Like</h1>
-        <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] w-full mx-auto flex flex-col md:flex-row gap-6 md:gap-8 lg:gap-7.5">
-          <ProductCard ymalimage={ymalimage} />
-          <ProductCard ymalimage={ymalimage2} />
-          <ProductCard ymalimage={ymalimage3} />
+        <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] w-full mx-auto flex flex-col gap-16">
+          <h1 className="text-center h3 font-Bold uppercase">
+            You may also Like
+          </h1>
+          <div className="flex flex-col md:flex-row gap-14 md:gap-[11px] lg:gap-7.5">
+            <ProductCard
+              ymalImage={ymalImage}
+              ymalProductName={ymalProductName}
+            />
+            <ProductCard
+              ymalImage={ymalImage2}
+              ymalProductName={ymalProductName2}
+            />
+            <ProductCard
+              ymalImage={ymalImage3}
+              ymalProductName={ymalProductName3}
+            />
+          </div>
         </div>
       </section>
 

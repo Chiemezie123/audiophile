@@ -1,4 +1,7 @@
+"use client";
+
 import Header from "@/features/Header";
+import useScreenSize from "@/hooks/useScreenSize";
 import ProductDetail from "@/features/ProductDetail";
 import React from "react";
 import Headphones3 from "@/assets/Headphones3.png";
@@ -8,8 +11,12 @@ import Speakers from "@/assets/Speakers.png";
 import DisplayHeadphones1 from "@/assets/DisplayHeadphones1.png";
 import DisplayHeadphones2 from "@/assets/DisplayHeadphones2.png";
 import DisplayHeadphones3 from "@/assets/DisplayHeadphones3.png";
+import DisplayHeadphones3Tablet from "@/assets/DisplayHeadphones3Tablet.png";
+import DisplayHeadphones3Mobile from "@/assets/DisplayHeadphones3Mobile.png";
 
 const page = () => {
+  const screen = useScreenSize();
+
   return (
     <div>
       <ProductDetail
@@ -20,9 +27,9 @@ const page = () => {
             title: "XX99 Mark II Headphones",
             price: 2999,
             width: 540,
-            smallWidth: 300,
+            smallWidth: 181,
             height: 560,
-            smallHeight: 300,
+            smallHeight: 201,
             isNewProduct: true,
             description:
               "The new XX99 Mark II headphones is the pinnacle of pristine audio. It redefines your premium headphone experience by reproducing the balanced depth and precision of studio-quality sound.",
@@ -37,11 +44,20 @@ const page = () => {
         ]}
         displayImage={DisplayHeadphones1.src}
         displayImage2={DisplayHeadphones2.src}
-        displayImage3={DisplayHeadphones3.src}
+        displayImage3={
+          screen === "large"
+            ? DisplayHeadphones3.src
+            : screen === "medium"
+            ? DisplayHeadphones3Tablet.src
+            : DisplayHeadphones3Mobile.src
+        }
         displayTitle="XX99 Mark II Headphones"
-        ymalimage={Headphones2.src}
-        ymalimage2={Headphones4.src}
-        ymalimage3={Speakers.src}
+        ymalImage={Headphones2.src}
+        ymalImage2={Headphones4.src}
+        ymalImage3={Speakers.src}
+        ymalProductName="XX99 Mark i"
+        ymalProductName2="XX59"
+        ymalProductName3="ZX9 Speaker"
       />
     </div>
   );

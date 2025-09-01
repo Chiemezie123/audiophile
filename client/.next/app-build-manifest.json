@@ -6,25 +6,10 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
-    ],
-    "/product-detail/speakers1/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/product-detail/speakers1/page.js"
-    ],
     "/product-detail/headphones1/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/product-detail/headphones1/page.js"
-    ],
-    "/product-detail/earphones1/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/product-detail/earphones1/page.js"
     ]
   }
 }

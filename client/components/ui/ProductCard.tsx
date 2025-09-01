@@ -1,28 +1,33 @@
 import Image from "next/image";
 import React from "react";
-import Headphones from "@/assets/Headphones 2.png";
+import { Button } from "./button";
+import useScreenSize from "@/hooks/useScreenSize";
 
 type ProductCardProps = {
-  ymalimage: string;
+  ymalImage: string,
+  ymalProductName: string;
 };
 
-const ProductCard = ({ ymalimage }: ProductCardProps) => {
+const ProductCard = ({ ymalImage, ymalProductName }: ProductCardProps) => {
+  
+  const screen = useScreenSize();
+
   return (
-    <div>
-      <div>
+    <div className="flex flex-col gap-10">
         <div
-          className="bg-[#F1F1F1] flex items-center justify-center xs:p-8 lg:p-25 md:p-15 rounded-[8px] w-full h-[352px] lg:w-[350px] lg:h-[318px]"
+          className="bg-[#F1F1F1] flex items-center justify-center xs:p8 lg:p-25 rounded-[8px] w-full xs:h-[120px] md:h-[318px] lg:h-[318px]"
         >
           <Image
-            src={ymalimage}
+            src={ymalImage}
             alt="Product Image"
-            width={350}
-            height={318}
+            width={screen==="small" ? 75 : 350}
+            height={screen === "small" ? 90 :318}
           />
         </div>
+      <div className="flex flex-col items-center justify-center gap-8">
+      <div className="h5 font-Bold uppercase">{ymalProductName}</div>
+      <Button>See Product</Button>
       </div>
-      <div>Name</div>
-      <div>button</div>
     </div>
   );
 };

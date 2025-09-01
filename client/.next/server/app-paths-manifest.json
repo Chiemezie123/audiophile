@@ -1,6 +1,3 @@
 {
-  "/page": "app/page.js",
-  "/product-detail/speakers1/page": "app/product-detail/speakers1/page.js",
-  "/product-detail/earphones1/page": "app/product-detail/earphones1/page.js",
   "/product-detail/headphones1/page": "app/product-detail/headphones1/page.js"
 }
