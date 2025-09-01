@@ -1,5 +1,6 @@
 {
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/categories/earphones/page": "app/categories/earphones/page.js",
-  "/categories/headphones/page": "app/categories/headphones/page.js"
+  "/page": "app/page.js",
+  "/product-detail/speakers1/page": "app/product-detail/speakers1/page.js",
+  "/product-detail/earphones1/page": "app/product-detail/earphones1/page.js",
+  "/product-detail/headphones1/page": "app/product-detail/headphones1/page.js"
 }

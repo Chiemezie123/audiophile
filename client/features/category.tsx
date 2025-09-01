@@ -52,7 +52,7 @@ const Category = ({ categoryTitle, items }: CategoryProps) => {
               } xs:flex-col items-center lg:justify-between md:justify-center h-full w-full gap-13`}
             >
               <div
-                className={`bg-[#F1F1F1] flex items-center justify-center xs:p-8 lg:p-25 md:p-15 rounded-[8px] relative  w-full h-[352px] lg:w-[540px] lg:h-[560px]`}
+                className="bg-[#F1F1F1] flex items-center justify-center xs:p-8 lg:p-25 md:p-15 rounded-[8px] relative  w-full h-[352px] lg:w-[540px] lg:h-[560px]"
               >
                 <div className="flex flex-col justify-center gap-8 relative z-10">
                   <Image
