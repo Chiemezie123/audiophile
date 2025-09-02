@@ -1,3 +1,6 @@
 {
+  "/checkout/page": "app/checkout/page.js",
+  "/page": "app/page.js",
+  "/Categories/Headphones/page": "app/Categories/Headphones/page.js",
   "/product-detail/headphones1/page": "app/product-detail/headphones1/page.js"
 }

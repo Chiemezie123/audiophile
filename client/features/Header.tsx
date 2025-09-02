@@ -1,10 +1,23 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import CartIcon from "@/assets/svg/Cart.svg?react";
 import LogoIcon from "@/assets/svg/Logo.svg?react";
 import HamburgerIcon from "@/assets/svg/Hamburger.svg?react";
 import Link from "next/link";
+import CartModal from "@/components/ui/CartModal";
 
 const Header = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleModalOpener = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalCloser = () => {
+    setModalOpen(false);
+  };
+
   return (
     <div className="bg-[#141414]">
       <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] mx-auto">
@@ -36,7 +49,8 @@ const Header = () => {
               </li>
             </Link>
           </ul>
-          <CartIcon />
+          <CartIcon onClick={handleModalOpener} />
+          {modalOpen && <CartModal handleModalCloser={handleModalCloser} />}
         </div>
       </div>
     </div>

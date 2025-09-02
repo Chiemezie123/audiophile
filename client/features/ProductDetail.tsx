@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import Header from "@/features/Header";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import useScreenSize from "@/hooks/useScreenSize";
 import SizeInputHandler from "@/components/ui/sizeInputHandler";
 import CategoryCard from "@/components/ui/CategoryCard";
@@ -13,7 +13,6 @@ import Speakers2 from "@/assets/Speakers2.png";
 import ActionCard from "./ActionCard";
 import Footer from "./Footer";
 import ProductCard from "@/components/ui/ProductCard";
-import Cart from "@/components/ui/Cart";
 
 type ProductDetailProps = {
   items: Array<{
@@ -58,13 +57,13 @@ const ProductDetail = ({
   ymalProductName2,
   ymalProductName3,
 }: ProductDetailProps) => {
-  const screen = useScreenSize();
+
+  const screen = useScreenSize();  
 
   return (
     <div>
       <Header />
       <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] mx-auto md:mt-[33px] xs:mt-4 xs:mb-6 lg:mt-20 lg:mb-14">
-        <Cart />
         <button className="text-sm opacity-50">Go Back</button>
       </div>
 

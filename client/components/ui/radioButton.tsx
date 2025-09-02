@@ -18,7 +18,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   return (
     <button
       onClick={() => onClick(value)}
-      className={`flex items-center p-[14px] w-full xl:w-[240px] h-[52px] gap-2 rounded-md border transition-all
+      className={`flex items-center p-[14px] w-full w-[309px xl:w-[240px] h-[52px] gap-2 rounded-md border transition-all
         ${
           isActive
             ? "bg-orange-50 border-orange-500"
