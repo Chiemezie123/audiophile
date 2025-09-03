@@ -1,9 +1,7 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import Header from "@/features/Header";
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import useScreenSize from "@/hooks/useScreenSize";
 import SizeInputHandler from "@/components/ui/sizeInputHandler";
 import CategoryCard from "@/components/ui/CategoryCard";
@@ -38,9 +36,14 @@ type ProductDetailProps = {
   ymalImage: string;
   ymalImage2: string;
   ymalImage3: string;
+  ymalLink: string;
+  ymalLink2: string;
+  ymalLink3: string;
   ymalProductName: string;
   ymalProductName2: string;
   ymalProductName3: string;
+  features_p1: string;
+  features_p2: string;
 };
 
 const ProductDetail = ({
@@ -53,12 +56,16 @@ const ProductDetail = ({
   ymalImage,
   ymalImage2,
   ymalImage3,
+  ymalLink,
+  ymalLink2,
+  ymalLink3,
   ymalProductName,
   ymalProductName2,
   ymalProductName3,
+  features_p1,
+  features_p2,
 }: ProductDetailProps) => {
-
-  const screen = useScreenSize();  
+  const screen = useScreenSize();
 
   return (
     <div>
@@ -114,23 +121,8 @@ const ProductDetail = ({
         <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] w-full mx-auto flex xs:flex-col lg:flex-row gap-[125px]">
           <div className="xs:w-full lg:w-[635px] flex flex-col gap-8">
             <h1 className="h3 font-Bold uppercase">Features</h1>
-            <p className="text-[15px] opacity-50">
-              Featuring a genuine leather head strap and premium earcups, these
-              headphones deliver superior comfort for those who like to enjoy
-              endless listening. It includes intuitive controls designed for any
-              situation. Whether you're taking a business call or just in your
-              own personal space, the auto on/off and pause features ensure that
-              you'll never miss a beat.
-            </p>
-            <p className="text-[15px] opacity-50">
-              The advanced Active Noise Cancellation with built-in equalizer
-              allow you to experience your audio world on your terms. It lets
-              you enjoy your audio in peace, but quickly interact with your
-              surroundings when you need to. Combined with Bluetooth 5. 0
-              compliant connectivity and 17 hour battery life, the XX99 Mark II
-              headphones gives you superior sound, cutting-edge technology, and
-              a modern design aesthetic.
-            </p>
+            <p className="text-[15px] opacity-50">{features_p1}</p>
+            <p className="text-[15px] opacity-50">{features_p2}</p>
           </div>
           <div className="lg:w-[350px] flex xs:flex-col md:flex-row lg:flex-col xs:gap-6 lg:gap-8">
             <h1 className="h3 font-Bold uppercase w-[339px]">In the Box</h1>
@@ -189,14 +181,17 @@ const ProductDetail = ({
             <ProductCard
               ymalImage={ymalImage}
               ymalProductName={ymalProductName}
+              ymalLink={ymalLink}
             />
             <ProductCard
               ymalImage={ymalImage2}
               ymalProductName={ymalProductName2}
+              ymalLink={ymalLink2}
             />
             <ProductCard
               ymalImage={ymalImage3}
               ymalProductName={ymalProductName3}
+              ymalLink={ymalLink3}
             />
           </div>
         </div>

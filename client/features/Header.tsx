@@ -33,17 +33,17 @@ const Header = () => {
                 Home
               </li>
             </Link>
-            <Link href="/Categories/Headphones" passHref>
+            <Link href="/Categories/headphones" passHref>
               <li className="cursor-pointer hover:text-[var(--color-warm-orange-brown)]">
                 Headphones
               </li>
             </Link>
-            <Link href="/Categories/Speakers" passHref>
+            <Link href="/Categories/speakers" passHref>
               <li className="cursor-pointer hover:text-[var(--color-warm-orange-brown)]">
                 Speakers
               </li>
             </Link>
-            <Link href="/Categories/Earphones" passHref>
+            <Link href="/Categories/earphones" passHref>
               <li className="cursor-pointer hover:text-[var(--color-warm-orange-brown)]">
                 Earphones
               </li>

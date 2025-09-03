@@ -1,6 +1,5 @@
 "use client";
 
-import Header from "@/features/Header";
 import useScreenSize from "@/hooks/useScreenSize";
 import ProductDetail from "@/features/ProductDetail";
 import React from "react";
@@ -35,12 +34,25 @@ const page = () => {
               "The new XX99 Mark II headphones is the pinnacle of pristine audio. It redefines your premium headphone experience by reproducing the balanced depth and precision of studio-quality sound.",
           },
         ]}
+        features_p1="Featuring a genuine leather head strap and premium earcups, these
+              headphones deliver superior comfort for those who like to enjoy
+              endless listening. It includes intuitive controls designed for any
+              situation. Whether you're taking a business call or just in your
+              own personal space, the auto on/off and pause features ensure that
+              you'll never miss a beat."
+        features_p2="The advanced Active Noise Cancellation with built-in equalizer
+              allow you to experience your audio world on your terms. It lets
+              you enjoy your audio in peace, but quickly interact with your
+              surroundings when you need to. Combined with Bluetooth 5. 0
+              compliant connectivity and 17 hour battery life, the XX99 Mark II
+              headphones gives you superior sound, cutting-edge technology, and
+              a modern design aesthetic."
         boxItems={[
-          { quantity: "1x", item: "Headphone Unit" },
-          { quantity: "2x", item: "Replacement Earcups" },
+          { quantity: "2x", item: "Speaker Unit" },
+          { quantity: "2x", item: "Speaker Cloth Panel" },
           { quantity: "1x", item: "User Manual" },
-          { quantity: "1x", item: "3.5mm 5m Audio Cable" },
-          { quantity: "1x", item: "Travel Bag" },
+          { quantity: "1x", item: "3.5mm 10m Audio Cable" },
+          { quantity: "1x", item: "10m Optical Cable" },
         ]}
         displayImage={DisplayHeadphones1.src}
         displayImage2={DisplayHeadphones2.src}
@@ -55,6 +67,9 @@ const page = () => {
         ymalImage={Headphones2.src}
         ymalImage2={Headphones4.src}
         ymalImage3={Speakers.src}
+        ymalLink="headphones2"
+        ymalLink2="headphones4"
+        ymalLink3="speakers1"
         ymalProductName="XX99 Mark i"
         ymalProductName2="XX59"
         ymalProductName3="ZX9 Speaker"

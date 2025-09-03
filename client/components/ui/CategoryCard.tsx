@@ -3,6 +3,7 @@ import { Button } from "./button";
 import ArrowRight from "@/assets/svg/ArrowRightsvg.svg";
 import Oval from "@/assets/Oval.png";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 
 type CategoryCardProps = {
@@ -33,9 +34,11 @@ const CategoryCard = ({
         />
         <div className="mt-22 lg:mt-29">
           <h6 className="md:text-[15px] font-bold">{title}</h6>
-          <Button variant={"tertiary"} rightIcon={<ArrowRight />}>
-            Shop
-          </Button>
+          <Link href={`/Categories/${title.toLocaleLowerCase()}`}>
+            <Button variant={"tertiary"} rightIcon={<ArrowRight />}>
+              Shop
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

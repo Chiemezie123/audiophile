@@ -2,14 +2,16 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "./button";
 import useScreenSize from "@/hooks/useScreenSize";
+import Link from "next/link";
 
 type ProductCardProps = {
   ymalImage: string,
   ymalProductName: string;
+  ymalLink: string;
 };
 
-const ProductCard = ({ ymalImage, ymalProductName }: ProductCardProps) => {
-  
+const ProductCard = ({ ymalImage, ymalProductName, ymalLink }: ProductCardProps) => {
+
   const screen = useScreenSize();
 
   return (
@@ -19,14 +21,16 @@ const ProductCard = ({ ymalImage, ymalProductName }: ProductCardProps) => {
         >
           <Image
             src={ymalImage}
-            alt="Product Image"
+            alt={ymalLink}
             width={screen==="small" ? 75 : 350}
             height={screen === "small" ? 90 :318}
           />
         </div>
       <div className="flex flex-col items-center justify-center gap-8">
       <div className="h5 font-Bold uppercase">{ymalProductName}</div>
+      <Link href={`/product-detail/${ymalLink}`}>
       <Button>See Product</Button>
+      </Link>
       </div>
     </div>
   );
