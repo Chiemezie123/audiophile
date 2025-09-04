@@ -6,10 +6,14 @@ import morgan from "morgan";
 import path from "path";
 import helmet from "helmet";
 import ExpressMongoSanitize from "express-mongo-sanitize";
+import session from "express-session";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import userRouter from "./routes/userRoutes.js";
-import { AllError } from "../Errors/errorUtils.js";
+import authRouter from "./routes/authRoutes.js";
+import debugRouter from "./routes/debugRoutes.js";
+import { AllError } from "./errrorHandling/error.js";
+import passportConfig from "./config/passport.js";
 
 // Global error handler
 const globalError = (err: any, req: any, res: any, next: any) => {
@@ -33,7 +37,29 @@ const limiter = rateLimit({
   message: "too many request, please chill",
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+// Session configuration (required for Passport)
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
+
+// Initialize Passport
+app.use(passportConfig.initialize());
+app.use(passportConfig.session());
 
 // IMPORTANT: Parse JSON request bodies (this was missing!)
 app.use(express.json({ limit: "10mb" }));
@@ -62,6 +88,8 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/debug", debugRouter);
 
 app.all("*", (req, res, next) => {
   const err = new AllError(`there is no ${req.url} route from the server`, 404);

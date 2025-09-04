@@ -6,37 +6,86 @@ import { AllError } from "../errrorHandling/error.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import Email from "../utils/emailHandler.js";
-import sendEmail from "../utils/emailHandler.js";
+import { sendEmail, sendEmailForOtp } from "../utils/emailHandler.js";
 import { sendTokenGenerated } from "../utils/JwtUtils.js";
 import express from "express";
 import passport from "passport";
 import GoogleStrategy from "passport-google-oidc";
 import { NextFunction, Request, Response } from "express";
+import Otp from "../models/otpModal.js";
 
-export const signUp = catchAsync(
+export const requestOtp = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { name, email, password, confirmPassword, createdPasswordAt, role } =
-      req.body;
+    const { email } = req.body;
 
-    const newUser = {
-      name,
+    const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
+    const hashedOtp = await bcrypt.hash(otp, 10);
+
+    await Otp.create({
       email,
-      password,
-      confirmPassword,
-      createdPasswordAt,
-      role,
-    };
+      otp: hashedOtp,
+      expiresAt: Date.now() + 10 * 60 * 1000, // 10 mins
+    });
 
-    const createNewUser = new User(newUser);
-    const user = await createNewUser.save();
+    const newEmail = new sendEmailForOtp(email, otp);
+    await newEmail.sendOtp();
 
-    // const url = `${req.protocol}://${req.get("host")}/userAccount`;
-    // let mail = new Email(user, url);
-    // mail = await mail.sendWelcome();
+    res.json({ success: true, message: "OTP sent to your email" });
+  }
+);
 
-    if (user) {
-      sendTokenGenerated(user, 201, res);
+export const verifyOtp = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, otp } = req.body;
+
+    const record = await Otp.findOne({ email }).sort({ createdAt: -1 });
+    if (!record) return res.status(400).json({ error: "OTP not found" });
+
+    const isValid = await bcrypt.compare(otp, record.otp);
+    console.log(isValid, "isValid");
+    if (!isValid || record.expiresAt < Date.now()) {
+      return res.status(400).json({ error: "Invalid or expired OTP" });
     }
+
+    await Otp.deleteMany({ email }); // cleanup
+    res.json({ success: true, message: "OTP verified" });
+  }
+);
+
+export const setPassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password, confirmPassword } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        email,
+        password: hashedPassword,
+        confirmPassword: hashedPassword,
+      });
+    } else {
+      user.password = hashedPassword;
+      user.confirmPassword = hashedPassword;
+      await user.save();
+    }
+
+    res.json({ success: true, message: "Password set, one more step to go" });
+  }
+);
+
+export const completeProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { firstName, lastName, dob } = req.body;
+
+    const user = await User.findById(req.user.id);
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.dateOfBirth = dob;
+    await user.save();
+
+    sendTokenGenerated(user, 201, res);
   }
 );
 
@@ -313,6 +362,89 @@ export const updatePassword = catchAsync(
     res.status(200).json({
       message: "success",
       token: jwTtoken,
+    });
+  }
+);
+
+// Google OAuth routes
+export const googleAuth = passport.authenticate("google", {
+  scope: ["profile", "email"],
+});
+
+export const googleCallback = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // This will be called after Google redirects back
+    passport.authenticate(
+      "google",
+      { session: false },
+      (err: any, user: any) => {
+        if (err) {
+          console.error("OAuth error:", err);
+          return res.redirect(
+            `${
+              process.env.CLIENT_URL || "http://localhost:3000"
+            }/signup?error=oauth_error`
+          );
+        }
+
+        if (!user) {
+          return res.redirect(
+            `${
+              process.env.CLIENT_URL || "http://localhost:3000"
+            }/signup?error=oauth_failed`
+          );
+        }
+
+        // Generate JWT token
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY!, {
+          expiresIn: process.env.JWT_EXPIRE_TIME || "90d",
+        });
+
+        // Set JWT as httpOnly cookie
+        res.cookie("jwt", token, {
+          expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+        });
+
+        // Create user data to pass to frontend (without sensitive info)
+        const userData = {
+          id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          photo: user.photo,
+          authProvider: user.authProvider,
+          isEmailVerified: user.isEmailVerified,
+          role: user.role,
+        };
+
+        // Encode user data to pass via URL
+        const encodedUserData = encodeURIComponent(JSON.stringify(userData));
+
+        // Redirect to landing page with user data
+        res.redirect(
+          `${
+            process.env.CLIENT_URL || "http://localhost:3000"
+          }?auth=success&user=${encodedUserData}`
+        );
+      }
+    )(req, res, next);
+  }
+);
+
+// Check if user exists (for OAuth flow)
+export const checkUserExists = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    res.status(200).json({
+      status: "success",
+      exists: !!user,
+      authProvider: user?.authProvider || null,
     });
   }
 );

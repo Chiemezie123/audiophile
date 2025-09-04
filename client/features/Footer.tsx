@@ -1,9 +1,10 @@
 import React from "react";
+import Image from "next/image";
 import Header from "./Header";
-import FacebookIcon from "@/assets/svg/Facebook.svg?react";
-import TwitterIcon from "@/assets/svg/Twitter.svg?react";
-import InstagramIcon from "@/assets/svg/Instagram.svg?react";
-import LogoIcon from "@/assets/svg/Logo.svg?react";
+import FacebookIcon from "@/assets/svg/Facebook.svg";
+import TwitterIcon from "@/assets/svg/Twitter.svg";
+import InstagramIcon from "@/assets/svg/Instagram.svg";
+import LogoIcon from "@/assets/svg/Logo.svg";
 import Link from "next/link";
 
 const Footer = () => {
@@ -12,7 +13,7 @@ const Footer = () => {
       <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] mx-auto px-4">
         <div className="flex xs:flex-col lg:flex-row xs:items-center md:items-start gap-12 lg:justify-between z-1 py-8">
           <div className=" flex items-center gap-10">
-            <LogoIcon fill="white"/>
+            <Image src={LogoIcon} alt="Logo" width={143} height={25} />
           </div>
           <ul className="flex xs:flex-col md:flex-row lg:inline-flex text-center gap-4 lg:gap-8.5 pr-0.5 justify-center md:items-start text-xs uppercase text-white ">
             <Link href="/" passHref>
@@ -46,13 +47,31 @@ const Footer = () => {
           </p>
           <ul className="flex items-center gap-4 mt-10">
             <li>
-              <FacebookIcon className="cursor-pointer text-white hover:text-warm-orange-brown transition-colors duration-300" />
+              <Image
+                src={FacebookIcon}
+                alt="Facebook"
+                width={24}
+                height={24}
+                className="cursor-pointer hover:opacity-75 transition-opacity duration-300"
+              />
             </li>
             <li>
-              <TwitterIcon className="cursor-pointer text-white hover:text-warm-orange-brown transition-colors duration-300" />
+              <Image
+                src={TwitterIcon}
+                alt="Twitter"
+                width={24}
+                height={20}
+                className="cursor-pointer hover:opacity-75 transition-opacity duration-300"
+              />
             </li>
             <li>
-              <InstagramIcon className="cursor-pointer text-white hover:text-warm-orange-brown transition-colors duration-300" />
+              <Image
+                src={InstagramIcon}
+                alt="Instagram"
+                width={24}
+                height={24}
+                className="cursor-pointer hover:opacity-75 transition-opacity duration-300"
+              />
             </li>
           </ul>
         </div>

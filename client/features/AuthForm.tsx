@@ -1,12 +1,13 @@
 import React from "react";
-import LogoIcon from "@/assets/svg/Logo.svg?react";
-import GoogleIcon from "@/assets/svg/Google.svg?react";
-import InstagramColored from "@/assets/svg/InstagramColored.svg?react";
+import Image from "next/image";
+import LogoIcon from "@/assets/svg/Logo.svg";
+import InstagramColored from "@/assets/svg/InstagramColored.svg";
 import { Input } from "@/components/ui/textIpnut";
 import type { InputProps } from "@/components/ui/textIpnut";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 
 type HelperType = { type: "link"; href?: string } | { type: "text" };
 
@@ -20,6 +21,7 @@ type AuthFormProps = {
   hrefPath: string;
   isForgotPassword?: boolean;
   isResetPassword?: boolean;
+  isSubmitting?: boolean;
 };
 
 const AuthForm = ({
@@ -32,11 +34,12 @@ const AuthForm = ({
   hrefPath,
   isForgotPassword,
   isResetPassword,
+  isSubmitting = false,
 }: AuthFormProps) => {
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="w-full py-[74.5px] pl-[104px]">
-        <LogoIcon className="" fill="black" />
+        <Image src={LogoIcon} alt="Logo" width={120} height={40} />
       </div>
       <div className="p-4 w-[543px] flex flex-col gap-[22px]">
         <h3 className="text-3xl font-semibold leading-[120%] text-[#24262D]">
@@ -51,7 +54,7 @@ const AuthForm = ({
               {helper &&
                 (helper.type === "link" ? (
                   <Link
-                    href={helper.href}
+                    href={helper.href || "#"}
                     className="text-right text-[#D87D4A]"
                   >
                     Forgot Your Password?
@@ -63,7 +66,11 @@ const AuthForm = ({
                   </p>
                 ))}
             </div>
-            <Button className=" w-full rounded-[32px] capitalize text-[16px] font-semibold">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className=" w-full rounded-[32px] capitalize text-[16px] font-semibold"
+            >
               {buttonText}
             </Button>
           </div>
@@ -75,20 +82,27 @@ const AuthForm = ({
               <span className="flex-1 border-t border-gray-100"></span>
             </div>
           )}
+          
           <div className="flex flex-col items-center gap-4 text-[14px] text-black font-semibold">
             {!isForgotPassword && !isResetPassword && (
               <div className="flex flex-col gap-4 w-full">
+                <GoogleSignInButton />
                 <div className="border-2 border-[#D7DAE0] py-3 px-16 w-full rounded-[32px] flex items-center self-stretch justify-center gap-4">
-                  <GoogleIcon />
-                  <span>Continue with Google</span>
-                </div>
-                <div className="border-2 border-[#D7DAE0] py-3 px-16 w-full rounded-[32px] flex items-center self-stretch justify-center gap-4">
-                  <InstagramColored />
+                  <Image
+                    src={InstagramColored}
+                    alt="Instagram"
+                    width={20}
+                    height={20}
+                  />
                   <span>Continue with Instagram</span>
                 </div>
               </div>
             )}
-            <div className={`w-full flex justify-center border-b-1 border-[#f0f2f5] pb-4 ${isForgotPassword || isResetPassword ? "mt-6" : ""}`}>
+            <div
+              className={`w-full flex justify-center border-b-1 border-[#f0f2f5] pb-4 ${
+                isForgotPassword || isResetPassword ? "mt-6" : ""
+              }`}
+            >
               <div className="max-w-[360px] text-center text-[12px] text-gray-500 ">
                 By continuing with Google, Instagram and Email, you agree to
                 Virality's{" "}

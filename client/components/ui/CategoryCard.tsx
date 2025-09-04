@@ -1,9 +1,9 @@
 import React from "react";
+import Image from "next/image";
 import { Button } from "./button";
 import ArrowRight from "@/assets/svg/ArrowRightsvg.svg";
 import Oval from "@/assets/Oval.png";
 import { cn } from "@/lib/utils";
-
 
 type CategoryCardProps = {
   image: string;
@@ -24,7 +24,10 @@ const CategoryCard = ({
         <img
           src={image}
           alt={alt}
-          className={cn(` absolute xs:bottom-26 md:bottom-29 lg:bottom-35`, imageClassName)}
+          className={cn(
+            ` absolute xs:bottom-26 md:bottom-29 lg:bottom-35`,
+            imageClassName
+          )}
         />
         <img
           src={Oval.src}
@@ -33,7 +36,12 @@ const CategoryCard = ({
         />
         <div className="mt-22 lg:mt-29">
           <h6 className="md:text-[15px] font-bold">{title}</h6>
-          <Button variant={"tertiary"} rightIcon={<ArrowRight />}>
+          <Button
+            variant={"tertiary"}
+            rightIcon={
+              <Image src={ArrowRight} alt="Arrow Right" width={8} height={12} />
+            }
+          >
             Shop
           </Button>
         </div>

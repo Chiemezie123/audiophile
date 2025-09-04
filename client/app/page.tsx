@@ -1,7 +1,8 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
-import  useScreenSize  from "@/hooks/useScreenSize"
+import useScreenSize from "@/hooks/useScreenSize";
+import { useAuthCallback } from "@/hooks/useAuthCallback";
 import ArrowRight from "@/assets/svg/arrowRightsvg.svg";
 import { Input } from "@/components/ui/textIpnut";
 import RadioButton from "../components/ui/radioButton";
@@ -27,8 +28,8 @@ import CategoryCard from "@/components/ui/CategoryCard";
 import Image from "next/image";
 
 export default function Home() {
-
   const screen = useScreenSize();
+  const { user, isLoading } = useAuthCallback();
 
   return (
     <div>
@@ -119,9 +120,7 @@ export default function Home() {
               height={screen === "large" ? 493 : 237}
             />
             <div className="flex flex-col justify-center lg:items-start xs:items-center lg:text-left xs:text-center lg:gap-8 xs:gap-6 md:w-[339px] w-[280px]">
-              <h2 className="h1  text-white font-bold">
-                ZX9 SPEAKER
-              </h2>
+              <h2 className="h1  text-white font-bold">ZX9 SPEAKER</h2>
               <p className="text-sm text-white opacity-75">
                 Upgrade to premium speakers that are phenomenally built to
                 deliver truly remarkable sound.
@@ -150,11 +149,7 @@ export default function Home() {
               className={"rounded-[8px]"}
               alt="Speakers"
               width={
-                screen === "small"
-                  ? 327
-                  : screen === "medium"
-                  ? 689
-                  : 1110
+                screen === "small" ? 327 : screen === "medium" ? 689 : 1110
               }
               height={320}
             />
@@ -163,9 +158,7 @@ export default function Home() {
             <div className=" lg:w-[540px] md:w-[339px] rounded-[8px]">
               <Image
                 src={
-                  screen === "medium"
-                    ? Earphones2Tablet.src
-                    : Earphones2.src
+                  screen === "medium" ? Earphones2Tablet.src : Earphones2.src
                 }
                 alt="Earphones"
                 className="rounded-[8px] xs:h-[200px] md:h-[320px]"

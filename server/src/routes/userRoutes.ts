@@ -1,7 +1,7 @@
 import express from "express";
 
 import {
-  signUp,
+ 
   logOut,
   isLoggedIn,
   forgotPasswords,
@@ -13,7 +13,6 @@ import {
 
 const router = express.Router();
 
-router.post("/signup", signUp);
 
 router.post("/login", login);
 

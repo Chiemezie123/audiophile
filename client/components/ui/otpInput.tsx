@@ -7,7 +7,7 @@ type OtpInputProps = {
   value?: string;
 };
 
-const OtpInput = ({ length = 6, onChange }: OtpInputProps) => {
+const OtpInput = ({ length = 6, onChange, value = "" }: OtpInputProps) => {
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
 
   interface HandleChangeEvent extends React.ChangeEvent<HTMLInputElement> {}
@@ -15,23 +15,22 @@ const OtpInput = ({ length = 6, onChange }: OtpInputProps) => {
   interface HandleKeyDownEvent extends React.KeyboardEvent<HTMLInputElement> {}
 
   const handleChange = (e: HandleChangeEvent, index: number): void => {
-    const value = e.target.value;
+    const inputValue = e.target.value;
 
-    if (!/^\d?$/.test(value)) return;
+    if (!/^\d?$/.test(inputValue)) return;
 
-    const prevNotFilled = inputsRef.current
-      .slice(0, index)
-      .some((input) => input && input.value === "");
+    // Create new OTP string
+    const otpArray = value
+      .split("")
+      .concat(Array(length).fill(""))
+      .slice(0, length);
+    otpArray[index] = inputValue;
 
-    if (prevNotFilled) return;
-
-    const newOtp = inputsRef.current
-      .map((input) => (input && input.value ? input.value : ""))
-      .join("")
-      .padEnd(length, ""); // Pads with empty string to ensure consistent length
+    const newOtp = otpArray.join("").replace(/\s/g, "");
     onChange?.(newOtp);
 
-    if (value && index < length - 1) {
+    // Move to next input if value entered and not at last input
+    if (inputValue && index < length - 1) {
       if (inputsRef.current[index + 1]) {
         inputsRef.current[index + 1]!.focus();
       }
@@ -56,6 +55,7 @@ const OtpInput = ({ length = 6, onChange }: OtpInputProps) => {
           type="text"
           inputMode="numeric"
           maxLength={1}
+          value={value[i] || ""}
           ref={(el) => {
             inputsRef.current[i] = el;
           }}
