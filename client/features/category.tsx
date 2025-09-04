@@ -11,6 +11,7 @@ import Earphones from "@/assets/Earphones.png";
 import Speakers2 from "@/assets/Speakers2.png";
 import ActionCard from "./ActionCard";
 import Footer from "./Footer";
+import Link from "next/link";
 
 type CategoryProps = {
   categoryTitle: string;
@@ -26,6 +27,7 @@ type CategoryProps = {
     description: string;
     isReversed: boolean;
     isNewProduct?: boolean;
+    page?: string;
   }>;
 };
 
@@ -51,9 +53,7 @@ const Category = ({ categoryTitle, items }: CategoryProps) => {
                 item.isReversed ? "lg:flex-row-reverse" : ""
               } xs:flex-col items-center lg:justify-between md:justify-center h-full w-full gap-13`}
             >
-              <div
-                className={`bg-[#F1F1F1] flex items-center justify-center xs:p-8 lg:p-25 md:p-15 rounded-[8px] relative  w-full h-[352px] lg:w-[540px] lg:h-[560px]`}
-              >
+              <div className="bg-[#F1F1F1] flex items-center justify-center xs:p-8 lg:p-25 md:p-15 rounded-[8px] relative  w-full h-[352px] lg:w-[540px] lg:h-[560px]">
                 <div className="flex flex-col justify-center gap-8 relative z-10">
                   <Image
                     src={item.image}
@@ -78,7 +78,9 @@ const Category = ({ categoryTitle, items }: CategoryProps) => {
                 <p className="text-sm text-black opacity-50 mt-4">
                   {item.description}
                 </p>
-                <Button>See Product</Button>
+                <Link href={`/product-detail/${item.page}`}>
+                  <Button>See Product</Button>
+                </Link>
               </div>
             </div>
           ))}

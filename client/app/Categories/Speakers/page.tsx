@@ -21,7 +21,8 @@ const page = () => {
             smallWidth: 202,
             width: 291,
             smallHeight: 243,
-            height: 350
+            height: 350,
+            page: "speakers1"
           },
           {
             id: 2,

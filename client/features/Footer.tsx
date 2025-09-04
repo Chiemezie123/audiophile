@@ -21,17 +21,17 @@ const Footer = () => {
                 Home
               </li>
             </Link>
-            <Link href="/Categories/Headphones" passHref>
+            <Link href="/Categories/headphones" passHref>
               <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
                 Headphones
               </li>
             </Link>
-            <Link href="/Categories/Speakers" passHref>
+            <Link href="/Categories/speakers" passHref>
               <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
                 Speakers
               </li>
             </Link>
-            <Link href="/Categories/Earphones" passHref>
+            <Link href="/Categories/earphones" passHref>
               <li className="cursor-pointer hover:text-warm-orange-brown font-bold">
                 Earphones
               </li>

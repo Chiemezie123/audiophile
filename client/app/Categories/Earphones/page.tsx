@@ -20,7 +20,8 @@ const page = () => {
             smallWidth: 200,
             width: 350,
             smallHeight: 200,
-            height: 386
+            height: 386,
+            page: "earphones1"
           },
         ]}
       />

@@ -24,7 +24,8 @@ const page = () => {
             smallWidth: 220,
             width: 350,
             smallHeight: 243,
-            height: 386
+            height: 386,
+            page: "headphones1"
           },
           {
             id: 2,
