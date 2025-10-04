@@ -6,6 +6,8 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { setUser as setReduxUser, clearUser } from "@/store/userSlice";
 
 interface User {
   id: string;
@@ -30,22 +32,47 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const dispatch = useAppDispatch();
+  const reduxUser = useAppSelector((state) => state.user);
   const [user, setUser] = useState<User | null>(null);
 
+  // Sync user state with Redux store
   useEffect(() => {
-    // Load user from localStorage on app start
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error("Error parsing stored user data:", error);
-        localStorage.removeItem("user");
+    if (reduxUser.id) {
+      const userData: User = {
+        id: reduxUser.id,
+        firstName: reduxUser.firstName || "",
+        lastName: reduxUser.lastName || "",
+        email: reduxUser.email || "",
+        photo: reduxUser.photo || "",
+        authProvider: reduxUser.authProvider || "local",
+        isEmailVerified: reduxUser.isEmailVerified || false,
+        role: reduxUser.role || "user",
+      };
+      setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
+    } else {
+      setUser(null);
+      localStorage.removeItem("user");
+    }
+  }, [reduxUser]);
+
+  useEffect(() => {
+    // Load user from localStorage on app start if Redux store is empty
+    if (!reduxUser.id) {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+          dispatch(setReduxUser(parsedUser));
+        } catch (error) {
+          console.error("Error parsing stored user data:", error);
+          localStorage.removeItem("user");
+        }
       }
     }
-  }, []);
-
-
+  }, [dispatch, reduxUser.id]);
 
   const logout = async () => {
     try {
@@ -62,21 +89,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      // Clear user data regardless of API call result
+      // Clear user data from both Redux and local state
+      dispatch(clearUser());
       setUser(null);
       localStorage.removeItem("user");
     }
   };
 
-
-  
-
   const updateUser = (userData: User | null) => {
-    setUser(userData);
     if (userData) {
-      localStorage.setItem("user", JSON.stringify(userData));
+      // Update Redux store, which will automatically sync with local state
+      dispatch(setReduxUser(userData));
     } else {
-      localStorage.removeItem("user");
+      dispatch(clearUser());
     }
   };
 

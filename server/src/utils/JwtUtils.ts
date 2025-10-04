@@ -12,7 +12,8 @@ export const getToken = (id: string | unknown) => {
 export const sendTokenGenerated = (
   user: UserDocument,
   statusCode: number,
-  res: Response
+  res: Response,
+  status?: string,
 ) => {
   const token = getToken(user._id);
 
@@ -38,7 +39,7 @@ export const sendTokenGenerated = (
   const { password, ...safeUser } = user.toObject();
 
   res.status(statusCode).json({
-    status: "success",
+    status: status,
     user: safeUser,
     token,
   });

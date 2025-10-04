@@ -6,7 +6,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import { toastUtils } from "@/lib/toastUtils";
-import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -19,6 +18,7 @@ import {
   setOtpSent,
   SignupStep,
 } from "@/store/signupSlice";
+import { setUser } from "@/store/userSlice";
 
 // Validation schemas for different steps
 const emailValidationSchema = yup.object().shape({
@@ -53,7 +53,6 @@ interface PasswordFormData {
 }
 
 const Page = () => {
-  const { user, setUser } = useAuth();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { currentStep, signupData, loading, error, otpVerified } =
@@ -180,18 +179,19 @@ const Page = () => {
       if (response.ok) {
         console.log("Account created successfully:", result);
 
-        // Store user data in AuthContext if available
+        // Store user data in Redux store (handles partial user data)
         if (result.user) {
-          setUser({
-            id: result.user._id,
-            firstName: result.user.firstName,
-            lastName: result.user.lastName,
+          const userData = {
+            id: result.user._id || result.user.id,
             email: result.user.email,
-            photo: result.user.photo || "default.jpg",
+            firstName: result.user.firstName || "",
+            lastName: result.user.lastName || "",
+            photo: result.user.photo || "",
             authProvider: result.user.authProvider || "local",
-            isEmailVerified: result.user.isEmailVerified || false,
+            isEmailVerified: result.user.isEmailVerified || true, // Since they completed OTP verification
             role: result.user.role || "user",
-          });
+          };
+          dispatch(setUser(userData));
         }
 
         toastUtils.updateLoading(
@@ -203,10 +203,21 @@ const Page = () => {
         // Move to profile completion step
         dispatch(setCurrentStep(SignupStep.PROFILE_COMPLETION));
 
-        // For now, redirect to home (you can create a profile completion page later)
-        setTimeout(() => {
-          router.replace("/", { scroll: false });
-        }, 1500);
+        // Check if user needs to complete profile (missing firstName or lastName)
+        const needsProfileCompletion =
+          !result.user?.firstName || !result.user?.lastName;
+
+        if (needsProfileCompletion) {
+          // Redirect to profile completion page
+          setTimeout(() => {
+            router.replace("/complete-profile", { scroll: false });
+          }, 1500);
+        } else {
+          // User has complete profile, redirect to home
+          setTimeout(() => {
+            router.replace("/", { scroll: false });
+          }, 1500);
+        }
       } else {
         const errorMessage =
           result.message || "Failed to create account. Please try again.";
@@ -271,7 +282,7 @@ const Page = () => {
                 className:
                   "max-w-full bg-gray-100 rounded-md h-[45px] cursor-not-allowed",
                 name: "email" as const,
-                register: () => ({}), // Read-only field
+                register: passwordForm.register as any, // Read-only field
                 errorMsg: "",
                 disabled: true,
               },

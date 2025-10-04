@@ -18,6 +18,14 @@ export const requestOtp = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email } = req.body;
 
+
+    if(email){
+      const user = await Otp.findOne({ email });
+      if(user){
+        await Otp.deleteMany({ email }); // cleanup
+      }
+    }
+
     const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
     const hashedOtp = await bcrypt.hash(otp, 10);
 
@@ -71,7 +79,8 @@ export const setPassword = catchAsync(
       await user.save();
     }
 
-    res.json({ success: true, message: "Password set, one more step to go" });
+    sendTokenGenerated(user, 201, res, "user created");
+   
   }
 );
 

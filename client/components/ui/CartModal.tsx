@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import SizeInputHandler from "./sizeInputHandler";
 import { Button } from "./button";
 import Headphones3 from "@/assets/Headphones3.png";
@@ -12,10 +12,31 @@ interface CartModalProps {
 }
 
 const CartModal = ({ handleModalCloser }: CartModalProps) => {
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !(modalRef.current as HTMLElement).contains(event.target as Node)
+      ) {
+        handleModalCloser?.();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleModalCloser]);
   return (
     <div
       className="fixed top-0 left-0 bg-[rgba(0,0,0,0.4)] w-full h-full z-100"
       onClick={handleModalCloser}
+      ref={modalRef}
     >
       <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] mx-auto relative">
         <div
@@ -91,7 +112,7 @@ const CartModal = ({ handleModalCloser }: CartModalProps) => {
               <p className="h6 font-bold">$ 5,396</p>
             </div>
             <Link href="/checkout">
-            <Button className="w-full">Checkout</Button>
+              <Button className="w-full">Checkout</Button>
             </Link>
           </div>
         </div>

@@ -1,33 +1,31 @@
-import myAccount from "@/assets/user.png";
-import myOrders from "@/assets/svg/order.svg";
-import whitelist from "@/assets/svg/lucide_star.svg";
-
+import MyAccount from "@/assets/svg/userOriginal.svg?react";
+import MyOrders from "@/assets/svg/order.svg?react";
+import Whitelist from "@/assets/svg/lucide_star.svg?react";
 
 interface AccountModalData {
-    title: string;
-    imgSrc: string;
-    href: string;
-    alt: string;
+  title: string;
+  imgSrc: React.ComponentType;
+  href: string;
+  alt: string;
 }
 
-
 export const accountModalData: AccountModalData[] = [
-    {
-        title: "my account",
-        imgSrc: myAccount,
-        href: "/my-account",
-        alt: "Sign up",
-    },
-    {
-        title: "my orders",
-        imgSrc: myOrders,
-            href: "/my-orders",
-        alt: "Login",
-    },
-    {
-        title: "whitelist",
-        imgSrc: whitelist,
-        href: "/whitelist",
-        alt: "Forgot Password",
-    }
-]
+  {
+    title: "my account",
+    imgSrc: MyAccount,
+    href: "/my-account",
+    alt: "Sign up",
+  },
+  {
+    title: "my orders",
+    imgSrc: MyOrders,
+    href: "/my-orders",
+    alt: "Login",
+  },
+  {
+    title: "whitelist",
+    imgSrc: Whitelist,
+    href: "/whitelist",
+    alt: "Forgot Password",
+  },
+];

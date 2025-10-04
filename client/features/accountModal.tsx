@@ -4,14 +4,17 @@ import { accountModalData } from "@/constants/data";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-const AccountModal = ({onClose}: {onClose: () => void}) => {
+const AccountModal = ({ onClose }: { onClose: () => void }) => {
   const modalRef = useRef(null);
   const router = useRouter();
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !(modalRef.current as HTMLElement).contains(event.target as Node)) {
+      if (
+        modalRef.current &&
+        !(modalRef.current as HTMLElement).contains(event.target as Node)
+      ) {
         onClose?.();
       }
     };
@@ -30,18 +33,23 @@ const AccountModal = ({onClose}: {onClose: () => void}) => {
         </Button>
       </div>
       <div className="w-full flex flex-col ">
-        {accountModalData.map((item, index) => (
-          <div
+        {accountModalData.map((item, index) => {
+          const Icon = item.imgSrc;
+          return(
+            <div
             key={index}
             className="w-full flex items-center gap-2 p-4 cursor-pointer"
             onClick={() => router.push(item.href)}
           >
-            <Image src={item.imgSrc} alt={item.alt} width={20} height={20} />
+            <Icon />
             <p className=" capitalize text-black text-[16px] font-semibold ">
               {item.title}
             </p>
           </div>
-        ))}
+          )
+        }
+        
+        )}
       </div>
     </div>
   );
