@@ -1,4 +1,4 @@
-// File: C:\Users\USER\Documents\collaboration\audiophile\client\app\layout.tsx
+// File: /Users/mac/Projects/others/audiophile/client/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
