@@ -1,0 +1,58 @@
+[33mcommit 7f1472bded31445555234c143859e8a318516e1a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mtonysBranch[m[33m, [m[1;31morigin/tonysBranch[m[33m)[m
+Author: nduaguba chiemezie anthony <anthonynduaguba123@gmail.com>
+Date:   Sat Oct 4 23:18:39 2025 +0100
+
+    wip
+
+A	client/.next/cache/images/-jLsASaQAvNSI0Z9Vh5EgCv0KH8v1bEQEySLciizdOc/60.1757687867196.0Sbskdfp8Ve4DdYG_Hge2JTtucouZ_u579vW-Tag4EU.Vy8iM2JmMi0xOTkzZTViNDljMyI.webp
+A	client/.next/cache/images/1kyDMwEwX96dy76qUIyaJ1WrkR4ZZ_mGIxKn37WiI-k/60.1756988768591.y4Ux-4GZLdTEr6tyxpaTMaCmqHOBvN3irBKYyREN8XA.Vy8iOTY1NzgtMTk5MTI5ODRhM2Yi.webp
+A	client/.next/cache/images/37be15zBQh0KCdwzFlAWXGwAMaGcWUfjcMxZS60AXe4/60.1757687867605.s9jCa_rol6FSQg3CJgRRpONAaRK7umYGY-4K0GmQpM8.Vy8iMzk0MzEtMTk5M2U1YjQ5YzMi.webp
+A	client/.next/cache/images/4Pxd13uKKqmGZkSf8gMcZpaURoyTcysudtvIZu36Bt8/60.1757064800722.ITickJz9NtBFshly0oZ48dNc93NYa7PyBf1ircgZE5I.Vy8iOTY1NzgtMTk5MTkzN2UxNmMi.webp
+A	client/.next/cache/images/5OGKT5BTPbTRKj9j4UVoqENS2c65MLzxS6QiyUXewUI/60.1757071645143.J4lcqMw1GgZQqezdc5aL1M0V-D5MA6SLoOfPoOkcxtA.Vy8iMTg5ODZkLTE5OTE5MzdlMGU4Ig.webp
+A	client/.next/cache/images/Dm8Tq8LiOdb47SxJl0xoEkF_DFBMtAbTHVoIO5UX8LE/60.1757064800653.slU5quPbmWddudfJFZxXazimC5J5-ZI7nF3HAmyZW7k.Vy8iMjg5Y2QtMTk5MTkzN2UwZTMi.webp
+A	client/.next/cache/images/HAiw1YB81SMlGd-w6GG-xfRjUauSZHiW6VMf1n0_KhY/60.1757071645145.JukKrrQcR3fVmUpk5pO1ujgtSXYYDx4IviKrDs3Y8I4.Vy8iMTBhNjFjLTE5OTE5MzdlMGU5Ig.webp
+A	client/.next/cache/images/L7yzKv4GWM_yL6gSDlMGXCwDz3acwW3yx0YT7ZSFkrE/60.1756988768594.ktn2VSpj6dEK9fpTOtRcCP4dTEosbMPZmQY8vqcwx-Q.Vy8iMjg5Y2QtMTk5MTI5MDU2MTEi.webp
+A	client/.next/cache/images/OFjIdNlrgUnsftvwjI7wJBtIEn9cgDz5KODnCZkAat8/60.1757687868428.cMgsbkIFwVSG2Nyo8dhUj0Mpvw8Wf6LRxScY4jUxoKY.Vy8iMTg5ODZkLTE5OTNlNWI0OWM1Ig.webp
+A	client/.next/cache/images/QzoHXFcfmN4pULchpsTiR2mmoGknokLzyw-M1hsj730/60.1757064800735.971Nqk_BE2H5_wZ4i8AM7Xm5KztKgTXhB4e7yjYSjb0.Vy8iZjUwNWUtMTk5MTkzN2UxNmMi.webp
+A	client/.next/cache/images/WgPcMf6E5qgFZgWwCLN0ghuAPpE-Qbj2oDQR5M4uoJ4/60.1756988766449.3-8vhNpLNtJbpcNUm060m1u3IYOjnQ2B5WwryjaISsc.Vy8iZjUwNWUtMTk5MTI5ODRhNDAi.webp
+A	client/.next/cache/images/_7OtqyJ3LuwwOn4DMPSiNUqil_12Uc5HvsKwpc_JAeo/60.1757687868251.nXiDMtKqrMPyuKAaXutJK8smD8AxCDwtF30Ard79EiY.Vy8iMTBhNjFjLTE5OTNlNWI0OWM3Ig.webp
+A	client/.next/cache/images/cJsg3HeQGRnr3VwN3w8LI7YGPyhtauLakD0tAob2BMU/60.1757687869653.QHvKnPN-UPmSeTvY-4pr1w_B68GRymOhyHp5n2nGg3U.Vy8iMTE2NmViLTE5OTNlNWI0OWMyIg.webp
+A	client/.next/cache/images/d7dQOdrU4uD2oy_mB3nZNDovwWt--wy6o7xZvF2u_1o/60.1757071647165.UT9LiukVTkFqHAP7qZ3wGwVwPB_ATVofUWOYRNnjD4A.Vy8iMTE2NmViLTE5OTE5MzdlMGUyIg.webp
+A	client/.next/cache/images/dd_aMyi0MJ-Sh5OH-O_O7C2akM45n7dJIAFNp7jJiNo/60.1757687867897.CtfhgY-gMCMgNI2NebqQ-hO5iWQr0mKf3M50nql0CEk.Vy8iMTYwNGJiLTE5OTNlNWI0OWM2Ig.webp
+A	client/.next/cache/images/m7QVADOz9Cj92KelNHd8s65OIgF0FGuHaQc3xKZfQf4/60.1757071643845.VQJPER6XGS0-3Ix3xbWh8bf7HCKWNDlgMhVkYsr22X4.Vy8iMzk0MzEtMTk5MTkzN2UwZTIi.webp
+A	client/.next/cache/images/rUKJHvg_gdcpPfCwcg4VWqJ8zbRq-bQezOK1xjiAnyU/60.1757071643160.0Sbskdfp8Ve4DdYG_Hge2JTtucouZ_u579vW-Tag4EU.Vy8iM2JmMi0xOTkxOTM3ZTBlMyI.webp
+A	client/.next/cache/images/vR85sYa-LuHF_DKj26Vi0efJVP6H6FEGVjfBuVTQqls/60.1757071644493.jztg8-OSicfXXxMfpsRnSlk7iOJYTBPSMBqnsNVS1fI.Vy8iMTYwNGJiLTE5OTE5MzdlMGU5Ig.webp
+A	client/.next/server/app/complete-profile/page.js
+A	client/.next/server/app/complete-profile/page_client-reference-manifest.js
+A	client/.next/server/app/signup/page.js
+A	client/.next/server/app/signup/page_client-reference-manifest.js
+A	client/.next/server/app/verify-email/page.js
+A	client/.next/server/app/verify-email/page_client-reference-manifest.js
+A	client/.next/server/vendor-chunks/@hookform.js
+A	client/.next/server/vendor-chunks/@reduxjs.js
+A	client/.next/server/vendor-chunks/immer.js
+A	client/.next/server/vendor-chunks/property-expr.js
+A	client/.next/server/vendor-chunks/react-hook-form.js
+A	client/.next/server/vendor-chunks/react-redux.js
+A	client/.next/server/vendor-chunks/react-toastify.js
+A	client/.next/server/vendor-chunks/redux-thunk.js
+A	client/.next/server/vendor-chunks/redux.js
+A	client/.next/server/vendor-chunks/reselect.js
+A	client/.next/server/vendor-chunks/tiny-case.js
+A	client/.next/server/vendor-chunks/toposort.js
+A	client/.next/server/vendor-chunks/use-sync-external-store.js
+A	client/.next/server/vendor-chunks/yup.js
+A	client/.next/static/chunks/app/complete-profile/page.js
+A	client/.next/static/chunks/app/signup/page.js
+A	client/.next/static/chunks/app/verify-email/page.js
+A	client/.next/static/media/Headphones3.8cb10f71.png
+A	client/.next/static/media/Headphones4.d9ba8b17.png
+A	client/.next/static/webpack/0e0d6b853f6edb27.webpack.hot-update.json
+A	client/.next/static/webpack/2adcdebc354e2a4b.webpack.hot-update.json
+A	client/.next/static/webpack/d8be4d72230ce2c5.webpack.hot-update.json
+A	client/.next/static/webpack/webpack.0e0d6b853f6edb27.hot-update.js
+A	client/.next/static/webpack/webpack.2adcdebc354e2a4b.hot-update.js
+A	client/.next/static/webpack/webpack.d8be4d72230ce2c5.hot-update.js
+A	client/.next/types/app/complete-profile/page.ts
+A	client/.next/types/app/signup/page.ts
+A	client/.next/types/app/verify-email/page.ts
