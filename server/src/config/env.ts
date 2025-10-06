@@ -9,3 +9,5 @@ const envSchema = z.object({
 });
 
 export const ENV = envSchema.parse(process.env);
+
+console.log("Loaded env:", process.env.JWT_SECRET_KEY, process.env.JWT_EXPIRE_TIME);
