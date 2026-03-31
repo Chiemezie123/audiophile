@@ -5,21 +5,23 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-[13.322px] whitespace-nowrap w-fit transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 ",
+  "inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-full transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-warm-orange-brown text-xs uppercase leading-normal font-bold text-white hover:bg-peachy-orange",
+          "bg-[#d87d4a] text-xs font-bold uppercase leading-normal tracking-[0.24em] text-white shadow-[0_14px_32px_rgba(216,125,74,0.24)] hover:bg-[#f0a57b]",
         secondary:
-          "bg-transparent text-xs uppercase font-bold leading-normal text-black border shadow-xs hover:bg-black hover:text-white ",
+          "border border-black/14 bg-transparent text-xs font-bold uppercase leading-normal tracking-[0.24em] text-black hover:border-[#15161a] hover:bg-[#15161a] hover:text-white",
+        outline:
+          "border border-black/14 bg-transparent text-xs font-bold uppercase leading-normal tracking-[0.24em] text-black hover:border-[#15161a] hover:bg-[#15161a] hover:text-white",
         tertiary:
-          "text-black uppercase font-bold bg-transparent  leading-normal hover:bg-accent hover:text-warm-orange-brown opacity-50 ",
-          quaternary:
-          "bg-black text-white text-xs uppercase font-bold leading-normal hover:bg-[#4C4C4C] border"
+          "bg-transparent text-xs font-bold uppercase leading-normal tracking-[0.24em] text-black/55 hover:text-[#d87d4a]",
+        quaternary:
+          "border border-black/8 bg-[#15161a] text-xs font-bold uppercase leading-normal tracking-[0.24em] text-white hover:bg-[#2b2e36]",
       },
       size: {
-        default: "h-12 px-[31.5px] py-[15px]",
+        default: "h-12 px-6 py-3",
         sm: "h-[18px]",
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
         icon: "size-9",

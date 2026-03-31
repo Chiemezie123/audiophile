@@ -46,6 +46,9 @@ const userSlice = createSlice({
         state.isEmailVerified = action.payload.isEmailVerified;
       if (action.payload.role !== undefined) state.role = action.payload.role;
     },
+
+
+
     clearUser: (state) => {
       state.id = "";
       state.firstName = "";
@@ -57,15 +60,26 @@ const userSlice = createSlice({
       state.role = "";
       state.error = null;
     },
+
+
+
+
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
+
+
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
+
+
     clearError: (state) => {
       state.error = null;
     },
+
+
+    
     updateUserProfile: (
       state,
       action: PayloadAction<
@@ -91,4 +105,6 @@ export const {
   clearError,
   updateUserProfile,
 } = userSlice.actions;
+
+
 export default userSlice.reducer;

@@ -42,6 +42,13 @@ export const requestOtp = catchAsync(
   }
 );
 
+
+
+
+
+
+
+
 export const verifyOtp = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, otp } = req.body;
@@ -49,7 +56,7 @@ export const verifyOtp = catchAsync(
     const record = await Otp.findOne({ email }).sort({ createdAt: -1 });
     if (!record) return res.status(400).json({ error: "OTP not found" });
 
-    const isValid = await bcrypt.compare(otp, record.otp);
+    const isValid = await bcrypt.compare(otp, record.otp || '');
     console.log(isValid, "isValid");
     if (!isValid || record.expiresAt < Date.now()) {
       return res.status(400).json({ error: "Invalid or expired OTP" });
@@ -60,13 +67,23 @@ export const verifyOtp = catchAsync(
   }
 );
 
+
+
+
+
+
 export const setPassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, confirmPassword } = req.body;
 
+    if(password !== confirmPassword){
+      return res.status(400).json({ error: "Password and confirm password do not match" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
 
     let user = await User.findOne({ email });
+
     if (!user) {
       user = await User.create({
         email,
@@ -84,6 +101,11 @@ export const setPassword = catchAsync(
   }
 );
 
+
+
+
+
+
 export const completeProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { firstName, lastName, dob } = req.body;
@@ -97,6 +119,10 @@ export const completeProfile = catchAsync(
     sendTokenGenerated(user, 201, res);
   }
 );
+
+
+
+
 
 export const login = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -128,6 +154,10 @@ export const login = catchAsync(
   }
 );
 
+
+
+
+
 export const logOut = (req: Request, res: Response, next: NextFunction) => {
   const cookieOptions = {
     expires: new Date(Date.now() + 10 * 1000),
@@ -141,6 +171,10 @@ export const logOut = (req: Request, res: Response, next: NextFunction) => {
     message: "successfully, user logged out",
   });
 };
+
+
+
+
 
 export const protect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -193,6 +227,10 @@ export const protect = catchAsync(
   }
 );
 
+
+
+
+
 export const isLoggedIn = async (
   req: Request,
   res: Response,
@@ -231,6 +269,11 @@ export const isLoggedIn = async (
   }
 };
 
+
+
+
+
+
 export const restriction = (...roles) => {
   return (req, res, next) => {
     //['admin', 'lead-guide] role = 'user'
@@ -246,6 +289,10 @@ export const restriction = (...roles) => {
     next();
   };
 };
+
+
+
+
 
 export const forgotPasswords = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -290,6 +337,11 @@ export const forgotPasswords = catchAsync(
     }
   }
 );
+
+
+
+
+
 
 export const resetPassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -375,10 +427,15 @@ export const updatePassword = catchAsync(
   }
 );
 
+
+
 // Google OAuth routes
 export const googleAuth = passport.authenticate("google", {
   scope: ["profile", "email"],
 });
+
+
+
 
 export const googleCallback = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -442,6 +499,9 @@ export const googleCallback = catchAsync(
     )(req, res, next);
   }
 );
+
+
+
 
 // Check if user exists (for OAuth flow)
 export const checkUserExists = catchAsync(

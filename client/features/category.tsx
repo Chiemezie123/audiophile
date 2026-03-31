@@ -1,116 +1,89 @@
-"use client";
-
-import React from "react";
-import Header from "@/features/Header";
-import { Button } from "@/components/ui/button";
-import useScreenSize from "@/hooks/useScreenSize";
 import Image from "next/image";
+
 import CategoryCard from "@/components/ui/CategoryCard";
-import Headphones2 from "@/assets/Headphones 2.png";
-import Earphones from "@/assets/Earphones.png";
-import Speakers2 from "@/assets/Speakers2.png";
+import ProductCard from "@/components/ui/ProductCard";
 import ActionCard from "./ActionCard";
 import Footer from "./Footer";
-import Link from "next/link";
+import Header from "./Header";
+import {
+  type CategorySlug,
+  categoryMeta,
+  getCategoryProducts,
+  homeCategoryCards,
+} from "@/lib/catalog";
 
 type CategoryProps = {
-  categoryTitle: string;
-  items: Array<{
-    id: number;
-    image: string;
-    alt: string;
-    smallWidth: number;
-    width?: number;
-    smallHeight: number;
-    height?: number;
-    title: string;
-    description: string;
-    isReversed: boolean;
-    isNewProduct?: boolean;
-    page?: string;
-  }>;
+  category: CategorySlug;
 };
 
-const Category = ({ categoryTitle, items }: CategoryProps) => {
-  const screen = useScreenSize();
+const Category = ({ category }: CategoryProps) => {
+  const meta = categoryMeta[category];
+  const products = getCategoryProducts(category) ?? [];
+
   return (
-    <div>
-      <section className="xs:h-[192px] lg:h-[336px] bg-[#141414]">
-        <Header />
-        <div className="flex justify-center items-center xs:h-[102px] lg:h-[239px]">
-          <h1 className="text-white xs:h4 lg:h2 uppercase font-Bold">
-            {categoryTitle}
-          </h1>
-        </div>
-      </section>
+    <div className="min-h-screen bg-[#f7f4ef] text-[#131418]">
+      <Header />
 
-      <section>
-        <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] w-full mx-auto flex flex-col xs:gap-30 lg:gap-40 xs:my-16 lg:my-40">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className={`flex lg:flex-row ${
-                item.isReversed ? "lg:flex-row-reverse" : ""
-              } xs:flex-col items-center lg:justify-between md:justify-center h-full w-full gap-13`}
-            >
-              <div className="bg-[#F1F1F1] flex items-center justify-center xs:p-8 lg:p-25 md:p-15 rounded-[8px] relative  w-full h-[352px] lg:w-[540px] lg:h-[560px]">
-                <div className="flex flex-col justify-center gap-8 relative z-10">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    width={screen === "large" ? item.width : item.smallWidth}
-                    height={screen === "large" ? item.height : item.smallHeight}
-                  />
-                </div>
-                <div className="absolute bottom-[81px] lg:left-[138px] rounded-[262px] blur-2xl bg-[rgba(0,0,0,0.5)] xs:w-[165px] lg:w-[262px] xs:h-[35px] lg:h-[56px] border border-red-500" />
-              </div>
-              <div className="md:w-[572px] lg:w-[445px] flex flex-col gap-6 lg:text-left xs:text-center md:text-center xs:items-center md:items-center lg:items-start">
-                <h6 className="text-sm text-black opacity-49 tracking-[10px]">
-                  {item.isNewProduct && (
-                    <span className="text-sm text-[#D87D4A] tracking-[10px]">
-                      NEW PRODUCT
-                    </span>
-                  )}
-                </h6>
-                <h1 className=" font-bold xs:h4 md:xs:h2 text-black uppercase">
-                  {item.title}
-                </h1>
-                <p className="text-sm text-black opacity-50 mt-4">
-                  {item.description}
-                </p>
-                <Link href={`/product-detail/${item.page}`}>
-                  <Button>See Product</Button>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <section className="border-b border-black/6 bg-[#111215] text-white">
+        <div className="mx-auto grid max-w-[1180px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_24rem] lg:px-8 lg:py-24">
+          <div className="max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#d9a07d]">
+              Category
+            </p>
+            <h1 className="mt-5 text-4xl font-black uppercase tracking-[0.08em] sm:text-5xl">
+              {meta.name}
+            </h1>
+            <p className="mt-5 text-sm leading-7 text-white/70 sm:text-base">
+              {meta.headline}
+            </p>
+            <p className="mt-4 max-w-xl text-sm leading-7 text-white/55">
+              {meta.description}
+            </p>
+          </div>
 
-      <section className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] mx-auto xs:mt-[40px] mb-[120px] md:mt-[96.5px] lg:mt-[128px] md:mb-[96px] lg:mb-[168px] relativ">
-        <div className="flex items-center relativ">
-          <div className="flex xs:flex-col md:flex-row md:gap-[10px] lg:gap-[30px] text-center items-center w-full relative">
-            <CategoryCard
-              image={Headphones2.src}
-              alt="Headphones"
-              title="HEADPHONES"
-              imageClassName="xs:w-[80px] xs:h-[104px] lg:w-[123px] lg:h-[160px] lg:bottom-30"
-            />
-            <CategoryCard
-              image={Speakers2.src}
-              alt="Speakers"
-              title="SPEAKERS"
-              imageClassName="xs:w-[84px] xs:h-[104px] lg:h-[146px] lg:w-[121px] "
-            />
-            <CategoryCard
-              image={Earphones.src}
-              alt="Earphones"
-              title="EARPHONES"
-              imageClassName="xs:w-[103px] xs:h-[104px] lg:h-[126px] lg:w-[123px] "
+          <div className="relative flex min-h-[16rem] items-center justify-center rounded-[2rem] border border-white/10 bg-white/6 p-8">
+            <div className="absolute inset-x-10 top-10 h-24 rounded-full bg-[#d87d4a]/20 blur-3xl" />
+            <Image
+              src={meta.heroImage}
+              alt={meta.name}
+              className="relative max-h-72 w-auto object-contain drop-shadow-[0_28px_32px_rgba(0,0,0,0.28)]"
             />
           </div>
         </div>
       </section>
+
+      <main className="mx-auto max-w-[1180px] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </section>
+
+        <section className="mt-20">
+          <div className="mb-8 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-black/38">
+                Browse next
+              </p>
+              <h2 className="mt-3 text-2xl font-black uppercase tracking-[0.08em]">
+                Explore more categories
+              </h2>
+            </div>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {homeCategoryCards.map((card) => (
+              <CategoryCard
+                key={card.category}
+                image={card.image}
+                label={card.label}
+                href={`/categories/${card.category}`}
+                eyebrow={card.category === category ? "Current focus" : "Browse category"}
+              />
+            ))}
+          </div>
+        </section>
+      </main>
 
       <ActionCard />
       <Footer />

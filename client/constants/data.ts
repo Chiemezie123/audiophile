@@ -1,6 +1,4 @@
-import MyAccount from "@/assets/svg/userOriginal.svg?react";
-import MyOrders from "@/assets/svg/order.svg?react";
-import Whitelist from "@/assets/svg/lucide_star.svg?react";
+import { Heart, Package2, UserRound } from "lucide-react";
 
 interface AccountModalData {
   title: string;
@@ -12,20 +10,20 @@ interface AccountModalData {
 export const accountModalData: AccountModalData[] = [
   {
     title: "my account",
-    imgSrc: MyAccount,
+    imgSrc: UserRound,
     href: "/my-account",
     alt: "Sign up",
   },
   {
     title: "my orders",
-    imgSrc: MyOrders,
+    imgSrc: Package2,
     href: "/my-orders",
     alt: "Login",
   },
   {
-    title: "whitelist",
-    imgSrc: Whitelist,
-    href: "/whitelist",
+    title: "wishlist",
+    imgSrc: Heart,
+    href: "/wishlist",
     alt: "Forgot Password",
   },
 ];

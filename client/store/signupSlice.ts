@@ -47,6 +47,7 @@ const signupSlice = createSlice({
       state.currentStep = action.payload;
     },
 
+
     nextStep: (state) => {
       const steps = Object.values(SignupStep);
       const currentIndex = steps.indexOf(state.currentStep);
@@ -54,6 +55,8 @@ const signupSlice = createSlice({
         state.currentStep = steps[currentIndex + 1];
       }
     },
+
+
     previousStep: (state) => {
       const steps = Object.values(SignupStep);
       const currentIndex = steps.indexOf(state.currentStep);
@@ -62,13 +65,23 @@ const signupSlice = createSlice({
       }
     },
 
+
+
+
+
     // Data management
     setSignupData: (state, action: PayloadAction<Partial<SignupData>>) => {
       state.signupData = { ...state.signupData, ...action.payload };
     },
+
+
+
     setEmail: (state, action: PayloadAction<string>) => {
       state.signupData.email = action.payload;
     },
+
+
+
     setPassword: (
       state,
       action: PayloadAction<{ password: string; confirmPassword: string }>
@@ -76,6 +89,9 @@ const signupSlice = createSlice({
       state.signupData.password = action.payload.password;
       state.signupData.confirmPassword = action.payload.confirmPassword;
     },
+
+
+
     setPersonalInfo: (
       state,
       action: PayloadAction<{ firstName: string; lastName: string }>
@@ -84,13 +100,20 @@ const signupSlice = createSlice({
       state.signupData.lastName = action.payload.lastName;
     },
 
+
+
+
     // OTP management
     setOtp: (state, action: PayloadAction<string>) => {
       state.otp = action.payload;
     },
+
+
     setOtpSent: (state, action: PayloadAction<boolean>) => {
       state.otpSent = action.payload;
     },
+
+
     setOtpVerified: (state, action: PayloadAction<boolean>) => {
       state.otpVerified = action.payload;
       if (action.payload) {
@@ -98,30 +121,43 @@ const signupSlice = createSlice({
       }
     },
 
+
+
     // Email verification
     setEmailVerified: (state, action: PayloadAction<boolean>) => {
       state.isEmailVerified = action.payload;
     },
 
+
+
     // Loading and error states
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
+
+
+
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
       if (action.payload) {
         state.loading = false;
       }
     },
+
+
     clearError: (state) => {
       state.error = null;
     },
+
+
 
     // Reset signup process
     resetSignup: (state) => {
       return initialState;
     },
 
+
+    
     // Complete signup
     completeSignup: (state) => {
       state.currentStep = SignupStep.COMPLETED;

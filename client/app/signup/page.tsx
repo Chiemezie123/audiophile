@@ -20,6 +20,19 @@ import {
 } from "@/store/signupSlice";
 import { setUser } from "@/store/userSlice";
 
+
+
+
+interface EmailFormData {
+  email: string;
+}
+
+interface PasswordFormData {
+  password: string;
+  confirmPassword: string;
+}
+
+
 // Validation schemas for different steps
 const emailValidationSchema = yup.object().shape({
   email: yup
@@ -43,26 +56,16 @@ const passwordValidationSchema = yup.object().shape({
     .oneOf([yup.ref("password")], "Password must correlate"),
 });
 
-interface EmailFormData {
-  email: string;
-}
 
-interface PasswordFormData {
-  password: string;
-  confirmPassword: string;
-}
 
 const Page = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { currentStep, signupData, loading, error, otpVerified } =
-    useAppSelector((state) => state.signup);
+  const { currentStep, signupData, loading, error, otpVerified } = useAppSelector((state) => state.signup);
 
   // Determine which form to show based on current step and OTP verification
   const isEmailStep = currentStep === SignupStep.EMAIL_INPUT;
-  const isPasswordStep =
-    currentStep === SignupStep.PASSWORD_INPUT ||
-    (currentStep === SignupStep.EMAIL_INPUT && otpVerified);
+  const isPasswordStep = currentStep === SignupStep.PASSWORD_INPUT || (currentStep === SignupStep.EMAIL_INPUT && otpVerified);
 
   // Email form setup
   const emailForm = useForm<EmailFormData>({
@@ -81,6 +84,12 @@ const Page = () => {
     },
   });
 
+
+
+
+
+
+
   // Check if user came back from email verification
   useEffect(() => {
     if (otpVerified && currentStep === SignupStep.EMAIL_INPUT) {
@@ -88,10 +97,26 @@ const Page = () => {
     }
   }, [otpVerified, currentStep, dispatch]);
 
+
+
+
+
+
+
+
   // Handle invalid form submission (validation errors)
   const onInvalidSubmit = (errors: any) => {
     toastUtils.validationErrors(errors);
   };
+
+
+
+
+
+
+
+
+
 
   // Email submission handler
   const onEmailSubmit = async (data: EmailFormData) => {
@@ -106,7 +131,7 @@ const Page = () => {
 
       // Send OTP to email
       const response = await fetch(
-        "http://127.0.0.1:4000/api/v1/auth/request-otp",
+        "/api/v1/auth/request-otp",
         {
           method: "POST",
           headers: {
@@ -124,15 +149,16 @@ const Page = () => {
         dispatch(setOtpSent(true));
         toastUtils.updateLoading(
           loadingToast,
-          "📧 Verification code sent to your email!",
+          result.devOtp
+            ? `📧 Verification code sent. Dev OTP: ${result.devOtp}`
+            : "📧 Verification code sent to your email!",
           "success"
         );
-
         // Redirect to email verification page
         router.push("/verify-email");
+
       } else {
-        const errorMessage =
-          result.message || "Failed to send verification code.";
+        const errorMessage = result.message || "Failed to send verification code.";
         dispatch(setError(errorMessage));
         toastUtils.updateLoading(loadingToast, `❌ ${errorMessage}`, "error");
       }
@@ -147,6 +173,14 @@ const Page = () => {
     }
   };
 
+
+
+
+
+
+
+
+
   // Password submission handler
   const onPasswordSubmit = async (data: PasswordFormData) => {
     dispatch(setLoading(true));
@@ -160,12 +194,13 @@ const Page = () => {
 
       // Create account with email and password
       const response = await fetch(
-        "http://127.0.0.1:4000/api/v1/auth/set-password",
+        "/api/v1/auth/set-password",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({
             email: signupData.email,
             password: data.password,
@@ -178,8 +213,6 @@ const Page = () => {
 
       if (response.ok) {
         console.log("Account created successfully:", result);
-
-        // Store user data in Redux store (handles partial user data)
         if (result.user) {
           const userData = {
             id: result.user._id || result.user.id,
@@ -196,7 +229,7 @@ const Page = () => {
 
         toastUtils.updateLoading(
           loadingToast,
-          "🎉 Account created successfully! Welcome to Audiophile!",
+          "🎉 Account created successfully! Welcome to FuzzyBeats!",
           "success"
         );
 
@@ -204,8 +237,7 @@ const Page = () => {
         dispatch(setCurrentStep(SignupStep.PROFILE_COMPLETION));
 
         // Check if user needs to complete profile (missing firstName or lastName)
-        const needsProfileCompletion =
-          !result.user?.firstName || !result.user?.lastName;
+        const needsProfileCompletion = !result.user?.firstName || !result.user?.lastName;
 
         if (needsProfileCompletion) {
           // Redirect to profile completion page
@@ -234,6 +266,17 @@ const Page = () => {
       dispatch(setLoading(false));
     }
   };
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div>
       {/* Email Step */}

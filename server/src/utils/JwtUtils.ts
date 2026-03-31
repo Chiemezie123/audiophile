@@ -27,11 +27,12 @@ export const sendTokenGenerated = (
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
+  console.log(token, 'token is here')
   res.cookie("jwt", token, {
-    httpOnly: true,
+    // httpOnly: true,
     secure: false,
-    domain: "localhost",
     path: "/",
+    sameSite: "none",
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 

@@ -1,7 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import LogoIcon from "@/assets/svg/Logo.svg";
 import { Button } from "@/components/ui/button";
 import OtpInput from "@/components/ui/otpInput";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -25,6 +23,11 @@ const page = () => {
 
   const [otpValue, setOtpValue] = useState("");
 
+
+
+
+
+
   // Redirect if no email in signup data
   useEffect(() => {
     if (!signupData.email || !otpSent) {
@@ -32,10 +35,18 @@ const page = () => {
     }
   }, [signupData.email, otpSent, router]);
 
+
+
+
+
+
   const handleOtpChange = (value: string) => {
     setOtpValue(value);
     dispatch(setOtp(value));
   };
+
+
+
 
   const handleVerifyEmail = async () => {
     if (!otpValue || otpValue.length !== 6) {
@@ -50,7 +61,7 @@ const page = () => {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:4000/api/v1/auth/verify-otp",
+        "/api/v1/auth/verify-otp",
         {
           method: "POST",
           headers: {
@@ -96,6 +107,9 @@ const page = () => {
     }
   };
 
+
+
+
   const handleResendOtp = async () => {
     dispatch(setLoading(true));
     dispatch(clearError());
@@ -104,7 +118,7 @@ const page = () => {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:4000/api/v1/auth/request-otp",
+        "/api/v1/auth/request-otp",
         {
           method: "POST",
           headers: {
@@ -119,11 +133,19 @@ const page = () => {
       const result = await response.json();
 
       if (response.ok) {
+        if (result.devOtp) {
+          toastUtils.updateLoading(
+            loadingToast,
+            `📧 Verification code sent again. Dev OTP: ${result.devOtp}`,
+            "success"
+          );
+        } else {
         toastUtils.updateLoading(
           loadingToast,
           "📧 Verification code sent again!",
           "success"
         );
+        }
         setOtpValue(""); // Clear current OTP input
         dispatch(setOtp(""));
       } else {
@@ -143,6 +165,8 @@ const page = () => {
     }
   };
 
+
+
   if (!signupData.email) {
     return null; // Will redirect to signup
   }
@@ -151,7 +175,13 @@ const page = () => {
     <div>
       <div className="flex flex-col justify-center items-center">
         <div className="w-full py-[74.5px] pl-[104px]">
-          <Image src={LogoIcon} alt="Logo" width={143} height={25} />
+          <button
+            type="button"
+            onClick={() => router.push("/")}
+            className="inline-flex text-xl font-black uppercase tracking-[0.28em] text-[#111215]"
+          >
+            FuzzyBeats
+          </button>
         </div>
         <div className="p-4 w-[543px] flex flex-col gap-[22px]">
           <div className="flex flex-col gap-2">

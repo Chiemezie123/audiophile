@@ -25,7 +25,7 @@ export interface InputProps<T extends FieldValues = FieldValues>
   max?: number | string;
   min?: number | string;
   register?: UseFormRegister<T>;
-  name: Path<T>;
+  name?: Path<T>;
 }
 
 function Input<T extends FieldValues = FieldValues>({
@@ -51,6 +51,7 @@ function Input<T extends FieldValues = FieldValues>({
   ...props
 }: InputProps<T>) {
   const [isValid, setIsValid] = useState({});
+  const inputId = name ?? label ?? placeholder ?? "input-field";
 
   return (
     <div className="group flex flex-col gap-[9px] w-full items-start">
@@ -60,7 +61,7 @@ function Input<T extends FieldValues = FieldValues>({
             "text-[12px] text-black font-bold tracking-[-0.214px]  w-fit first-letter:capitalize",
             labelCustomClassName
           )}
-          htmlFor={name}
+          htmlFor={inputId}
         >
           {label}
         </label>
@@ -75,7 +76,7 @@ function Input<T extends FieldValues = FieldValues>({
 
         <input
           type={type}
-          id={name}
+          id={inputId}
           placeholder={placeholder}
           data-slot="input"
           max={max}
@@ -90,7 +91,7 @@ function Input<T extends FieldValues = FieldValues>({
             leftIcon && "pl-10",
             rightIcon && "pr-10"
           )}
-          {...(register ? register(name) : {})}
+          {...(register && name ? register(name) : {})}
           {...props}
         />
         {rightIcon && (

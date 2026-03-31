@@ -108,7 +108,7 @@ export const toastUtils = {
 
   // Account created success
   accountCreated: () => {
-    toast.success("🎉 Account created successfully! Welcome to Audiophile!", {
+    toast.success("🎉 Account created successfully! Welcome to FuzzyBeats!", {
       ...defaultToastConfig,
       autoClose: 6000,
     });

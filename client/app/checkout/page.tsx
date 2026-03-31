@@ -1,52 +1,70 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import RadioButton from "@/components/ui/radioButton";
 import { Input } from "@/components/ui/textIpnut";
 import Footer from "@/features/Footer";
 import Header from "@/features/Header";
-import Headphones3 from "@/assets/Headphones3.png";
-import Headphones4 from "@/assets/Headphones4.png";
-import Earphones from "@/assets/Earphones.png";
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import CheckoutModal from "@/components/ui/CheckoutModal";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { clearCart } from "@/store/cartSlice";
+import { getCartProducts } from "@/lib/cart";
+import { useAuth } from "@/contexts/AuthContext";
 
-const page = () => {
-    const [modalOpen, setModalOpen] = useState(false);
-    
-      const handleModalOpener = () => {
-        setModalOpen(true);
-      };
-    
-      const handleModalCloser = () => {
-        setModalOpen(false);
-      };
+const SHIPPING_COST = 50;
+
+const Page = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { isAuthenticated } = useAuth();
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const items = useMemo(() => getCartProducts(cartItems), [cartItems]);
+  const subtotal = items.reduce((sum, item) => sum + item.lineTotal, 0);
+  const vat = Math.round(subtotal * 0.2);
+  const grandTotal = subtotal + SHIPPING_COST;
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace("/signup");
+    }
+  }, [isAuthenticated, router]);
 
   return (
     <div className="bg-[#F1F1F1]">
       <Header />
-      <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] mx-auto md:mt-[33px] xs:mt-4 xs:mb-6 lg:mt-20 lg:mb-14">
-        <button className="text-sm opacity-50">Go Back</button>
+      <div className="mx-auto mb-6 mt-4 max-w-[1110px] px-4 lg:mb-14 lg:mt-20">
+        <button
+          type="button"
+          className="text-sm opacity-50"
+          onClick={() => router.back()}
+        >
+          Go Back
+        </button>
       </div>
 
-      <div className="xs:max-w-[327px] md:max-w-[689px] lg:max-w-[1110px] mx-auto">
-        <div className="flex xs:flex-col lg:flex-row gap-7.5">
-          <div className="xs:w-full lg:w-[730px] h-[1126px md:mb-0 lg:mb-[141px] bg-[#FFFFFF] pt-14 pb-12 px-12 rounded-md">
+      <div className="mx-auto max-w-[1110px] px-4">
+        <div className="flex flex-col gap-8 lg:flex-row">
+          <div className="w-full rounded-md bg-[#FFFFFF] px-8 py-12 lg:w-[730px]">
             <h1 className="h3 font-bold uppercase">Checkout</h1>
-            <div className="flex flex-col gap-4 mt-10.25">
+            <div className="mt-10.25 flex flex-col gap-4">
               <h3 className="text-[13px] font-Bold uppercase text-[#D87D4A]">
                 Billing Details
               </h3>
               <div className="flex flex-col gap-6">
-                <div className="flex xs:flex-col md:flex-row gap-4">
+                <div className="flex flex-col gap-4 md:flex-row">
                   <Input placeholder="Alexei Ward" label="Name" />
                   <Input placeholder="alexei@mail.com" label="Email Address" />
                 </div>
                 <Input placeholder="+1 202-555-0136" label="Phone Number" />
               </div>
             </div>
-            <div className="flex flex-col gap-4 mt-13.25">
+            <div className="mt-13.25 flex flex-col gap-4">
               <h3 className="text-[13px] font-Bold uppercase text-[#D87D4A]">
                 Shipping Info
               </h3>
@@ -55,17 +73,17 @@ const page = () => {
                 label="Address"
                 className="max-w-full"
               />
-              <div className="flex xs:flex-col md:flex-row gap-4">
+              <div className="flex flex-col gap-4 md:flex-row">
                 <Input placeholder="10001" label="Zip Code" />
                 <Input placeholder="New York" label="City" />
               </div>
               <Input placeholder="United States" label="Country" />
             </div>
-            <div className="flex flex-col gap-4 mt-15.25">
+            <div className="mt-15.25 flex flex-col gap-4">
               <h3 className="text-[13px] font-Bold uppercase text-[#D87D4A]">
                 Payment Details
               </h3>
-              <div className="flex xs:flex-col md:flex-row xs:gap-4.25 md:justify-between">
+              <div className="flex flex-col justify-between gap-4 md:flex-row">
                 <h6 className="text-[12px] font-Bold">Payment Method</h6>
                 <div className="flex flex-col gap-4">
                   <RadioButton
@@ -80,103 +98,95 @@ const page = () => {
                     isActive={false}
                     onClick={() => {}}
                   />
-                  {/* I changed the width from 240px to 309px to fit the figma file. */}
-                  {/* I changed it back, cos it's messing up with the responsive design */}
                 </div>
               </div>
-              <div className="flex xs:flex-col md:flex-row gap-4">
+              <div className="flex flex-col gap-4 md:flex-row">
                 <Input placeholder="238521993" label="e-Money Number" />
                 <Input placeholder="6891" label="e-Money PIN" />
               </div>
             </div>
           </div>
 
-          <div className="xs:w-full lg:w-[350px] h-[612px] bg-[#FFFFFF] px-8.25 py-8 xs:mb-[116px] lg:mb-0 flex flex-col gap-8 rounded-md">
+          <div className="mb-[116px] flex w-full flex-col gap-8 rounded-md bg-[#FFFFFF] px-8.25 py-8 lg:mb-0 lg:w-[350px]">
             <h3 className="h6 font-Bold uppercase">Summary</h3>
-            <div className="flex flex-col gap-6 my-1">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="bg-[#F1F1F1] flex items-center justify-center rounded-[8px] w-[64px] h-[64px]">
-                    <Image
-                      src={Headphones3}
-                      alt="Headphones 3"
-                      width={38}
-                      height={40}
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-Bold uppercase">XX99 Mk II</p>
-                    <p className="text-sm opacity-50">$ 2,999</p>
-                  </div>
-                </div>
-                <h6>1x</h6>
+
+            {items.length === 0 ? (
+              <div className="rounded-[1.5rem] bg-[#f7f4ef] px-5 py-8 text-sm text-black/55">
+                Your cart is empty. Add products before proceeding to checkout.
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="bg-[#F1F1F1] flex items-center justify-center rounded-[8px] w-[64px] h-[64px]">
-                    <Image
-                      src={Headphones4}
-                      alt="Headphones 2"
-                      width={38}
-                      height={40}
-                    />
+            ) : (
+              <div className="my-1 flex flex-col gap-6">
+                {items.map(({ product, quantity, lineTotal }) => (
+                  <div key={product.id} className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-[64px] w-[64px] items-center justify-center rounded-[8px] bg-[#F1F1F1]">
+                        <Image
+                          src={product.cardImage}
+                          alt={product.name}
+                          className="max-h-[40px] w-auto object-contain"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-sm font-Bold uppercase">
+                          {product.shortName}
+                        </p>
+                        <p className="text-sm opacity-50">
+                          ${lineTotal.toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    <h6>{quantity}x</h6>
                   </div>
-                  <div>
-                    <p className="text-sm font-Bold uppercase">XX59</p>
-                    <p className="text-sm opacity-50">$ 899</p>
-                  </div>
-                </div>
-                <h6>2x</h6>
+                ))}
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="bg-[#F1F1F1] flex items-center justify-center rounded-[8px] w-[64px] h-[64px]">
-                    <Image
-                      src={Earphones}
-                      alt="Earphones"
-                      width={38}
-                      height={40}
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-Bold uppercase">YX1</p>
-                    <p className="text-sm opacity-50">$ 599</p>
-                  </div>
-                </div>
-                <h6>1x</h6>
-              </div>
-            </div>
+            )}
+
             <div className="flex flex-col gap-6">
               <div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm opacity-50 uppercase leading-[25px]">
+                  <p className="text-sm uppercase leading-[25px] opacity-50">
                     Total
                   </p>
-                  <p className="h6 font-bold">$ 5,396</p>
+                  <p className="h6 font-bold">${subtotal.toLocaleString()}</p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm opacity-50 uppercase leading-[25px]">
+                  <p className="text-sm uppercase leading-[25px] opacity-50">
                     Shipping
                   </p>
-                  <p className="h6 font-bold">$ 50</p>
+                  <p className="h6 font-bold">${SHIPPING_COST.toLocaleString()}</p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm opacity-50 uppercase leading-[25px]">
+                  <p className="text-sm uppercase leading-[25px] opacity-50">
                     Vat included
                   </p>
-                  <p className="h6 font-bold">$ 1,079</p>
+                  <p className="h6 font-bold">${vat.toLocaleString()}</p>
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-sm opacity-50 uppercase leading-[25px]">
+                <p className="text-sm uppercase leading-[25px] opacity-50">
                   Grand Total
                 </p>
-                <p className="h6 font-bold text-[#D87D4A]">$ 5,446</p>
+                <p className="h6 font-bold text-[#D87D4A]">
+                  ${grandTotal.toLocaleString()}
+                </p>
               </div>
             </div>
 
-            <Button className="w-full" onClick={handleModalOpener}>Continue & Pay</Button>
-            {modalOpen && <CheckoutModal handleModalCloser={handleModalCloser} />}
+            <Button
+              className="w-full"
+              disabled={items.length === 0}
+              onClick={() => setModalOpen(true)}
+            >
+              Continue & Pay
+            </Button>
+            {modalOpen ? (
+              <CheckoutModal
+                handleModalCloser={() => setModalOpen(false)}
+                items={items}
+                grandTotal={grandTotal}
+                onComplete={() => dispatch(clearCart())}
+              />
+            ) : null}
           </div>
         </div>
       </div>
@@ -186,4 +196,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

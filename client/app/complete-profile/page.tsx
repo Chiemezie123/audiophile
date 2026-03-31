@@ -42,37 +42,34 @@ const CompleteProfilePage = () => {
 
   const onSubmit = async (data: ProfileFormData) => {
     setLoading(true);
-
+  
     try {
       const response = await fetch(
-        "http://127.0.0.1:4000/api/v1/auth/complete-profile",
+        "/api/v1/auth/complete-profile",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // Include cookies for JWT
+          credentials: "include",
           body: JSON.stringify({
             firstName: data.firstName,
             lastName: data.lastName,
           }),
         }
       );
-
+  
       const result = await response.json();
-
+  
       if (response.ok) {
-        // Update Redux store
         dispatch(
           updateUserProfile({
             firstName: data.firstName,
             lastName: data.lastName,
           })
         );
-
+  
         toast.success("Profile completed successfully! 🎉");
-
-        // Redirect to home
         router.replace("/");
       } else {
         toast.error(result.message || "Failed to update profile");
@@ -84,6 +81,7 @@ const CompleteProfilePage = () => {
       setLoading(false);
     }
   };
+  
 
   const onInvalidSubmit = (errors: any) => {
     Object.values(errors).forEach((error: any) => {
@@ -104,7 +102,7 @@ const CompleteProfilePage = () => {
         <form onSubmit={form.handleSubmit(onSubmit, onInvalidSubmit)}>
           <AuthForm
             title="Complete Your Profile"
-            subtitle="Please provide your name to finish setting up your account"
+            // subtitle="Please provide your name to finish setting up your account"
             inputs={[
               {
                 label: "First Name",
