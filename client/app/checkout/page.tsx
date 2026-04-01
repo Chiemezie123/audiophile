@@ -15,11 +15,23 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { clearCart } from "@/store/cartSlice";
 import { getCartProducts } from "@/lib/cart";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const SHIPPING_COST = 50;
 
 const Page = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"e-money" | "cash">("e-money");
+  const [checkoutData, setCheckoutData] = useState({
+    billingName: "",
+    billingEmail: "",
+    billingPhone: "",
+    shippingAddress: "",
+    shippingZipCode: "",
+    shippingCity: "",
+    shippingCountry: "",
+  });
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuth();
@@ -34,6 +46,69 @@ const Page = () => {
       router.replace("/signup");
     }
   }, [isAuthenticated, router]);
+
+  const handleInputChange =
+    (field: keyof typeof checkoutData) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setCheckoutData((current) => ({
+        ...current,
+        [field]: event.target.value,
+      }));
+    };
+
+  const handlePlaceOrder = async () => {
+    if (items.length === 0) {
+      toast.error("Your cart is empty.");
+      return;
+    }
+
+    for (const [field, value] of Object.entries(checkoutData)) {
+      if (!value.trim()) {
+        toast.error(`${field} is required.`);
+        return;
+      }
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await fetch("/api/v1/cart", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ items: cartItems }),
+      });
+
+      const response = await fetch("/api/v1/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          ...checkoutData,
+          paymentMethod,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        toast.error(result.message || "Unable to place order.");
+        return;
+      }
+
+      dispatch(clearCart());
+      setModalOpen(true);
+    } catch (error) {
+      console.error("Failed to place order:", error);
+      toast.error("Unable to place order right now.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="bg-[#F1F1F1]">
@@ -58,10 +133,25 @@ const Page = () => {
               </h3>
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-4 md:flex-row">
-                  <Input placeholder="Alexei Ward" label="Name" />
-                  <Input placeholder="alexei@mail.com" label="Email Address" />
+                  <Input
+                    placeholder="Alexei Ward"
+                    label="Name"
+                    value={checkoutData.billingName}
+                    onChange={handleInputChange("billingName")}
+                  />
+                  <Input
+                    placeholder="alexei@mail.com"
+                    label="Email Address"
+                    value={checkoutData.billingEmail}
+                    onChange={handleInputChange("billingEmail")}
+                  />
                 </div>
-                <Input placeholder="+1 202-555-0136" label="Phone Number" />
+                <Input
+                  placeholder="+1 202-555-0136"
+                  label="Phone Number"
+                  value={checkoutData.billingPhone}
+                  onChange={handleInputChange("billingPhone")}
+                />
               </div>
             </div>
             <div className="mt-13.25 flex flex-col gap-4">
@@ -72,12 +162,29 @@ const Page = () => {
                 placeholder="1137 Williams Avenue"
                 label="Address"
                 className="max-w-full"
+                value={checkoutData.shippingAddress}
+                onChange={handleInputChange("shippingAddress")}
               />
               <div className="flex flex-col gap-4 md:flex-row">
-                <Input placeholder="10001" label="Zip Code" />
-                <Input placeholder="New York" label="City" />
+                <Input
+                  placeholder="10001"
+                  label="Zip Code"
+                  value={checkoutData.shippingZipCode}
+                  onChange={handleInputChange("shippingZipCode")}
+                />
+                <Input
+                  placeholder="New York"
+                  label="City"
+                  value={checkoutData.shippingCity}
+                  onChange={handleInputChange("shippingCity")}
+                />
               </div>
-              <Input placeholder="United States" label="Country" />
+              <Input
+                placeholder="United States"
+                label="Country"
+                value={checkoutData.shippingCountry}
+                onChange={handleInputChange("shippingCountry")}
+              />
             </div>
             <div className="mt-15.25 flex flex-col gap-4">
               <h3 className="text-[13px] font-Bold uppercase text-[#D87D4A]">
@@ -89,21 +196,23 @@ const Page = () => {
                   <RadioButton
                     label="e-Money"
                     value="e-money"
-                    isActive
-                    onClick={() => {}}
+                    isActive={paymentMethod === "e-money"}
+                    onClick={(value) => setPaymentMethod(value as "e-money" | "cash")}
                   />
                   <RadioButton
                     label="Cash on Delivery"
                     value="cash"
-                    isActive={false}
-                    onClick={() => {}}
+                    isActive={paymentMethod === "cash"}
+                    onClick={(value) => setPaymentMethod(value as "e-money" | "cash")}
                   />
                 </div>
               </div>
-              <div className="flex flex-col gap-4 md:flex-row">
-                <Input placeholder="238521993" label="e-Money Number" />
-                <Input placeholder="6891" label="e-Money PIN" />
-              </div>
+              {paymentMethod === "e-money" ? (
+                <div className="flex flex-col gap-4 md:flex-row">
+                  <Input placeholder="238521993" label="e-Money Number" />
+                  <Input placeholder="6891" label="e-Money PIN" />
+                </div>
+              ) : null}
             </div>
           </div>
 
@@ -174,10 +283,10 @@ const Page = () => {
 
             <Button
               className="w-full"
-              disabled={items.length === 0}
-              onClick={() => setModalOpen(true)}
+              disabled={items.length === 0 || isSubmitting}
+              onClick={handlePlaceOrder}
             >
-              Continue & Pay
+              {isSubmitting ? "Processing..." : "Continue & Pay"}
             </Button>
             {modalOpen ? (
               <CheckoutModal

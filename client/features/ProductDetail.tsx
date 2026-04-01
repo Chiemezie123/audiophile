@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowLeft, Heart, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 import ProductCard from "@/components/ui/ProductCard";
 import { Button } from "@/components/ui/button";
@@ -14,6 +16,7 @@ import Header from "./Header";
 import type { Product } from "@/lib/catalog";
 import { useAppDispatch } from "@/store/hooks";
 import { addToCart } from "@/store/cartSlice";
+import { useAuth } from "@/contexts/AuthContext";
 
 type ProductDetailProps = {
   product: Product;
@@ -22,10 +25,82 @@ type ProductDetailProps = {
 
 const ProductDetail = ({ product, relatedProducts }: ProductDetailProps) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
   const [quantity, setQuantity] = useState(1);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
 
   const handleAddToCart = () => {
     dispatch(addToCart({ productSlug: product.slug, quantity }));
+  };
+
+  useEffect(() => {
+    const loadWishlistState = async () => {
+      if (!isAuthenticated) {
+        setIsWishlisted(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/v1/wishlist", {
+          credentials: "include",
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const result = await response.json();
+        const items = Array.isArray(result.items) ? result.items : [];
+        setIsWishlisted(items.some((item: { productSlug: string }) => item.productSlug === product.slug));
+      } catch (error) {
+        console.error("Failed to load wishlist state:", error);
+      }
+    };
+
+    void loadWishlistState();
+  }, [isAuthenticated, product.slug]);
+
+  const handleWishlistToggle = async () => {
+    if (!isAuthenticated) {
+      router.push("/signup");
+      return;
+    }
+
+    setWishlistLoading(true);
+
+    try {
+      const response = await fetch(
+        isWishlisted ? `/api/v1/wishlist/${product.slug}` : "/api/v1/wishlist",
+        {
+          method: isWishlisted ? "DELETE" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: isWishlisted ? undefined : JSON.stringify({ productSlug: product.slug }),
+        }
+      );
+
+      if (!response.ok) {
+        toast.error("Unable to update wishlist right now.");
+        return;
+      }
+
+      setIsWishlisted((current) => !current);
+      toast.success(
+        isWishlisted
+          ? `${product.shortName} removed from wishlist.`
+          : `${product.shortName} saved to wishlist.`
+      );
+    } catch (error) {
+      console.error("Wishlist update failed:", error);
+      toast.error("Unable to update wishlist right now.");
+    } finally {
+      setWishlistLoading(false);
+    }
   };
 
   return (
@@ -92,6 +167,21 @@ const ProductDetail = ({ product, relatedProducts }: ProductDetailProps) => {
                   className="rounded-full bg-[#f3efe8]"
                 />
                 <Button onClick={handleAddToCart}>Add to Cart</Button>
+                <Button
+                  variant="secondary"
+                  className={`rounded-full ${
+                    isWishlisted
+                      ? "border-[#d87d4a] bg-[#d87d4a] text-white hover:bg-[#f0a57b] hover:text-white"
+                      : ""
+                  }`}
+                  disabled={wishlistLoading}
+                  onClick={handleWishlistToggle}
+                >
+                  <Heart
+                    className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""}`}
+                  />
+                  {isWishlisted ? "Saved" : "Save"}
+                </Button>
               </div>
             </div>
           </div>

@@ -1,64 +1,23 @@
-import { promises as fs } from "fs";
-import path from "path";
-import crypto from "crypto";
+import crypto from "node:crypto";
 
-const DATA_DIR = path.join(process.cwd(), ".data");
-const DATA_FILE = path.join(DATA_DIR, "auth.json");
+import { getDb, nowIso } from "./sqlite";
+
 const OTP_TTL_MS = 10 * 60 * 1000;
 const SECRET = process.env.AUTH_SECRET || "fuzzybeats-local-auth-secret";
+
 export const SESSION_COOKIE_NAME = "fuzzybeats_session";
 export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 
-type StoredUser = {
+type StoredUserRow = {
   id: string;
   email: string;
-  passwordHash?: string;
-  firstName?: string;
-  lastName?: string;
-  photo?: string;
-  authProvider: "local";
-  isEmailVerified: boolean;
-  role: "user" | "admin";
-  createdAt: string;
-  updatedAt: string;
+  first_name: string;
+  last_name: string;
+  photo: string;
+  auth_provider: string;
+  is_email_verified: number;
+  role: string;
 };
-
-type StoredOtp = {
-  email: string;
-  otpHash: string;
-  expiresAt: number;
-};
-
-type AuthStore = {
-  users: StoredUser[];
-  otps: StoredOtp[];
-};
-
-const defaultStore: AuthStore = {
-  users: [],
-  otps: [],
-};
-
-async function ensureStore() {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-
-  try {
-    await fs.access(DATA_FILE);
-  } catch {
-    await fs.writeFile(DATA_FILE, JSON.stringify(defaultStore, null, 2), "utf8");
-  }
-}
-
-async function readStore(): Promise<AuthStore> {
-  await ensureStore();
-  const raw = await fs.readFile(DATA_FILE, "utf8");
-  return JSON.parse(raw) as AuthStore;
-}
-
-async function writeStore(store: AuthStore) {
-  await ensureStore();
-  await fs.writeFile(DATA_FILE, JSON.stringify(store, null, 2), "utf8");
-}
 
 function digest(value: string) {
   return crypto.createHash("sha256").update(value).digest("hex");
@@ -70,7 +29,7 @@ async function hashPassword(password: string) {
   return `${salt}:${derived}`;
 }
 
-async function verifyPassword(password: string, storedHash?: string) {
+async function verifyPassword(password: string, storedHash?: string | null) {
   if (!storedHash) {
     return false;
   }
@@ -94,6 +53,7 @@ function signToken(payload: { userId: string; email: string }) {
     .createHmac("sha256", SECRET)
     .update(encodedPayload)
     .digest("base64url");
+
   return `${encodedPayload}.${signature}`;
 }
 
@@ -114,7 +74,9 @@ export function verifyToken(token: string) {
   }
 
   try {
-    return JSON.parse(Buffer.from(encodedPayload, "base64url").toString("utf8")) as {
+    return JSON.parse(
+      Buffer.from(encodedPayload, "base64url").toString("utf8")
+    ) as {
       userId: string;
       email: string;
       iat: number;
@@ -124,112 +86,170 @@ export function verifyToken(token: string) {
   }
 }
 
-function sanitizeUser(user: StoredUser) {
+function sanitizeUser(user: StoredUserRow) {
   return {
     id: user.id,
     email: user.email,
-    firstName: user.firstName || "",
-    lastName: user.lastName || "",
+    firstName: user.first_name || "",
+    lastName: user.last_name || "",
     photo: user.photo || "",
-    authProvider: user.authProvider,
-    isEmailVerified: user.isEmailVerified,
+    authProvider: user.auth_provider,
+    isEmailVerified: Boolean(user.is_email_verified),
     role: user.role,
   };
 }
 
 export async function createOtpForEmail(email: string) {
-  const store = await readStore();
+  const db = getDb();
   const normalizedEmail = email.trim().toLowerCase();
   const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
 
-  store.otps = store.otps.filter((entry) => entry.email !== normalizedEmail);
-  store.otps.push({
-    email: normalizedEmail,
-    otpHash: digest(otp),
-    expiresAt: Date.now() + OTP_TTL_MS,
-  });
-
-  await writeStore(store);
+  db.prepare(`DELETE FROM otp_codes WHERE email = ?`).run(normalizedEmail);
+  db.prepare(
+    `
+      INSERT INTO otp_codes (email, code_hash, expires_at, created_at)
+      VALUES (?, ?, ?, ?)
+    `
+  ).run(normalizedEmail, digest(otp), Date.now() + OTP_TTL_MS, nowIso());
 
   return otp;
 }
 
 export async function verifyOtpForEmail(email: string, otp: string) {
-  const store = await readStore();
+  const db = getDb();
   const normalizedEmail = email.trim().toLowerCase();
-  const otpEntry = store.otps.find((entry) => entry.email === normalizedEmail);
+  const otpRow = db
+    .prepare(
+      `
+        SELECT id, code_hash, expires_at
+        FROM otp_codes
+        WHERE email = ? AND used_at IS NULL
+        ORDER BY id DESC
+        LIMIT 1
+      `
+    )
+    .get(normalizedEmail) as
+    | { id: number; code_hash: string; expires_at: number }
+    | undefined;
 
-  if (!otpEntry) {
+  if (!otpRow) {
     return false;
   }
 
   const isValid =
-    otpEntry.expiresAt > Date.now() && otpEntry.otpHash === digest(otp);
+    otpRow.expires_at > Date.now() && otpRow.code_hash === digest(otp);
 
   if (isValid) {
-    store.otps = store.otps.filter((entry) => entry.email !== normalizedEmail);
-    await writeStore(store);
+    db.prepare(`UPDATE otp_codes SET used_at = ? WHERE id = ?`).run(
+      Date.now(),
+      otpRow.id
+    );
   }
 
   return isValid;
 }
 
 export async function createOrUpdatePasswordUser(email: string, password: string) {
-  const store = await readStore();
+  const db = getDb();
   const normalizedEmail = email.trim().toLowerCase();
-  const now = new Date().toISOString();
   const passwordHash = await hashPassword(password);
-  let user = store.users.find((entry) => entry.email === normalizedEmail);
+  const now = nowIso();
+  const existingUser = db
+    .prepare(
+      `
+        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
+        FROM users
+        WHERE email = ?
+        LIMIT 1
+      `
+    )
+    .get(normalizedEmail) as StoredUserRow | undefined;
 
-  if (!user) {
-    user = {
-      id: crypto.randomUUID(),
-      email: normalizedEmail,
-      passwordHash,
-      firstName: "",
-      lastName: "",
-      photo: "",
-      authProvider: "local",
-      isEmailVerified: true,
-      role: "user",
-      createdAt: now,
-      updatedAt: now,
+  if (!existingUser) {
+    const userId = crypto.randomUUID();
+    db.prepare(
+      `
+        INSERT INTO users (
+          id, email, password_hash, first_name, last_name, photo, auth_provider,
+          is_email_verified, role, created_at, updated_at
+        )
+        VALUES (?, ?, ?, '', '', '', 'local', 1, 'user', ?, ?)
+      `
+    ).run(userId, normalizedEmail, passwordHash, now, now);
+
+    const createdUser = db
+      .prepare(
+        `
+          SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
+          FROM users
+          WHERE id = ?
+        `
+      )
+      .get(userId) as StoredUserRow;
+
+    return {
+      user: sanitizeUser(createdUser),
+      token: signToken({ userId: createdUser.id, email: createdUser.email }),
     };
-    store.users.push(user);
-  } else {
-    user.passwordHash = passwordHash;
-    user.isEmailVerified = true;
-    user.updatedAt = now;
   }
 
-  await writeStore(store);
+  db.prepare(
+    `
+      UPDATE users
+      SET password_hash = ?, auth_provider = 'local', is_email_verified = 1, updated_at = ?
+      WHERE id = ?
+    `
+  ).run(passwordHash, now, existingUser.id);
+
+  const updatedUser = db
+    .prepare(
+      `
+        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
+        FROM users
+        WHERE id = ?
+      `
+    )
+    .get(existingUser.id) as StoredUserRow;
 
   return {
-    user: sanitizeUser(user),
-    token: signToken({ userId: user.id, email: user.email }),
+    user: sanitizeUser(updatedUser),
+    token: signToken({ userId: updatedUser.id, email: updatedUser.email }),
   };
 }
 
 export async function loginUser(email: string, password: string) {
-  const store = await readStore();
+  const db = getDb();
   const normalizedEmail = email.trim().toLowerCase();
-  const user = store.users.find((entry) => entry.email === normalizedEmail);
+  const userRow = db
+    .prepare(
+      `
+        SELECT id, email, password_hash, first_name, last_name, photo, auth_provider, is_email_verified, role
+        FROM users
+        WHERE email = ?
+        LIMIT 1
+      `
+    )
+    .get(normalizedEmail) as
+    | (StoredUserRow & { password_hash: string | null })
+    | undefined;
 
-  if (!user) {
+  if (!userRow) {
     return null;
   }
 
-  const validPassword = await verifyPassword(password, user.passwordHash);
+  const validPassword = await verifyPassword(password, userRow.password_hash);
   if (!validPassword) {
     return null;
   }
 
-  user.updatedAt = new Date().toISOString();
-  await writeStore(store);
+  db.prepare(`UPDATE users SET updated_at = ? WHERE id = ?`).run(
+    nowIso(),
+    userRow.id
+  );
 
   return {
-    user: sanitizeUser(user),
-    token: signToken({ userId: user.id, email: user.email }),
+    user: sanitizeUser(userRow),
+    token: signToken({ userId: userRow.id, email: userRow.email }),
   };
 }
 
@@ -242,19 +262,31 @@ export async function updateUserProfileFromToken(
     return null;
   }
 
-  const store = await readStore();
-  const user = store.users.find((entry) => entry.id === payload.userId);
-  if (!user) {
+  const db = getDb();
+  db.prepare(
+    `
+      UPDATE users
+      SET first_name = ?, last_name = ?, updated_at = ?
+      WHERE id = ?
+    `
+  ).run(profile.firstName.trim(), profile.lastName.trim(), nowIso(), payload.userId);
+
+  const updatedUser = db
+    .prepare(
+      `
+        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
+        FROM users
+        WHERE id = ?
+        LIMIT 1
+      `
+    )
+    .get(payload.userId) as StoredUserRow | undefined;
+
+  if (!updatedUser) {
     return null;
   }
 
-  user.firstName = profile.firstName.trim();
-  user.lastName = profile.lastName.trim();
-  user.updatedAt = new Date().toISOString();
-
-  await writeStore(store);
-
-  return sanitizeUser(user);
+  return sanitizeUser(updatedUser);
 }
 
 export async function getUserFromToken(token: string) {
@@ -264,8 +296,17 @@ export async function getUserFromToken(token: string) {
     return null;
   }
 
-  const store = await readStore();
-  const user = store.users.find((entry) => entry.id === payload.userId);
+  const db = getDb();
+  const user = db
+    .prepare(
+      `
+        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
+        FROM users
+        WHERE id = ?
+        LIMIT 1
+      `
+    )
+    .get(payload.userId) as StoredUserRow | undefined;
 
   if (!user) {
     return null;
