@@ -13,6 +13,7 @@ const page = () => {
             id: "email",
             placeholder: "Enter your email",
             className: "max-w-full bg-[#F6F7F9] rounded-md h-[45px]",
+            name: "email",
           },
         ]}
         isForgotPassword={true}

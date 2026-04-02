@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { createOtpForEmail } from "@/lib/server/auth-store";
+import { createOtpForEmail, userExistsByEmail } from "@/lib/server/auth-store";
 
 export async function POST(request: Request) {
   try {
@@ -10,6 +10,18 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { message: "Email is required." },
         { status: 400 }
+      );
+    }
+
+    const exists = await userExistsByEmail(email);
+
+    if (exists) {
+      return NextResponse.json(
+        {
+          message: "An account with this email already exists. Please log in.",
+          shouldLogin: true,
+        },
+        { status: 409 }
       );
     }
 

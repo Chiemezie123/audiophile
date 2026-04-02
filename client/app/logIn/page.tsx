@@ -3,11 +3,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { toastUtils } from "@/lib/toastUtils";
+
 import AuthForm from "@/features/AuthForm";
+import { useAuth } from "@/contexts/AuthContext";
+import { toastUtils } from "@/lib/toastUtils";
 import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/userSlice";
-import { useAuth } from "@/contexts/AuthContext";
 
 type LoginFormData = {
   email: string;
@@ -19,6 +20,32 @@ const Page = () => {
   const dispatch = useAppDispatch();
   const { setUser: setAuthUser } = useAuth();
   const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const oauth = new URLSearchParams(window.location.search).get("oauth");
+
+    if (!oauth) {
+      return;
+    }
+
+    const oauthMessages: Record<string, string> = {
+      unavailable: "Google sign-in is not configured yet.",
+      invalid_state: "Google sign-in session expired. Please try again.",
+      token_failed: "Google sign-in failed while exchanging tokens.",
+      userinfo_failed: "Google sign-in failed while loading your profile.",
+      userinfo_invalid: "Google sign-in returned incomplete profile data.",
+      oauth_failed: "Google sign-in failed. Please try again.",
+    };
+
+    const message =
+      oauthMessages[oauth] || "Google sign-in failed. Please try again.";
+    toastUtils.error(message);
+    router.replace("/login", { scroll: false });
+  }, [router]);
 
   const form = useForm<LoginFormData>({
     defaultValues: {
@@ -37,6 +64,7 @@ const Page = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(data),
       });
 

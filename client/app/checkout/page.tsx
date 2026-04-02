@@ -2,27 +2,29 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import React from "react";
+import { toast } from "react-toastify";
 
 import RadioButton from "@/components/ui/radioButton";
 import { Input } from "@/components/ui/textIpnut";
-import Footer from "@/features/Footer";
-import Header from "@/features/Header";
-import Image from "next/image";
-import React from "react";
 import { Button } from "@/components/ui/button";
 import CheckoutModal from "@/components/ui/CheckoutModal";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { clearCart } from "@/store/cartSlice";
-import { getCartProducts } from "@/lib/cart";
+import Footer from "@/features/Footer";
+import Header from "@/features/Header";
 import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "react-toastify";
+import { getCartProducts } from "@/lib/cart";
+import { clearCart } from "@/store/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 const SHIPPING_COST = 50;
 
 const Page = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"e-money" | "cash">("e-money");
+  const [paymentMethod, setPaymentMethod] = useState<"e-money" | "cash">(
+    "e-money"
+  );
   const [checkoutData, setCheckoutData] = useState({
     billingName: "",
     billingEmail: "",
@@ -32,6 +34,7 @@ const Page = () => {
     shippingCity: "",
     shippingCountry: "",
   });
+
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuth();
@@ -197,13 +200,17 @@ const Page = () => {
                     label="e-Money"
                     value="e-money"
                     isActive={paymentMethod === "e-money"}
-                    onClick={(value) => setPaymentMethod(value as "e-money" | "cash")}
+                    onClick={(value) =>
+                      setPaymentMethod(value as "e-money" | "cash")
+                    }
                   />
                   <RadioButton
                     label="Cash on Delivery"
                     value="cash"
                     isActive={paymentMethod === "cash"}
-                    onClick={(value) => setPaymentMethod(value as "e-money" | "cash")}
+                    onClick={(value) =>
+                      setPaymentMethod(value as "e-money" | "cash")
+                    }
                   />
                 </div>
               </div>
@@ -226,7 +233,10 @@ const Page = () => {
             ) : (
               <div className="my-1 flex flex-col gap-6">
                 {items.map(({ product, quantity, lineTotal }) => (
-                  <div key={product.id} className="flex items-center justify-between">
+                  <div
+                    key={product.id}
+                    className="flex items-center justify-between"
+                  >
                     <div className="flex items-center gap-4">
                       <div className="flex h-[64px] w-[64px] items-center justify-center rounded-[8px] bg-[#F1F1F1]">
                         <Image
@@ -262,7 +272,9 @@ const Page = () => {
                   <p className="text-sm uppercase leading-[25px] opacity-50">
                     Shipping
                   </p>
-                  <p className="h6 font-bold">${SHIPPING_COST.toLocaleString()}</p>
+                  <p className="h6 font-bold">
+                    ${SHIPPING_COST.toLocaleString()}
+                  </p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm uppercase leading-[25px] opacity-50">

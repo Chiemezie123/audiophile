@@ -78,6 +78,8 @@ export const categoryMeta: Record<CategorySlug, CategoryMeta> = {
   },
 };
 
+
+
 export const productsByCategory: Record<CategorySlug, Product[]> = {
   headphones: [
     {
@@ -222,7 +224,7 @@ export const productsByCategory: Record<CategorySlug, Product[]> = {
       cardImage: SpeakersZX7,
       gallery: [DisplaySpeakers2, DisplaySpeakers1, DisplaySpeakers3],
       features: [
-        "With premium-grade internal components and carefully controlled dispersion, the ZX7 brings clarity and control to both entertainment setups and dedicated music spaces.",
+        "With audiophile-grade internal components and carefully controlled dispersion, the ZX7 brings clarity and control to both entertainment setups and dedicated music spaces.",
         "Its more compact cabinet keeps visual bulk low while preserving the authority and precision expected from a premium powered speaker system.",
       ],
       includes: [
@@ -274,6 +276,8 @@ export const productsByCategory: Record<CategorySlug, Product[]> = {
   ],
 };
 
+
+
 export const allProducts = categories.flatMap((category) => productsByCategory[category]);
 
 export function getCategoryProducts(category: string) {
@@ -288,11 +292,15 @@ export function getProductBySlug(slug: string) {
   return allProducts.find((product) => product.slug === slug) ?? null;
 }
 
+
+
 export function getRelatedProducts(product: Product) {
   return product.relatedSlugs
     .map((slug) => getProductBySlug(slug))
     .filter((value): value is Product => Boolean(value));
 }
+
+
 
 export function searchProducts(query: string) {
   const normalizedQuery = query.trim().toLowerCase();

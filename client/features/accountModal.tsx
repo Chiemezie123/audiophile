@@ -87,7 +87,7 @@ const AccountModal = ({ onClose }: { onClose: () => void }) => {
                 className="flex-1 border-white/14 text-white hover:border-white/18 hover:bg-white hover:text-[#15161a]"
                 onClick={() => {
                   onClose();
-                  router.push("/logIn");
+                  router.push("/login");
                 }}
               >
                 <LogIn className="h-4 w-4" />

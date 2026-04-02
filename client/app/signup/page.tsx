@@ -157,6 +157,18 @@ const Page = () => {
         // Redirect to email verification page
         router.push("/verify-email");
 
+      } else if (response.status === 409 && result.shouldLogin) {
+        const errorMessage =
+          result.message || "An account with this email already exists.";
+        dispatch(setError(errorMessage));
+        toastUtils.updateLoading(
+          loadingToast,
+          `ℹ️ ${errorMessage} Redirecting to login...`,
+          "info"
+        );
+        setTimeout(() => {
+          router.push("/login");
+        }, 1200);
       } else {
         const errorMessage = result.message || "Failed to send verification code.";
         dispatch(setError(errorMessage));

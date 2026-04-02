@@ -213,13 +213,13 @@ const AuthForm = ({
 
                   <div className="flex flex-col gap-4">
                     <GoogleSignInButton className="rounded-[1rem]" />
-                    <button
+                    {/* <button
                       type="button"
                       className="flex w-full items-center justify-center gap-4 rounded-[1rem] border-2 border-[#D7DAE0] px-4 py-3 text-[13px] font-semibold text-black transition hover:bg-[#faf7f2] sm:px-6 sm:text-[14px]"
                     >
                       <InstagramColored />
                       <span>Continue with Instagram</span>
-                    </button>
+                    </button> */}
                   </div>
                 </>
               ) : null}

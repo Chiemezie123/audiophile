@@ -19,6 +19,8 @@ type StoredUserRow = {
   role: string;
 };
 
+type SanitizedUser = ReturnType<typeof sanitizeUser>;
+
 function digest(value: string) {
   return crypto.createHash("sha256").update(value).digest("hex");
 }
@@ -49,12 +51,17 @@ function signToken(payload: { userId: string; email: string }) {
       iat: Date.now(),
     })
   ).toString("base64url");
+  
   const signature = crypto
     .createHmac("sha256", SECRET)
     .update(encodedPayload)
     .digest("base64url");
 
   return `${encodedPayload}.${signature}`;
+}
+
+export function createSessionTokenForUser(user: { id: string; email: string }) {
+  return signToken({ userId: user.id, email: user.email });
 }
 
 export function verifyToken(token: string) {
@@ -97,6 +104,23 @@ function sanitizeUser(user: StoredUserRow) {
     isEmailVerified: Boolean(user.is_email_verified),
     role: user.role,
   };
+}
+
+export async function userExistsByEmail(email: string) {
+  const db = getDb();
+  const normalizedEmail = email.trim().toLowerCase();
+  const user = db
+    .prepare(
+      `
+        SELECT id
+        FROM users
+        WHERE email = ?
+        LIMIT 1
+      `
+    )
+    .get(normalizedEmail) as { id: string } | undefined;
+
+  return Boolean(user);
 }
 
 export async function createOtpForEmail(email: string) {
@@ -214,6 +238,97 @@ export async function createOrUpdatePasswordUser(email: string, password: string
   return {
     user: sanitizeUser(updatedUser),
     token: signToken({ userId: updatedUser.id, email: updatedUser.email }),
+  };
+}
+
+export async function createOrUpdateGoogleUser(input: {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  photo?: string;
+  googleId: string;
+}) {
+  const db = getDb();
+  const normalizedEmail = input.email.trim().toLowerCase();
+  const now = nowIso();
+  const existingUser = db
+    .prepare(
+      `
+        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
+        FROM users
+        WHERE email = ?
+        LIMIT 1
+      `
+    )
+    .get(normalizedEmail) as StoredUserRow | undefined;
+
+  let userId = existingUser?.id || crypto.randomUUID();
+
+  if (!existingUser) {
+    db.prepare(
+      `
+        INSERT INTO users (
+          id, email, password_hash, first_name, last_name, photo, auth_provider,
+          is_email_verified, role, created_at, updated_at
+        )
+        VALUES (?, ?, NULL, ?, ?, ?, 'google', 1, 'user', ?, ?)
+      `
+    ).run(
+      userId,
+      normalizedEmail,
+      input.firstName?.trim() || "",
+      input.lastName?.trim() || "",
+      input.photo || "",
+      now,
+      now
+    );
+  } else {
+    db.prepare(
+      `
+        UPDATE users
+        SET first_name = CASE WHEN first_name = '' THEN ? ELSE first_name END,
+            last_name = CASE WHEN last_name = '' THEN ? ELSE last_name END,
+            photo = CASE WHEN photo = '' THEN ? ELSE photo END,
+            auth_provider = 'google',
+            is_email_verified = 1,
+            updated_at = ?
+        WHERE id = ?
+      `
+    ).run(
+      input.firstName?.trim() || "",
+      input.lastName?.trim() || "",
+      input.photo || "",
+      now,
+      userId
+    );
+  }
+
+  db.prepare(
+    `
+      INSERT INTO auth_accounts (user_id, provider, provider_account_id, created_at, updated_at)
+      VALUES (?, 'google', ?, ?, ?)
+      ON CONFLICT(provider, provider_account_id) DO UPDATE SET
+        user_id = excluded.user_id,
+        updated_at = excluded.updated_at
+    `
+  ).run(userId, input.googleId, now, now);
+
+  const user = db
+    .prepare(
+      `
+        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
+        FROM users
+        WHERE id = ?
+        LIMIT 1
+      `
+    )
+    .get(userId) as StoredUserRow;
+
+  const sanitizedUser = sanitizeUser(user);
+
+  return {
+    user: sanitizedUser,
+    token: createSessionTokenForUser(sanitizedUser),
   };
 }
 

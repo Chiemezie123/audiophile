@@ -3,13 +3,14 @@ import authReducer from "./authSlice";
 import cartReducer from "./cartSlice";
 import signupReducer from "./signupSlice";
 import userReducer from "./userSlice";
-
+import loginReducer from "./loginSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     cart: cartReducer,
     signup: signupReducer,  
     user: userReducer,
+    login: loginReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

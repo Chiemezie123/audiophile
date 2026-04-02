@@ -56,6 +56,10 @@ function normalizeItems(items: PersistedCartItem[]) {
   }));
 }
 
+
+
+
+
 export async function getCartItemsForUser(userId: string) {
   const db = getDb();
   const rows = db
