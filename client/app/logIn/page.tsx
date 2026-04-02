@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import AuthForm from "@/features/AuthForm";
 import { useAuth } from "@/contexts/AuthContext";
+import { MERGE_GUEST_CART_FLAG_KEY } from "@/lib/cart-storage";
 import { toastUtils } from "@/lib/toastUtils";
 import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/userSlice";
@@ -77,6 +78,10 @@ const Page = () => {
           "error"
         );
         return;
+      }
+
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(MERGE_GUEST_CART_FLAG_KEY, "1");
       }
 
       dispatch(setUser(result.user));

@@ -1,6 +1,10 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import GoogleIcon from "@/assets/svg/Google.svg";
+import {
+  GUEST_CART_STORAGE_KEY,
+  MERGE_GUEST_CART_FLAG_KEY,
+} from "@/lib/cart-storage";
 
 interface GoogleSignInButtonProps {
   text?: string;
@@ -12,6 +16,17 @@ export default function GoogleSignInButton({
   className = "",
 }: GoogleSignInButtonProps) {
   const handleGoogleSignIn = () => {
+    try {
+      const guestCart = window.localStorage.getItem(GUEST_CART_STORAGE_KEY);
+      const parsedGuestCart = guestCart ? JSON.parse(guestCart) : [];
+
+      if (Array.isArray(parsedGuestCart) && parsedGuestCart.length > 0) {
+        window.localStorage.setItem(MERGE_GUEST_CART_FLAG_KEY, "1");
+      }
+    } catch {
+      window.localStorage.removeItem(MERGE_GUEST_CART_FLAG_KEY);
+    }
+
     window.location.href = "/api/v1/auth/google";
   };
 

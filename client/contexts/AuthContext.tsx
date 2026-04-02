@@ -3,6 +3,7 @@ import React, {
   createContext,
   useContext,
   useEffect,
+  useState,
   ReactNode,
 } from "react";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
@@ -23,6 +24,7 @@ interface AuthContextType {
   user: User | null;
   setUser: (user: User | null) => void;
   isAuthenticated: boolean;
+  isAuthResolved: boolean;
   logout: () => void;
 }
 
@@ -33,6 +35,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const dispatch = useAppDispatch();
   const reduxUser = useAppSelector((state) => state.user);
+  const [isAuthResolved, setIsAuthResolved] = useState(false);
 
   useEffect(() => {
     const syncSession = async () => {
@@ -56,11 +59,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         }
       } catch (error) {
         console.error("Error syncing auth session:", error);
+      } finally {
+        setIsAuthResolved(true);
       }
     };
 
     if (!reduxUser.id) {
       void syncSession();
+    } else {
+      setIsAuthResolved(true);
     }
   }, [dispatch, reduxUser.id]);
 
@@ -87,6 +94,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       console.error("Logout error:", error);
     } finally {
       dispatch(clearUser());
+      setIsAuthResolved(true);
     }
   };
 
@@ -96,6 +104,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     } else {
       dispatch(clearUser());
     }
+    setIsAuthResolved(true);
   };
 
   return (
@@ -104,6 +113,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         user,
         setUser: updateUser,
         isAuthenticated: !!user,
+        isAuthResolved,
         logout,
       }}
     >

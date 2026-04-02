@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { toast } from "react-toastify";
 import { toastUtils } from "@/lib/toastUtils";
 import { useRouter } from "next/navigation";
+import { MERGE_GUEST_CART_FLAG_KEY } from "@/lib/cart-storage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   setEmail,
@@ -225,6 +226,9 @@ const Page = () => {
 
       if (response.ok) {
         console.log("Account created successfully:", result);
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(MERGE_GUEST_CART_FLAG_KEY, "1");
+        }
         if (result.user) {
           const userData = {
             id: result.user._id || result.user.id,
