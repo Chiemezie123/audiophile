@@ -97,41 +97,40 @@ const CompleteProfilePage = () => {
   }, [user.firstName, user.lastName, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full">
-        <form onSubmit={form.handleSubmit(onSubmit, onInvalidSubmit)}>
-          <AuthForm
-            title="Complete Your Profile"
-            // subtitle="Please provide your name to finish setting up your account"
-            inputs={[
-              {
-                label: "First Name",
-                type: "text",
-                id: "firstName",
-                placeholder: "Enter your first name",
-                className: "max-w-full bg-[#F6F7F9] rounded-md h-[45px]",
-                name: "firstName" as const,
-                register: form.register as any,
-                errorMsg: form.formState.errors.firstName?.message,
-              },
-              {
-                label: "Last Name",
-                type: "text",
-                id: "lastName",
-                placeholder: "Enter your last name",
-                className: "max-w-full bg-[#F6F7F9] rounded-md h-[45px]",
-                name: "lastName" as const,
-                register: form.register as any,
-                errorMsg: form.formState.errors.lastName?.message,
-              },
-            ]}
-            buttonText={loading ? "Saving..." : "Complete Profile"}
-            isSubmitting={loading}
-            helper={{ type: "text" }}
-          />
-        </form>
-      </div>
-    </div>
+    <form onSubmit={form.handleSubmit(onSubmit, onInvalidSubmit)}>
+      <AuthForm
+        title="Complete Your Profile"
+        description="Finish setting up your FuzzyBeats account so your profile, wishlist, and order history stay linked to you."
+        inputs={[
+          {
+            label: "First Name",
+            type: "text",
+            id: "firstName",
+            placeholder: "Enter your first name",
+            className: "max-w-full bg-[#F6F7F9] rounded-md h-[45px]",
+            name: "firstName" as const,
+            register: form.register as any,
+            errorMsg: form.formState.errors.firstName?.message,
+          },
+          {
+            label: "Last Name",
+            type: "text",
+            id: "lastName",
+            placeholder: "Enter your last name",
+            className: "max-w-full bg-[#F6F7F9] rounded-md h-[45px]",
+            name: "lastName" as const,
+            register: form.register as any,
+            errorMsg: form.formState.errors.lastName?.message,
+          },
+        ]}
+        buttonText={loading ? "Saving..." : "Complete Profile"}
+        isSubmitting={loading}
+        helper={{ type: "text" }}
+        hideSocialAuth
+        hideLegalCopy
+        hideBottomLink
+      />
+    </form>
   );
 };
 

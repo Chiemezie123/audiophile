@@ -16,6 +16,7 @@ type HelperType = { type: "link"; href?: string } | { type: "text" };
 
 type AuthFormProps = {
   title?: string;
+  description?: string;
   inputs?: InputProps[];
   buttonText?: string;
   bottomText?: string;
@@ -25,10 +26,14 @@ type AuthFormProps = {
   isForgotPassword?: boolean;
   isResetPassword?: boolean;
   isSubmitting?: boolean;
+  hideSocialAuth?: boolean;
+  hideLegalCopy?: boolean;
+  hideBottomLink?: boolean;
 };
 
 const AuthForm = ({
   title,
+  description,
   inputs,
   buttonText,
   bottomText,
@@ -38,6 +43,9 @@ const AuthForm = ({
   isForgotPassword,
   isResetPassword,
   isSubmitting = false,
+  hideSocialAuth = false,
+  hideLegalCopy = false,
+  hideBottomLink = false,
 }: AuthFormProps) => {
   const slides = useMemo(
     () => [
@@ -79,13 +87,15 @@ const AuthForm = ({
     return () => window.clearInterval(interval);
   }, [slides.length]);
 
-  const isSocialAuthVisible = !isForgotPassword && !isResetPassword;
+  const isSocialAuthVisible =
+    !hideSocialAuth && !isForgotPassword && !isResetPassword;
   const helperText =
-    title === "Log In"
+    description ||
+    (title === "Log In"
       ? "Access your saved cart, profile, and premium audio picks."
       : title === "Create Account" || title === "Complete Your Account"
       ? "Join FuzzyBeats to save your cart, track orders, and continue checkout."
-      : "Manage your FuzzyBeats account with a cleaner, faster flow.";
+      : "Manage your FuzzyBeats account with a cleaner, faster flow.");
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fcfaf6_0%,#f4efe8_100%)] px-3 py-3 sm:px-4 sm:py-4 md:px-6 lg:px-8">
@@ -225,26 +235,30 @@ const AuthForm = ({
               ) : null}
 
               <div className={`mt-6 ${isSocialAuthVisible ? "pt-4 sm:pt-6" : "pt-1"}`}>
-                <div className="flex justify-center border-b border-[#f0f2f5] pb-4 sm:pb-5">
-                  <div className="max-w-[360px] text-center text-[12px] leading-6 text-gray-500">
-                    By continuing with Google, Instagram and Email, you agree to
-                    FuzzyBeats&apos;{" "}
-                    <span className="text-[#D87D4A]">
-                      <a href="#">Terms of Service</a>
-                    </span>{" "}
-                    and{" "}
-                    <span className="text-[#D87D4A]">
-                      <a href="#">Privacy Policy.</a>
+                {!hideLegalCopy ? (
+                  <div className="flex justify-center border-b border-[#f0f2f5] pb-4 sm:pb-5">
+                    <div className="max-w-[360px] text-center text-[12px] leading-6 text-gray-500">
+                      By continuing with Google, Instagram and Email, you agree to
+                      FuzzyBeats&apos;{" "}
+                      <span className="text-[#D87D4A]">
+                        <a href="#">Terms of Service</a>
+                      </span>{" "}
+                      and{" "}
+                      <span className="text-[#D87D4A]">
+                        <a href="#">Privacy Policy.</a>
+                      </span>
+                    </div>
+                  </div>
+                ) : null}
+
+                {!hideBottomLink && (bottomText || linkText) ? (
+                  <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-center text-[14px] text-[#3D434F] sm:mt-5 sm:text-[15px]">
+                    {bottomText}
+                    <span className="font-semibold text-[#D87D4A]">
+                      <Link href={hrefPath || "#"}>{linkText}</Link>
                     </span>
                   </div>
-                </div>
-
-                <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-center text-[14px] text-[#3D434F] sm:mt-5 sm:text-[15px]">
-                  {bottomText}
-                  <span className="font-semibold text-[#D87D4A]">
-                    <Link href={hrefPath || "#"}>{linkText}</Link>
-                  </span>
-                </div>
+                ) : null}
               </div>
             </div>
           </div>
