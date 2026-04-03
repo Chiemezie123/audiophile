@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface SizeInputHandlerProps {
@@ -18,6 +18,10 @@ const SizeInputHandler = ({
   className,
 }: SizeInputHandlerProps) => {
   const [count, setCount] = useState(value);
+
+  useEffect(() => {
+    setCount(value);
+  }, [value]);
 
   const handleIncrement = () => {
     if (count < max) {

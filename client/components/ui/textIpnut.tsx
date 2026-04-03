@@ -1,10 +1,12 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { UseFormRegister, FieldValues, Path } from "react-hook-form";
 
 import { InputHTMLAttributes, ReactNode } from "react";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps<T extends FieldValues = FieldValues>
+  extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   type?: string;
   label?: string;
@@ -22,9 +24,11 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   selectClassName?: string;
   max?: number | string;
   min?: number | string;
+  register?: UseFormRegister<T>;
+  name?: Path<T>;
 }
 
-function Input({
+function Input<T extends FieldValues = FieldValues>({
   className,
   type,
   label,
@@ -42,9 +46,12 @@ function Input({
   selectClassName,
   max,
   min,
+  register,
+  name,
   ...props
-}: InputProps) {
+}: InputProps<T>) {
   const [isValid, setIsValid] = useState({});
+  const inputId = name ?? label ?? placeholder ?? "input-field";
 
   return (
     <div className="group flex flex-col gap-[9px] w-full items-start">
@@ -54,7 +61,7 @@ function Input({
             "text-[12px] text-black font-bold tracking-[-0.214px]  w-fit first-letter:capitalize",
             labelCustomClassName
           )}
-          htmlFor={props.name}
+          htmlFor={inputId}
         >
           {label}
         </label>
@@ -69,14 +76,14 @@ function Input({
 
         <input
           type={type}
-          id={props.name}
+          id={inputId}
           placeholder={placeholder}
           data-slot="input"
           max={max}
           min={min}
           className={cn(
             "bg-white border-[#CFCFCF] flex h-[56px] font-bold w-full rounded-md border max-w-[309px] px-[1.5rem] py-[1.125rem] tracking-[-0.25px] text-sm outline-none placeholder:text-black placeholder:opacity-50 selection:border-[#CFCFCF] selection:text-black ",
-            "focus:border-warm-orange-brown ",
+            "focus:border-warm-orange-brown",
             "disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-base-50 disabled:text-gray-200 disabled:border-none",
             "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
             "placeholder:text-sm lg:placeholder:text-sm xl:placeholder:text-sm",
@@ -84,6 +91,7 @@ function Input({
             leftIcon && "pl-10",
             rightIcon && "pr-10"
           )}
+          {...(register && name ? register(name) : {})}
           {...props}
         />
         {rightIcon && (

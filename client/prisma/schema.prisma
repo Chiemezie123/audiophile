@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String         @id @default(uuid())
+  email           String         @unique
+  passwordHash    String?        @map("password_hash")
+  firstName       String         @default("") @map("first_name")
+  lastName        String         @default("") @map("last_name")
+  photo           String         @default("")
+  authProvider    String         @default("local") @map("auth_provider")
+  isEmailVerified Boolean        @default(false) @map("is_email_verified")
+  role            String         @default("user")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  authAccounts    AuthAccount[]
+  cartItems       CartItem[]
+  wishlistItems   WishlistItem[]
+  orders          Order[]
+
+  @@map("users")
+}
+
+model AuthAccount {
+  id                Int      @id @default(autoincrement())
+  userId            String   @map("user_id")
+  provider          String
+  providerAccountId String   @map("provider_account_id")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("auth_accounts")
+}
+
+model OtpCode {
+  id        Int       @id @default(autoincrement())
+  email     String
+  codeHash  String    @map("code_hash")
+  expiresAt BigInt    @map("expires_at")
+  usedAt    BigInt?   @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@index([email])
+  @@map("otp_codes")
+}
+
+model Category {
+  slug     String    @id
+  name     String
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  slug          String         @id
+  categorySlug  String         @map("category_slug")
+  name          String
+  shortName     String         @map("short_name")
+  price         Int
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  category      Category       @relation(fields: [categorySlug], references: [slug], onDelete: Restrict)
+  cartItems     CartItem[]
+  wishlistItems WishlistItem[]
+  orderItems    OrderItem[]
+
+  @@map("products")
+}
+
+model CartItem {
+  id         Int      @id @default(autoincrement())
+  userId     String   @map("user_id")
+  productSlug String  @map("product_slug")
+  quantity   Int
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productSlug], references: [slug], onDelete: Restrict)
+
+  @@unique([userId, productSlug])
+  @@index([userId])
+  @@map("cart_items")
+}
+
+model WishlistItem {
+  id         Int      @id @default(autoincrement())
+  userId     String   @map("user_id")
+  productSlug String  @map("product_slug")
+  createdAt  DateTime @default(now()) @map("created_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productSlug], references: [slug], onDelete: Restrict)
+
+  @@unique([userId, productSlug])
+  @@index([userId])
+  @@map("wishlist_items")
+}
+
+model Order {
+  id              String      @id
+  userId          String      @map("user_id")
+  status          String      @default("placed")
+  billingName     String      @map("billing_name")
+  billingEmail    String      @map("billing_email")
+  billingPhone    String      @map("billing_phone")
+  shippingAddress String      @map("shipping_address")
+  shippingZipCode String      @map("shipping_zip_code")
+  shippingCity    String      @map("shipping_city")
+  shippingCountry String      @map("shipping_country")
+  paymentMethod   String      @map("payment_method")
+  subtotal        Int
+  shippingFee     Int         @map("shipping_fee")
+  vat             Int
+  grandTotal      Int         @map("grand_total")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items           OrderItem[]
+
+  @@index([userId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id         Int      @id @default(autoincrement())
+  orderId    String   @map("order_id")
+  productSlug String  @map("product_slug")
+  quantity   Int
+  unitPrice  Int      @map("unit_price")
+  lineTotal  Int      @map("line_total")
+  createdAt  DateTime @default(now()) @map("created_at")
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productSlug], references: [slug], onDelete: Restrict)
+
+  @@map("order_items")
+}

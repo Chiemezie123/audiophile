@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
 import "./globals.css";
-
-const manrope = Manrope({
-  variable: "--font-manrope",
-  subsets: ["latin"],
-});
+import "./toast-custom.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import CartSync from "@/components/CartSync";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ReduxProvider from "@/store/ReduxProvider";
 
 export const metadata: Metadata = {
-  title: "audiophile",
+  title: "fuzzybeats",
   description: "Enhance your audio experience",
 };
 
@@ -19,7 +19,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={` ${manrope.variable} antialiased`}>{children}</body>
+      <body>
+        <ReduxProvider>
+          <AuthProvider>
+            <CartSync />
+            {children}
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={true}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+              className="toast-container"
+              toastClassName="custom-toast"
+              progressClassName="toast-progress"
+            />
+          </AuthProvider>
+        </ReduxProvider>
+      </body>
     </html>
   );
 }
