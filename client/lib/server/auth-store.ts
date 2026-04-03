@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 
-import { getDb, nowIso } from "./sqlite";
+import { getDb, nowIso } from "./db";
 
 const OTP_TTL_MS = 10 * 60 * 1000;
 const SECRET = process.env.AUTH_SECRET || "fuzzybeats-local-auth-secret";
@@ -8,18 +8,16 @@ const SECRET = process.env.AUTH_SECRET || "fuzzybeats-local-auth-secret";
 export const SESSION_COOKIE_NAME = "fuzzybeats_session";
 export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 
-type StoredUserRow = {
+type PrismaUserShape = {
   id: string;
   email: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   photo: string;
-  auth_provider: string;
-  is_email_verified: number;
+  authProvider: string;
+  isEmailVerified: boolean;
   role: string;
 };
-
-type SanitizedUser = ReturnType<typeof sanitizeUser>;
 
 function digest(value: string) {
   return crypto.createHash("sha256").update(value).digest("hex");
@@ -51,7 +49,7 @@ function signToken(payload: { userId: string; email: string }) {
       iat: Date.now(),
     })
   ).toString("base64url");
-  
+
   const signature = crypto
     .createHmac("sha256", SECRET)
     .update(encodedPayload)
@@ -93,151 +91,117 @@ export function verifyToken(token: string) {
   }
 }
 
-function sanitizeUser(user: StoredUserRow) {
+function sanitizeUser(user: PrismaUserShape) {
   return {
     id: user.id,
     email: user.email,
-    firstName: user.first_name || "",
-    lastName: user.last_name || "",
+    firstName: user.firstName || "",
+    lastName: user.lastName || "",
     photo: user.photo || "",
-    authProvider: user.auth_provider,
-    isEmailVerified: Boolean(user.is_email_verified),
+    authProvider: user.authProvider,
+    isEmailVerified: Boolean(user.isEmailVerified),
     role: user.role,
   };
 }
 
 export async function userExistsByEmail(email: string) {
-  const db = getDb();
+  const db = await getDb();
   const normalizedEmail = email.trim().toLowerCase();
-  const user = db
-    .prepare(
-      `
-        SELECT id
-        FROM users
-        WHERE email = ?
-        LIMIT 1
-      `
-    )
-    .get(normalizedEmail) as { id: string } | undefined;
+  const user = await db.user.findUnique({
+    where: { email: normalizedEmail },
+    select: { id: true },
+  });
 
   return Boolean(user);
 }
 
 export async function createOtpForEmail(email: string) {
-  const db = getDb();
+  const db = await getDb();
   const normalizedEmail = email.trim().toLowerCase();
   const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
 
-  db.prepare(`DELETE FROM otp_codes WHERE email = ?`).run(normalizedEmail);
-  db.prepare(
-    `
-      INSERT INTO otp_codes (email, code_hash, expires_at, created_at)
-      VALUES (?, ?, ?, ?)
-    `
-  ).run(normalizedEmail, digest(otp), Date.now() + OTP_TTL_MS, nowIso());
+  await db.otpCode.deleteMany({
+    where: { email: normalizedEmail },
+  });
+
+  await db.otpCode.create({
+    data: {
+      email: normalizedEmail,
+      codeHash: digest(otp),
+      expiresAt: BigInt(Date.now() + OTP_TTL_MS),
+      createdAt: new Date(),
+    },
+  });
 
   return otp;
 }
 
 export async function verifyOtpForEmail(email: string, otp: string) {
-  const db = getDb();
+  const db = await getDb();
   const normalizedEmail = email.trim().toLowerCase();
-  const otpRow = db
-    .prepare(
-      `
-        SELECT id, code_hash, expires_at
-        FROM otp_codes
-        WHERE email = ? AND used_at IS NULL
-        ORDER BY id DESC
-        LIMIT 1
-      `
-    )
-    .get(normalizedEmail) as
-    | { id: number; code_hash: string; expires_at: number }
-    | undefined;
+  const otpRow = await db.otpCode.findFirst({
+    where: {
+      email: normalizedEmail,
+      usedAt: null,
+    },
+    orderBy: {
+      id: "desc",
+    },
+  });
 
   if (!otpRow) {
     return false;
   }
 
   const isValid =
-    otpRow.expires_at > Date.now() && otpRow.code_hash === digest(otp);
+    Number(otpRow.expiresAt) > Date.now() && otpRow.codeHash === digest(otp);
 
   if (isValid) {
-    db.prepare(`UPDATE otp_codes SET used_at = ? WHERE id = ?`).run(
-      Date.now(),
-      otpRow.id
-    );
+    await db.otpCode.update({
+      where: { id: otpRow.id },
+      data: { usedAt: BigInt(Date.now()) },
+    });
   }
 
   return isValid;
 }
 
 export async function createOrUpdatePasswordUser(email: string, password: string) {
-  const db = getDb();
+  const db = await getDb();
   const normalizedEmail = email.trim().toLowerCase();
   const passwordHash = await hashPassword(password);
-  const now = nowIso();
-  const existingUser = db
-    .prepare(
-      `
-        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
-        FROM users
-        WHERE email = ?
-        LIMIT 1
-      `
-    )
-    .get(normalizedEmail) as StoredUserRow | undefined;
+  const existingUser = await db.user.findUnique({
+    where: { email: normalizedEmail },
+  });
 
-  if (!existingUser) {
-    const userId = crypto.randomUUID();
-    db.prepare(
-      `
-        INSERT INTO users (
-          id, email, password_hash, first_name, last_name, photo, auth_provider,
-          is_email_verified, role, created_at, updated_at
-        )
-        VALUES (?, ?, ?, '', '', '', 'local', 1, 'user', ?, ?)
-      `
-    ).run(userId, normalizedEmail, passwordHash, now, now);
+  const user = existingUser
+    ? await db.user.update({
+        where: { id: existingUser.id },
+        data: {
+          passwordHash,
+          authProvider: "local",
+          isEmailVerified: true,
+          updatedAt: new Date(),
+        },
+      })
+    : await db.user.create({
+        data: {
+          email: normalizedEmail,
+          passwordHash,
+          firstName: "",
+          lastName: "",
+          photo: "",
+          authProvider: "local",
+          isEmailVerified: true,
+          role: "user",
+        },
+      });
 
-    const createdUser = db
-      .prepare(
-        `
-          SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
-          FROM users
-          WHERE id = ?
-        `
-      )
-      .get(userId) as StoredUserRow;
-
-    return {
-      user: sanitizeUser(createdUser),
-      token: signToken({ userId: createdUser.id, email: createdUser.email }),
-    };
-  }
-
-  db.prepare(
-    `
-      UPDATE users
-      SET password_hash = ?, auth_provider = 'local', is_email_verified = 1, updated_at = ?
-      WHERE id = ?
-    `
-  ).run(passwordHash, now, existingUser.id);
-
-  const updatedUser = db
-    .prepare(
-      `
-        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
-        FROM users
-        WHERE id = ?
-      `
-    )
-    .get(existingUser.id) as StoredUserRow;
+  const sanitizedUser = sanitizeUser(user);
 
   return {
-    user: sanitizeUser(updatedUser),
-    token: signToken({ userId: updatedUser.id, email: updatedUser.email }),
+    user: sanitizedUser,
+    token: signToken({ userId: sanitizedUser.id, email: sanitizedUser.email }),
   };
 }
 
@@ -248,81 +212,74 @@ export async function createOrUpdateGoogleUser(input: {
   photo?: string;
   googleId: string;
 }) {
-  const db = getDb();
+  const db = await getDb();
   const normalizedEmail = input.email.trim().toLowerCase();
-  const now = nowIso();
-  const existingUser = db
-    .prepare(
-      `
-        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
-        FROM users
-        WHERE email = ?
-        LIMIT 1
-      `
-    )
-    .get(normalizedEmail) as StoredUserRow | undefined;
+  const firstName = input.firstName?.trim() || "";
+  const lastName = input.lastName?.trim() || "";
+  const photo = input.photo || "";
 
-  let userId = existingUser?.id || crypto.randomUUID();
+  const existingAccount = await db.authAccount.findUnique({
+    where: {
+      provider_providerAccountId: {
+        provider: "google",
+        providerAccountId: input.googleId,
+      },
+    },
+    include: {
+      user: true,
+    },
+  });
 
-  if (!existingUser) {
-    db.prepare(
-      `
-        INSERT INTO users (
-          id, email, password_hash, first_name, last_name, photo, auth_provider,
-          is_email_verified, role, created_at, updated_at
-        )
-        VALUES (?, ?, NULL, ?, ?, ?, 'google', 1, 'user', ?, ?)
-      `
-    ).run(
-      userId,
-      normalizedEmail,
-      input.firstName?.trim() || "",
-      input.lastName?.trim() || "",
-      input.photo || "",
-      now,
-      now
-    );
-  } else {
-    db.prepare(
-      `
-        UPDATE users
-        SET first_name = CASE WHEN first_name = '' THEN ? ELSE first_name END,
-            last_name = CASE WHEN last_name = '' THEN ? ELSE last_name END,
-            photo = CASE WHEN photo = '' THEN ? ELSE photo END,
-            auth_provider = 'google',
-            is_email_verified = 1,
-            updated_at = ?
-        WHERE id = ?
-      `
-    ).run(
-      input.firstName?.trim() || "",
-      input.lastName?.trim() || "",
-      input.photo || "",
-      now,
-      userId
-    );
-  }
+  const existingUserByEmail =
+    existingAccount?.user ||
+    (await db.user.findUnique({
+      where: { email: normalizedEmail },
+    }));
 
-  db.prepare(
-    `
-      INSERT INTO auth_accounts (user_id, provider, provider_account_id, created_at, updated_at)
-      VALUES (?, 'google', ?, ?, ?)
-      ON CONFLICT(provider, provider_account_id) DO UPDATE SET
-        user_id = excluded.user_id,
-        updated_at = excluded.updated_at
-    `
-  ).run(userId, input.googleId, now, now);
+  const user = existingUserByEmail
+    ? await db.user.update({
+        where: { id: existingUserByEmail.id },
+        data: {
+          firstName: existingUserByEmail.firstName || firstName,
+          lastName: existingUserByEmail.lastName || lastName,
+          photo: existingUserByEmail.photo || photo,
+          authProvider: "google",
+          isEmailVerified: true,
+          updatedAt: new Date(),
+        },
+      })
+    : await db.user.create({
+        data: {
+          email: normalizedEmail,
+          passwordHash: null,
+          firstName,
+          lastName,
+          photo,
+          authProvider: "google",
+          isEmailVerified: true,
+          role: "user",
+        },
+      });
 
-  const user = db
-    .prepare(
-      `
-        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
-        FROM users
-        WHERE id = ?
-        LIMIT 1
-      `
-    )
-    .get(userId) as StoredUserRow;
+  await db.authAccount.upsert({
+    where: {
+      provider_providerAccountId: {
+        provider: "google",
+        providerAccountId: input.googleId,
+      },
+    },
+    update: {
+      userId: user.id,
+      updatedAt: new Date(),
+    },
+    create: {
+      userId: user.id,
+      provider: "google",
+      providerAccountId: input.googleId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
 
   const sanitizedUser = sanitizeUser(user);
 
@@ -333,38 +290,31 @@ export async function createOrUpdateGoogleUser(input: {
 }
 
 export async function loginUser(email: string, password: string) {
-  const db = getDb();
+  const db = await getDb();
   const normalizedEmail = email.trim().toLowerCase();
-  const userRow = db
-    .prepare(
-      `
-        SELECT id, email, password_hash, first_name, last_name, photo, auth_provider, is_email_verified, role
-        FROM users
-        WHERE email = ?
-        LIMIT 1
-      `
-    )
-    .get(normalizedEmail) as
-    | (StoredUserRow & { password_hash: string | null })
-    | undefined;
+  const user = await db.user.findUnique({
+    where: { email: normalizedEmail },
+  });
 
-  if (!userRow) {
+  if (!user) {
     return null;
   }
 
-  const validPassword = await verifyPassword(password, userRow.password_hash);
+  const validPassword = await verifyPassword(password, user.passwordHash);
   if (!validPassword) {
     return null;
   }
 
-  db.prepare(`UPDATE users SET updated_at = ? WHERE id = ?`).run(
-    nowIso(),
-    userRow.id
-  );
+  await db.user.update({
+    where: { id: user.id },
+    data: { updatedAt: new Date() },
+  });
+
+  const sanitizedUser = sanitizeUser(user);
 
   return {
-    user: sanitizeUser(userRow),
-    token: signToken({ userId: userRow.id, email: userRow.email }),
+    user: sanitizedUser,
+    token: signToken({ userId: sanitizedUser.id, email: sanitizedUser.email }),
   };
 }
 
@@ -377,29 +327,15 @@ export async function updateUserProfileFromToken(
     return null;
   }
 
-  const db = getDb();
-  db.prepare(
-    `
-      UPDATE users
-      SET first_name = ?, last_name = ?, updated_at = ?
-      WHERE id = ?
-    `
-  ).run(profile.firstName.trim(), profile.lastName.trim(), nowIso(), payload.userId);
-
-  const updatedUser = db
-    .prepare(
-      `
-        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
-        FROM users
-        WHERE id = ?
-        LIMIT 1
-      `
-    )
-    .get(payload.userId) as StoredUserRow | undefined;
-
-  if (!updatedUser) {
-    return null;
-  }
+  const db = await getDb();
+  const updatedUser = await db.user.update({
+    where: { id: payload.userId },
+    data: {
+      firstName: profile.firstName.trim(),
+      lastName: profile.lastName.trim(),
+      updatedAt: new Date(),
+    },
+  });
 
   return sanitizeUser(updatedUser);
 }
@@ -411,17 +347,10 @@ export async function getUserFromToken(token: string) {
     return null;
   }
 
-  const db = getDb();
-  const user = db
-    .prepare(
-      `
-        SELECT id, email, first_name, last_name, photo, auth_provider, is_email_verified, role
-        FROM users
-        WHERE id = ?
-        LIMIT 1
-      `
-    )
-    .get(payload.userId) as StoredUserRow | undefined;
+  const db = await getDb();
+  const user = await db.user.findUnique({
+    where: { id: payload.userId },
+  });
 
   if (!user) {
     return null;

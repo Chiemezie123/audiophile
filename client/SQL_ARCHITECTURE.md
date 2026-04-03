@@ -5,7 +5,7 @@
 MongoDB:
 - database -> collection -> document
 
-SQLite / SQL:
+PostgreSQL / SQL:
 - database -> table -> row
 
 Examples:
@@ -15,20 +15,23 @@ Examples:
 
 ## Active database
 
-The Next.js app now uses SQLite through Node's built-in `node:sqlite` module.
+The Next.js app now targets PostgreSQL through Prisma.
 
-Database file:
-- `.data/fuzzybeats.sqlite`
+Prisma schema:
+- `prisma/schema.prisma`
 
-Bootstrap file:
-- `lib/server/sqlite.ts`
+Prisma config:
+- `prisma.config.ts`
+
+Database bootstrap and seed helper:
+- `lib/server/db.ts`
 
 ## Core tables
 
 - `users`
   - account identity, local password hash, profile details
 - `auth_accounts`
-  - provider links for future OAuth expansion
+  - provider links for Google and future OAuth expansion
 - `otp_codes`
   - hashed OTP records with expiry and used state
 - `categories`
@@ -87,3 +90,14 @@ Do not use it as the active runtime.
 The active backend logic lives inside the Next app under:
 - `app/api`
 - `lib/server`
+
+## Deployment
+
+For local development or Vercel deployment:
+- create a PostgreSQL database
+- set `DATABASE_URL`
+- run `npm run prisma:generate`
+- run `npm run prisma:push`
+
+On Vercel, use a managed Postgres provider such as Neon and add the same
+environment variables in the project settings.
