@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "cross-env NEXT_TELEMETRY_DISABLED=1 NODE_OPTIONS=\"--max-old-space-size=4096\" next dev",
     "dev:windows": "set NEXT_TELEMETRY_DISABLED=1 && set NODE_OPTIONS=--max-old-space-size=4096 && next dev",
     "build": "next build",
+    "vercel-build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "prisma generate",

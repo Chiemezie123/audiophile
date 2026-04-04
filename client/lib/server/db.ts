@@ -1,18 +1,20 @@
-import { prisma } from "./prisma";
+import { getPrismaClient } from "./prisma";
 import { categorySeed, productSeed } from "./product-seed";
 
 let seeded = false;
 
 export async function getDb() {
+  const prisma = getPrismaClient();
+
   if (!seeded) {
-    await seedReferenceData();
+    await seedReferenceData(prisma);
     seeded = true;
   }
 
   return prisma;
 }
 
-async function seedReferenceData() {
+async function seedReferenceData(prisma: ReturnType<typeof getPrismaClient>) {
   for (const category of categorySeed) {
     await prisma.category.upsert({
       where: { slug: category.slug },

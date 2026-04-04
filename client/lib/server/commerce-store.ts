@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import type { Prisma } from "@prisma/client";
 
 import { getDb } from "./db";
 
@@ -17,6 +18,11 @@ export type CreateOrderInput = {
   shippingCountry: string;
   paymentMethod: string;
 };
+
+type DbTransaction = Omit<
+  Prisma.TransactionClient,
+  "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+>;
 
 function normalizeItems(items: PersistedCartItem[]) {
   const merged = new Map<string, number>();
@@ -59,7 +65,7 @@ export async function replaceCartItemsForUser(
   const db = await getDb();
   const nextItems = normalizeItems(items);
 
-  await db.$transaction(async (tx) => {
+  await db.$transaction(async (tx: DbTransaction) => {
     await tx.cartItem.deleteMany({
       where: { userId },
     });
@@ -85,7 +91,7 @@ export async function mergeCartItemsForUser(
   const db = await getDb();
   const nextItems = normalizeItems(items);
 
-  await db.$transaction(async (tx) => {
+  await db.$transaction(async (tx: DbTransaction) => {
     for (const item of nextItems) {
       const existing = await tx.cartItem.findUnique({
         where: {
@@ -242,7 +248,7 @@ export async function createOrderFromCartForUser(
   }
 
   const subtotal = cartRows.reduce(
-    (sum, item) => sum + item.quantity * item.product.price,
+    (sum: number, item: typeof cartRows[number]) => sum + item.quantity * item.product.price,
     0
   );
   const shippingFee = 50;
@@ -250,7 +256,7 @@ export async function createOrderFromCartForUser(
   const grandTotal = subtotal + shippingFee;
   const orderId = `ord_${crypto.randomUUID()}`;
 
-  await db.$transaction(async (tx) => {
+  await db.$transaction(async (tx: DbTransaction) => {
     await tx.order.create({
       data: {
         id: orderId,
