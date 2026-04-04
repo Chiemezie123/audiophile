@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import type { Prisma } from "@prisma/client";
 
 import { getDb } from "./db";
 
@@ -17,6 +18,11 @@ export type CreateOrderInput = {
   shippingCountry: string;
   paymentMethod: string;
 };
+
+type DbTransaction = Omit<
+  Prisma.TransactionClient,
+  "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+>;
 
 function normalizeItems(items: PersistedCartItem[]) {
   const merged = new Map<string, number>();
@@ -59,7 +65,7 @@ export async function replaceCartItemsForUser(
   const db = await getDb();
   const nextItems = normalizeItems(items);
 
-  await db.$transaction(async (tx:any) => {
+  await db.$transaction(async (tx: DbTransaction) => {
     await tx.cartItem.deleteMany({
       where: { userId },
     });
@@ -85,8 +91,8 @@ export async function mergeCartItemsForUser(
   const db = await getDb();
   const nextItems = normalizeItems(items);
 
-  await db.$transaction(async (tx:any) => {
-    for (const item of nextItems as any) {
+  await db.$transaction(async (tx: DbTransaction) => {
+    for (const item of nextItems) {
       const existing = await tx.cartItem.findUnique({
         where: {
           userId_productSlug: {
@@ -137,7 +143,7 @@ export async function getWishlistItemsForUser(userId: string) {
     },
   });
 
-  return rows.map((row:any) => ({
+  return rows.map((row) => ({
     productSlug: row.productSlug,
     createdAt: row.createdAt.toISOString(),
   }));
@@ -195,7 +201,7 @@ export async function getOrdersForUser(userId: string) {
     },
   });
 
-  return orders.map((order:any) => ({
+  return orders.map((order) => ({
     id: order.id,
     status: order.status,
     billingName: order.billingName,
@@ -211,7 +217,7 @@ export async function getOrdersForUser(userId: string) {
     vat: order.vat,
     grandTotal: order.grandTotal,
     createdAt: order.createdAt.toISOString(),
-    items: order.items.map((item:any) => ({
+    items: order.items.map((item) => ({
       productSlug: item.productSlug,
       quantity: item.quantity,
       unitPrice: item.unitPrice,
@@ -250,7 +256,7 @@ export async function createOrderFromCartForUser(
   const grandTotal = subtotal + shippingFee;
   const orderId = `ord_${crypto.randomUUID()}`;
 
-  await db.$transaction(async (tx:any) => {
+  await db.$transaction(async (tx: DbTransaction) => {
     await tx.order.create({
       data: {
         id: orderId,
