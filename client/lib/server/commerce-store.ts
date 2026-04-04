@@ -59,7 +59,7 @@ export async function replaceCartItemsForUser(
   const db = await getDb();
   const nextItems = normalizeItems(items);
 
-  await db.$transaction(async (tx) => {
+  await db.$transaction(async (tx:any) => {
     await tx.cartItem.deleteMany({
       where: { userId },
     });
@@ -85,8 +85,8 @@ export async function mergeCartItemsForUser(
   const db = await getDb();
   const nextItems = normalizeItems(items);
 
-  await db.$transaction(async (tx) => {
-    for (const item of nextItems) {
+  await db.$transaction(async (tx:any) => {
+    for (const item of nextItems as any) {
       const existing = await tx.cartItem.findUnique({
         where: {
           userId_productSlug: {
@@ -137,7 +137,7 @@ export async function getWishlistItemsForUser(userId: string) {
     },
   });
 
-  return rows.map((row) => ({
+  return rows.map((row:any) => ({
     productSlug: row.productSlug,
     createdAt: row.createdAt.toISOString(),
   }));
@@ -195,7 +195,7 @@ export async function getOrdersForUser(userId: string) {
     },
   });
 
-  return orders.map((order) => ({
+  return orders.map((order:any) => ({
     id: order.id,
     status: order.status,
     billingName: order.billingName,
@@ -211,7 +211,7 @@ export async function getOrdersForUser(userId: string) {
     vat: order.vat,
     grandTotal: order.grandTotal,
     createdAt: order.createdAt.toISOString(),
-    items: order.items.map((item) => ({
+    items: order.items.map((item:any) => ({
       productSlug: item.productSlug,
       quantity: item.quantity,
       unitPrice: item.unitPrice,
@@ -242,7 +242,7 @@ export async function createOrderFromCartForUser(
   }
 
   const subtotal = cartRows.reduce(
-    (sum, item) => sum + item.quantity * item.product.price,
+    (sum: number, item: typeof cartRows[number]) => sum + item.quantity * item.product.price,
     0
   );
   const shippingFee = 50;
@@ -250,7 +250,7 @@ export async function createOrderFromCartForUser(
   const grandTotal = subtotal + shippingFee;
   const orderId = `ord_${crypto.randomUUID()}`;
 
-  await db.$transaction(async (tx) => {
+  await db.$transaction(async (tx:any) => {
     await tx.order.create({
       data: {
         id: orderId,
@@ -273,7 +273,7 @@ export async function createOrderFromCartForUser(
 
     if (cartRows.length > 0) {
       await tx.orderItem.createMany({
-        data: cartRows.map((item) => ({
+        data: cartRows.map((item:any) => ({
           orderId,
           productSlug: item.productSlug,
           quantity: item.quantity,
