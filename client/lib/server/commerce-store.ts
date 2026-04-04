@@ -279,7 +279,7 @@ export async function createOrderFromCartForUser(
 
     if (cartRows.length > 0) {
       await tx.orderItem.createMany({
-        data: cartRows.map((item:any) => ({
+        data: cartRows.map((item) => ({
           orderId,
           productSlug: item.productSlug,
           quantity: item.quantity,
