@@ -1,24 +1,24 @@
 import type { StaticImageData } from "next/image";
 
-import HeadphonesHero from "@/assets/Headphones.png";
-import HeadphonesCategoryThumb from "@/assets/Headphones 2.png";
-import HeadphonesMarkII from "@/assets/Headphones3.png";
-import HeadphonesXX59 from "@/assets/Headphones4.png";
-import EarphonesThumb from "@/assets/Earphones.png";
-import EarphonesLifestyle from "@/assets/Earphones2.png";
-import SpeakersZX9 from "@/assets/Speakers.png";
-import SpeakersThumb from "@/assets/Speakers2.png";
-import SpeakersZX7Lifestyle from "@/assets/Speakers3.png";
-import SpeakersZX7 from "@/assets/Speakers4.png";
-import DisplayHeadphones1 from "@/assets/DisplayHeadphones1.png";
-import DisplayHeadphones2 from "@/assets/DisplayHeadphones2.png";
-import DisplayHeadphones3 from "@/assets/DisplayHeadphones3.png";
-import DisplayEarphones1 from "@/assets/DisplayEarphones1.png";
-import DisplayEarphones2 from "@/assets/DisplayEarphones2.png";
-import DisplayEarphones3 from "@/assets/DisplayEarphones3.png";
-import DisplaySpeakers1 from "@/assets/DisplaySpeakers1.png";
-import DisplaySpeakers2 from "@/assets/DisplaySpeakers2.png";
-import DisplaySpeakers3 from "@/assets/DisplaySpeakers3.png";
+import HeadphonesHero from "@/assets/Headphones.webp";
+import HeadphonesCategoryThumb from "@/assets/Headphones 2.webp";
+import HeadphonesMarkII from "@/assets/Headphones3.webp";
+import HeadphonesXX59 from "@/assets/Headphones4.webp";
+import EarphonesThumb from "@/assets/Earphones.webp";
+import EarphonesLifestyle from "@/assets/Earphones2.webp";
+import SpeakersZX9 from "@/assets/Speakers.webp";
+import SpeakersThumb from "@/assets/Speakers2.webp";
+import SpeakersZX7Lifestyle from "@/assets/Speakers3.webp";
+import SpeakersZX7 from "@/assets/Speakers4.webp";
+import DisplayHeadphones1 from "@/assets/DisplayHeadphones1.webp";
+import DisplayHeadphones2 from "@/assets/DisplayHeadphones2.webp";
+import DisplayHeadphones3 from "@/assets/DisplayHeadphones3.webp";
+import DisplayEarphones1 from "@/assets/DisplayEarphones1.webp";
+import DisplayEarphones2 from "@/assets/DisplayEarphones2.webp";
+import DisplayEarphones3 from "@/assets/DisplayEarphones3.webp";
+import DisplaySpeakers1 from "@/assets/DisplaySpeakers1.webp";
+import DisplaySpeakers2 from "@/assets/DisplaySpeakers2.webp";
+import DisplaySpeakers3 from "@/assets/DisplaySpeakers3.webp";
 
 export const categories = ["headphones", "speakers", "earphones"] as const;
 

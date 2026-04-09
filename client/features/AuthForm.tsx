@@ -2,9 +2,9 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import AudioModel from "@/assets/Audio Model.png";
-import HeadphonesHero from "@/assets/Headphones3.png";
-import EarphonesLifestyle from "@/assets/Earphones2.png";
+import AudioModel from "@/assets/Audio Model.webp";
+import HeadphonesHero from "@/assets/Headphones3.webp";
+import EarphonesLifestyle from "@/assets/Earphones2.webp";
 import InstagramColored from "@/assets/svg/InstagramColored.svg";
 import { Input } from "@/components/ui/textIpnut";
 import type { InputProps } from "@/components/ui/textIpnut";

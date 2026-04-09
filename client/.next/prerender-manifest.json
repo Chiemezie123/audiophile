@@ -54,7 +54,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/my-account": {
+    "/login": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -67,8 +67,109 @@
         }
       ],
       "initialRevalidateSeconds": false,
+<<<<<<< Updated upstream
       "srcRoute": "/my-account",
       "dataRoute": "/my-account.rsc",
+=======
+      "srcRoute": "/login",
+      "dataRoute": "/login.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/complete-profile": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/complete-profile",
+      "dataRoute": "/complete-profile.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/reset-password": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/reset-password",
+      "dataRoute": "/reset-password.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/signup": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/signup",
+      "dataRoute": "/signup.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/verify-email": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/verify-email",
+      "dataRoute": "/verify-email.rsc",
+>>>>>>> Stashed changes
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -102,7 +203,10 @@
         "x-next-revalidate-tag-token"
       ]
     },
+<<<<<<< Updated upstream
     "/reset-password": {
+=======
+    "/wishlist": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -115,8 +219,81 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/reset-password",
-      "dataRoute": "/reset-password.rsc",
+      "srcRoute": "/wishlist",
+      "dataRoute": "/wishlist.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/categories/earphones": {
+>>>>>>> Stashed changes
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/categories/[category]",
+      "dataRoute": "/categories/earphones.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/categories/headphones": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/categories/[category]",
+      "dataRoute": "/categories/headphones.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/categories/speakers": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/categories/[category]",
+      "dataRoute": "/categories/speakers.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -294,6 +471,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
+<<<<<<< Updated upstream
     "/wishlist": {
       "experimentalBypassFor": [
         {
@@ -415,6 +593,9 @@
       ]
     },
     "/categories/earphones": {
+=======
+    "/forgot-password": {
+>>>>>>> Stashed changes
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -427,8 +608,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/categories/[category]",
-      "dataRoute": "/categories/earphones.rsc",
+      "srcRoute": "/forgot-password",
+      "dataRoute": "/forgot-password.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -438,7 +619,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/categories/headphones": {
+    "/my-account": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -451,8 +632,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/categories/[category]",
-      "dataRoute": "/categories/headphones.rsc",
+      "srcRoute": "/my-account",
+      "dataRoute": "/my-account.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -462,7 +643,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/categories/speakers": {
+    "/": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -475,8 +656,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/categories/[category]",
-      "dataRoute": "/categories/speakers.rsc",
+      "srcRoute": "/",
+      "dataRoute": "/index.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -512,31 +693,6 @@
     }
   },
   "dynamicRoutes": {
-    "/products/[slug]": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "routeRegex": "^/products/([^/]+?)(?:/)?$",
-      "dataRoute": "/products/[slug].rsc",
-      "fallback": null,
-      "dataRouteRegex": "^/products/([^/]+?)\\.rsc$",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
     "/categories/[category]": {
       "experimentalBypassFor": [
         {
@@ -553,6 +709,31 @@
       "dataRoute": "/categories/[category].rsc",
       "fallback": null,
       "dataRouteRegex": "^/categories/([^/]+?)\\.rsc$",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/products/[slug]": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "routeRegex": "^/products/([^/]+?)(?:/)?$",
+      "dataRoute": "/products/[slug].rsc",
+      "fallback": null,
+      "dataRouteRegex": "^/products/([^/]+?)\\.rsc$",
       "allowHeader": [
         "host",
         "x-matched-path",
