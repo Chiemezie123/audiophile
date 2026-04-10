@@ -33,6 +33,20 @@ function getTransport() {
   });
 }
 
+export function getMailerDebugConfig() {
+  return {
+    host: process.env.SMTP_HOST || null,
+    port: process.env.SMTP_PORT || "587",
+    secure:
+      process.env.SMTP_SECURE === "true" ||
+      Number(process.env.SMTP_PORT || "587") === 465,
+    userPresent: Boolean(process.env.SMTP_USER),
+    passPresent: Boolean(process.env.SMTP_PASS),
+    fromEmail: process.env.SMTP_FROM_EMAIL || null,
+    fromName: process.env.SMTP_FROM_NAME || "FuzzyBeats",
+  };
+}
+
 function buildOtpHtml(otp: string) {
   return `
     <div style="font-family:Arial,Helvetica,sans-serif;background:#f7f3ec;padding:32px;color:#111215;">

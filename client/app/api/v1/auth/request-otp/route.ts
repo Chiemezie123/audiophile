@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { createOtpForEmail, userExistsByEmail } from "@/lib/server/auth-store";
-import { sendOtpEmail } from "@/lib/server/mailer";
+import { getMailerDebugConfig, sendOtpEmail } from "@/lib/server/mailer";
 
 export async function POST(request: Request) {
   try {
@@ -40,7 +40,15 @@ export async function POST(request: Request) {
       message: "OTP sent to your email.",
       devOtp: process.env.NODE_ENV !== "production" ? otp : undefined,
     });
-  } catch {
+  }
+  catch (error) {
+    console.error("request-otp failed", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+      nodeEnv: process.env.NODE_ENV,
+      mailer: getMailerDebugConfig(),
+    });
+
     return NextResponse.json(
       { message: "Failed to create OTP." },
       { status: 500 }
