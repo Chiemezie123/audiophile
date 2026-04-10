@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { createOtpForEmail, userExistsByEmail } from "@/lib/server/auth-store";
+import { sendOtpEmail } from "@/lib/server/mailer";
 
 export async function POST(request: Request) {
   try {
@@ -26,6 +27,10 @@ export async function POST(request: Request) {
     }
 
     const otp = await createOtpForEmail(email);
+
+    if (process.env.NODE_ENV === "production") {
+      await sendOtpEmail({ email, otp });
+    }
 
     return NextResponse.json({
       success: true,
