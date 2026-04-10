@@ -29,6 +29,8 @@ export async function POST(request: Request) {
     const otp = await createOtpForEmail(email);
 
     if (process.env.NODE_ENV === "production") {
+      console.log("Sending OTP to email:", email);
+      console.log("OTP:", otp);
       await sendOtpEmail({ email, otp });
     }
 
