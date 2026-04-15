@@ -88,20 +88,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const logout = async () => {
     try {
-      if (reduxUser.id && cartHydrated) {
-        await fetch("/api/v1/cart", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ items: cartItems }),
-        });
-      }
-
       await fetch("/api/v1/auth/logout", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         credentials: "include",
+        body: JSON.stringify({
+          items: reduxUser.id && cartHydrated ? cartItems : [],
+        }),
       });
     } catch (error) {
       console.error("Logout error:", error);
