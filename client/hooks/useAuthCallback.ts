@@ -9,6 +9,13 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  phone: string;
+  shippingAddress: string;
+  shippingCity: string;
+  shippingState: string;
+  shippingCountry: string;
+  newsletterOptIn: boolean;
+  storeCredit: number;
   photo: string;
   authProvider: string;
   isEmailVerified: boolean;

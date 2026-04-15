@@ -1,5 +1,6 @@
 "use client";
 import React, {
+  useCallback,
   createContext,
   useContext,
   useEffect,
@@ -14,6 +15,13 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  phone: string;
+  shippingAddress: string;
+  shippingCity: string;
+  shippingState: string;
+  shippingCountry: string;
+  newsletterOptIn: boolean;
+  storeCredit: number;
   photo: string;
   authProvider: string;
   isEmailVerified: boolean;
@@ -79,6 +87,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         firstName: reduxUser.firstName || "",
         lastName: reduxUser.lastName || "",
         email: reduxUser.email || "",
+        phone: reduxUser.phone || "",
+        shippingAddress: reduxUser.shippingAddress || "",
+        shippingCity: reduxUser.shippingCity || "",
+        shippingState: reduxUser.shippingState || "",
+        shippingCountry: reduxUser.shippingCountry || "",
+        newsletterOptIn: reduxUser.newsletterOptIn ?? true,
+        storeCredit: reduxUser.storeCredit || 0,
         photo: reduxUser.photo || "",
         authProvider: reduxUser.authProvider || "local",
         isEmailVerified: reduxUser.isEmailVerified || false,
@@ -86,7 +101,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       } as User)
     : null;
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await fetch("/api/v1/auth/logout", {
         method: "POST",
@@ -104,16 +119,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       dispatch(clearUser());
       setIsAuthResolved(true);
     }
-  };
+  }, [cartHydrated, cartItems, dispatch, reduxUser.id]);
 
-  const updateUser = (userData: User | null) => {
+  const updateUser = useCallback((userData: User | null) => {
     if (userData) {
       dispatch(setReduxUser(userData));
     } else {
       dispatch(clearUser());
     }
     setIsAuthResolved(true);
-  };
+  }, [dispatch]);
 
   return (
     <AuthContext.Provider

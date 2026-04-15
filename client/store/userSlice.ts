@@ -4,6 +4,13 @@ interface UserState {
   firstName?: string;
   lastName?: string;
   email?: string;
+  phone?: string;
+  shippingAddress?: string;
+  shippingCity?: string;
+  shippingState?: string;
+  shippingCountry?: string;
+  newsletterOptIn?: boolean;
+  storeCredit?: number;
   photo?: string;
   authProvider?: string;
   isEmailVerified?: boolean;
@@ -17,6 +24,13 @@ const initialState: UserState = {
   firstName: "",
   lastName: "",
   email: "",
+  phone: "",
+  shippingAddress: "",
+  shippingCity: "",
+  shippingState: "",
+  shippingCountry: "",
+  newsletterOptIn: true,
+  storeCredit: 0,
   photo: "",
   authProvider: "",
   isEmailVerified: false,
@@ -38,6 +52,20 @@ const userSlice = createSlice({
         state.lastName = action.payload.lastName;
       if (action.payload.email !== undefined)
         state.email = action.payload.email;
+      if (action.payload.phone !== undefined)
+        state.phone = action.payload.phone;
+      if (action.payload.shippingAddress !== undefined)
+        state.shippingAddress = action.payload.shippingAddress;
+      if (action.payload.shippingCity !== undefined)
+        state.shippingCity = action.payload.shippingCity;
+      if (action.payload.shippingState !== undefined)
+        state.shippingState = action.payload.shippingState;
+      if (action.payload.shippingCountry !== undefined)
+        state.shippingCountry = action.payload.shippingCountry;
+      if (action.payload.newsletterOptIn !== undefined)
+        state.newsletterOptIn = action.payload.newsletterOptIn;
+      if (action.payload.storeCredit !== undefined)
+        state.storeCredit = action.payload.storeCredit;
       if (action.payload.photo !== undefined)
         state.photo = action.payload.photo;
       if (action.payload.authProvider !== undefined)
@@ -54,6 +82,13 @@ const userSlice = createSlice({
       state.firstName = "";
       state.lastName = "";
       state.email = "";
+      state.phone = "";
+      state.shippingAddress = "";
+      state.shippingCity = "";
+      state.shippingState = "";
+      state.shippingCountry = "";
+      state.newsletterOptIn = true;
+      state.storeCredit = 0;
       state.photo = "";
       state.authProvider = "";
       state.isEmailVerified = false;

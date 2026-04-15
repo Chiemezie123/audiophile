@@ -13,7 +13,14 @@ type PrismaUserShape = {
   email: string;
   firstName: string;
   lastName: string;
-  photo: string;
+  phone?: string;
+  shippingAddress?: string;
+  shippingCity?: string;
+  shippingState?: string;
+  shippingCountry?: string;
+  newsletterOptIn?: boolean;
+  storeCredit?: number;
+  photo?: string;
   authProvider: string;
   isEmailVerified: boolean;
   role: string;
@@ -97,6 +104,13 @@ function sanitizeUser(user: PrismaUserShape) {
     email: user.email,
     firstName: user.firstName || "",
     lastName: user.lastName || "",
+    phone: user.phone || "",
+    shippingAddress: user.shippingAddress || "",
+    shippingCity: user.shippingCity || "",
+    shippingState: user.shippingState || "",
+    shippingCountry: user.shippingCountry || "",
+    newsletterOptIn: Boolean(user.newsletterOptIn),
+    storeCredit: Number(user.storeCredit || 0),
     photo: user.photo || "",
     authProvider: user.authProvider,
     isEmailVerified: Boolean(user.isEmailVerified),
@@ -190,6 +204,13 @@ export async function createOrUpdatePasswordUser(email: string, password: string
           passwordHash,
           firstName: "",
           lastName: "",
+          phone: "",
+          shippingAddress: "",
+          shippingCity: "",
+          shippingState: "",
+          shippingCountry: "",
+          newsletterOptIn: true,
+          storeCredit: 0,
           photo: "",
           authProvider: "local",
           isEmailVerified: true,
@@ -254,6 +275,13 @@ export async function createOrUpdateGoogleUser(input: {
           passwordHash: null,
           firstName,
           lastName,
+          phone: "",
+          shippingAddress: "",
+          shippingCity: "",
+          shippingState: "",
+          shippingCountry: "",
+          newsletterOptIn: true,
+          storeCredit: 0,
           photo,
           authProvider: "google",
           isEmailVerified: true,
@@ -320,7 +348,16 @@ export async function loginUser(email: string, password: string) {
 
 export async function updateUserProfileFromToken(
   token: string,
-  profile: { firstName: string; lastName: string }
+  profile: {
+    firstName: string;
+    lastName: string;
+    phone?: string;
+    shippingAddress?: string;
+    shippingCity?: string;
+    shippingState?: string;
+    shippingCountry?: string;
+    newsletterOptIn?: boolean;
+  }
 ) {
   const payload = verifyToken(token);
   if (!payload) {
@@ -333,6 +370,15 @@ export async function updateUserProfileFromToken(
     data: {
       firstName: profile.firstName.trim(),
       lastName: profile.lastName.trim(),
+      phone: profile.phone?.trim() || "",
+      shippingAddress: profile.shippingAddress?.trim() || "",
+      shippingCity: profile.shippingCity?.trim() || "",
+      shippingState: profile.shippingState?.trim() || "",
+      shippingCountry: profile.shippingCountry?.trim() || "",
+      newsletterOptIn:
+        typeof profile.newsletterOptIn === "boolean"
+          ? profile.newsletterOptIn
+          : true,
       updatedAt: new Date(),
     },
   });
