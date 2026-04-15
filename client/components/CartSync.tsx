@@ -111,6 +111,8 @@ const CartSync = () => {
     void persistRemoteCart();
   }, [hydrated, isAuthenticated, isAuthResolved, items]);
 
+
+
   useEffect(() => {
     if (!hasInitialized.current || !isAuthResolved) {
       return;
@@ -133,8 +135,7 @@ const CartSync = () => {
       }
 
       if (!previousState && isAuthenticated) {
-        const shouldMerge =
-          window.localStorage.getItem(MERGE_GUEST_CART_FLAG_KEY) === "1";
+        const shouldMerge = window.localStorage.getItem(MERGE_GUEST_CART_FLAG_KEY) === "1";
         const guestCart = window.localStorage.getItem(GUEST_CART_STORAGE_KEY);
         const parsedGuestCart = guestCart ? JSON.parse(guestCart) : [];
 

@@ -46,6 +46,8 @@ const CartModal = ({ handleModalCloser }: CartModalProps) => {
     };
   }, [handleModalCloser]);
 
+
+  
   const handleCheckout = () => {
     handleModalCloser();
     router.push(isAuthenticated ? "/checkout" : "/signup");

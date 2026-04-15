@@ -280,6 +280,10 @@ export const productsByCategory: Record<CategorySlug, Product[]> = {
 
 export const allProducts = categories.flatMap((category) => productsByCategory[category]);
 
+
+
+
+
 export function getCategoryProducts(category: string) {
   if (!categories.includes(category as CategorySlug)) {
     return null;
@@ -288,9 +292,17 @@ export function getCategoryProducts(category: string) {
   return productsByCategory[category as CategorySlug];
 }
 
+
+
+
+
 export function getProductBySlug(slug: string) {
   return allProducts.find((product) => product.slug === slug) ?? null;
 }
+
+
+
+
 
 
 
@@ -299,6 +311,9 @@ export function getRelatedProducts(product: Product) {
     .map((slug) => getProductBySlug(slug))
     .filter((value): value is Product => Boolean(value));
 }
+
+
+
 
 
 
@@ -327,12 +342,18 @@ export function searchProducts(query: string) {
     .map((entry) => entry.product);
 }
 
+
+
+
 export const featuredProducts = {
   hero: getProductBySlug("xx99-mark-ii-headphones")!,
   statement: getProductBySlug("zx9-speaker")!,
   compact: getProductBySlug("zx7-speaker")!,
   portable: getProductBySlug("yx1-wireless-earphones")!,
 };
+
+
+
 
 export const homeCategoryCards = [
   {
@@ -351,6 +372,9 @@ export const homeCategoryCards = [
     label: "Earphones",
   },
 ];
+
+
+
 
 export const searchPreviewImage = {
   headphones: HeadphonesHero,
