@@ -125,10 +125,10 @@ const CartSync = () => {
 
     const handleAuthTransition = async () => {
       if (previousState && !isAuthenticated) {
-        const guestCart = window.localStorage.getItem(GUEST_CART_STORAGE_KEY);
-        const parsedGuestCart = guestCart ? JSON.parse(guestCart) : [];
+        window.localStorage.removeItem(GUEST_CART_STORAGE_KEY);
+        window.localStorage.removeItem(MERGE_GUEST_CART_FLAG_KEY);
         skipNextPersist.current = true;
-        dispatch(hydrateCart(Array.isArray(parsedGuestCart) ? parsedGuestCart : []));
+        dispatch(hydrateCart([]));
         return;
       }
 

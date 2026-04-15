@@ -1,11 +1,1 @@
-{
-  "version": 4,
-  "routes": {},
-  "dynamicRoutes": {},
-  "notFoundRoutes": [],
-  "preview": {
-    "previewModeId": "2a5ed4a3d98355e953a671fb1fe162f8",
-    "previewModeSigningKey": "43ba3aac560b74ce2dceb1c21fc46af1b14847a75b146c48e0eeadbca5a51f80",
-    "previewModeEncryptionKey": "5dc7ed64ede35b19d4a284ba429102292eca05ad28d20b300491c231cae4a9d7"
-  }
-}
+{"version":4,"routes":{"/categories/headphones":{},"/categories/speakers":{},"/categories/earphones":{},"/products/xx99-mark-ii-headphones":{},"/products/xx99-mark-i-headphones":{},"/products/xx59-headphones":{},"/products/zx9-speaker":{},"/products/zx7-speaker":{},"/products/yx1-wireless-earphones":{}},"dynamicRoutes":{"/categories/[category]":{"fallback":null},"/products/[slug]":{"fallback":null}},"notFoundRoutes":[],"preview":{"previewModeId":"2a5ed4a3d98355e953a671fb1fe162f8","previewModeSigningKey":"43ba3aac560b74ce2dceb1c21fc46af1b14847a75b146c48e0eeadbca5a51f80","previewModeEncryptionKey":"5dc7ed64ede35b19d4a284ba429102292eca05ad28d20b300491c231cae4a9d7"}}
