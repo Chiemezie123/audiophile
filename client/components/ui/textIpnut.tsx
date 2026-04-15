@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { UseFormRegister, FieldValues, Path } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
 
 import { InputHTMLAttributes, ReactNode } from "react";
 
@@ -51,7 +52,10 @@ function Input<T extends FieldValues = FieldValues>({
   ...props
 }: InputProps<T>) {
   const [isValid, setIsValid] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
   const inputId = name ?? label ?? placeholder ?? "input-field";
+  const isPasswordInput = type === "password";
+  const resolvedType = isPasswordInput && showPassword ? "text" : type;
 
   return (
     <div className="group flex flex-col gap-[9px] w-full items-start">
@@ -75,7 +79,7 @@ function Input<T extends FieldValues = FieldValues>({
         )}
 
         <input
-          type={type}
+          type={resolvedType}
           id={inputId}
           placeholder={placeholder}
           data-slot="input"
@@ -89,13 +93,29 @@ function Input<T extends FieldValues = FieldValues>({
             "placeholder:text-sm lg:placeholder:text-sm xl:placeholder:text-sm",
             className,
             leftIcon && "pl-10",
-            rightIcon && "pr-10"
+            (rightIcon || isPasswordInput) && "pr-12"
           )}
           {...(register && name ? register(name) : {})}
           {...props}
         />
+        {isPasswordInput ? (
+          <button
+            type="button"
+            onClick={() => setShowPassword((current) => !current)}
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-black/45 transition hover:text-[#d87d4a]"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-pressed={showPassword}
+          >
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        ) : null}
         {rightIcon && (
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <div
+            className={cn(
+              "absolute inset-y-0 right-0 flex items-center pointer-events-none",
+              isPasswordInput ? "pr-10" : "pr-3"
+            )}
+          >
             {rightIcon}
           </div>
         )}
