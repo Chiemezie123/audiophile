@@ -35,6 +35,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const dispatch = useAppDispatch();
   const reduxUser = useAppSelector((state) => state.user);
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const cartHydrated = useAppSelector((state) => state.cart.hydrated);
   const [isAuthResolved, setIsAuthResolved] = useState(false);
 
   useEffect(() => {
@@ -86,6 +88,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const logout = async () => {
     try {
+      if (reduxUser.id && cartHydrated) {
+        await fetch("/api/v1/cart", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ items: cartItems }),
+        });
+      }
+
       await fetch("/api/v1/auth/logout", {
         method: "POST",
         credentials: "include",
