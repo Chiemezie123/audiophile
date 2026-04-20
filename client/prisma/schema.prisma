@@ -72,6 +72,14 @@ model Product {
   name          String
   shortName     String         @map("short_name")
   price         Int
+  tagline       String         @default("")
+  description   String         @default("")
+  isNew         Boolean        @default(false) @map("is_new")
+  imageUrls     String[]       @default([]) @map("image_urls")
+  features      String[]       @default([])
+  includes      String[]       @default([])
+  relatedSlugs  String[]       @default([]) @map("related_slugs")
+  accent        String         @default("oklch(0.7 0.08 40)")
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
   category      Category       @relation(fields: [categorySlug], references: [slug], onDelete: Restrict)

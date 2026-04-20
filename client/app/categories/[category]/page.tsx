@@ -2,12 +2,9 @@ import { notFound } from "next/navigation";
 
 import Category from "@/features/category";
 import { categories, type CategorySlug } from "@/lib/catalog";
+import { getCatalogProductsByCategory } from "@/lib/server/catalog-store";
 
-export function generateStaticParams() {
-  return categories.map((category) => ({ category }));
-}
-
-
+export const dynamic = "force-dynamic";
 
 type CategoryPageProps = {
   params: Promise<{ category: string }>;
@@ -23,5 +20,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  return <Category category={category as CategorySlug} />;
+  const products = await getCatalogProductsByCategory(category as CategorySlug);
+
+  return <Category category={category as CategorySlug} products={products} />;
 }

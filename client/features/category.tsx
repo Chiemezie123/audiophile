@@ -8,17 +8,17 @@ import Header from "./Header";
 import {
   type CategorySlug,
   categoryMeta,
-  getCategoryProducts,
   homeCategoryCards,
+  type Product,
 } from "@/lib/catalog";
 
 type CategoryProps = {
   category: CategorySlug;
+  products: Product[];
 };
 
-const Category = ({ category }: CategoryProps) => {
+const Category = ({ category, products }: CategoryProps) => {
   const meta = categoryMeta[category];
-  const products = getCategoryProducts(category) ?? [];
 
   return (
     <div className="min-h-screen bg-[#f7f4ef] text-[#131418]">

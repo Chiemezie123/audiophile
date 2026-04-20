@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Heart, Sparkles } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Heart, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -30,6 +30,14 @@ const ProductDetail = ({ product, relatedProducts }: ProductDetailProps) => {
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+
+  const galleryImages =
+    product.gallery.length >= 3
+      ? product.gallery
+      : [product.heroImage, product.heroImage, product.heroImage];
+
+  const activeGalleryImage = galleryImages[activeGalleryIndex] ?? galleryImages[0];
 
   const handleAddToCart = () => {
     dispatch(addToCart({ productSlug: product.slug, quantity }));
@@ -122,11 +130,69 @@ const ProductDetail = ({ product, relatedProducts }: ProductDetailProps) => {
               className="absolute inset-x-16 top-10 h-24 rounded-full opacity-80 blur-3xl"
               style={{ backgroundColor: product.accent }}
             />
-            <Image
-              src={product.heroImage}
-              alt={product.name}
-              className="relative mx-auto max-h-[30rem] w-auto object-contain drop-shadow-[0_36px_38px_rgba(0,0,0,0.18)]"
-            />
+            <div className="relative">
+              <Image
+                src={activeGalleryImage}
+                alt={`${product.name} view ${activeGalleryIndex + 1}`}
+                className="relative mx-auto max-h-[30rem] w-auto object-contain drop-shadow-[0_36px_38px_rgba(0,0,0,0.18)]"
+                width={900}
+                height={900}
+              />
+
+              {galleryImages.length > 1 ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActiveGalleryIndex((current) =>
+                        current === 0 ? galleryImages.length - 1 : current - 1
+                      )
+                    }
+                    className="absolute left-0 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black/8 bg-white/90 text-[#15161a] transition hover:border-[#d87d4a] hover:bg-[#d87d4a] hover:text-white"
+                    aria-label="Previous product image"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActiveGalleryIndex((current) =>
+                        current === galleryImages.length - 1 ? 0 : current + 1
+                      )
+                    }
+                    className="absolute right-0 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black/8 bg-white/90 text-[#15161a] transition hover:border-[#d87d4a] hover:bg-[#d87d4a] hover:text-white"
+                    aria-label="Next product image"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                </>
+              ) : null}
+            </div>
+
+            <div className="relative mt-8 grid gap-4 sm:grid-cols-3">
+              {galleryImages.map((image, index) => (
+                <button
+                  key={`${product.slug}-thumb-${index}`}
+                  type="button"
+                  onClick={() => setActiveGalleryIndex(index)}
+                  className={`relative overflow-hidden rounded-[1.3rem] border bg-white/65 p-2 transition ${
+                    index === activeGalleryIndex
+                      ? "border-[#d87d4a] shadow-[0_18px_32px_rgba(216,125,74,0.18)]"
+                      : "border-black/8 hover:border-[#d87d4a]/40"
+                  }`}
+                  aria-label={`View product image ${index + 1}`}
+                >
+                  <div className="relative aspect-square overflow-hidden rounded-[1rem] bg-white">
+                    <Image
+                      src={image}
+                      alt={`${product.name} thumbnail ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="rounded-[2.5rem] border border-black/6 bg-white p-8 shadow-[0_24px_60px_rgba(16,18,25,0.08)] sm:p-10">
@@ -219,34 +285,6 @@ const ProductDetail = ({ product, relatedProducts }: ProductDetailProps) => {
               ))}
             </ul>
           </aside>
-        </section>
-
-        <section className="mt-16 grid gap-5 md:grid-cols-[0.9fr_1.1fr]">
-          <div className="grid gap-5">
-            {product.gallery.slice(0, 2).map((image, index) => (
-              <div
-                key={index}
-                className="relative min-h-[14rem] overflow-hidden rounded-[2rem] bg-[#ece4d8]"
-              >
-                <Image
-                  src={image}
-                  alt={`${product.name} gallery ${index + 1}`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 40vw"
-                />
-              </div>
-            ))}
-          </div>
-          <div className="relative min-h-[28rem] overflow-hidden rounded-[2rem] bg-[#ece4d8]">
-            <Image
-              src={product.gallery[2]}
-              alt={`${product.name} gallery`}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 55vw"
-            />
-          </div>
         </section>
 
         <section className="mt-20">

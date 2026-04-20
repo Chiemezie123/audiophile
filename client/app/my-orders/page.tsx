@@ -8,7 +8,8 @@ import { useRouter } from "next/navigation";
 import Header from "@/features/Header";
 import Footer from "@/features/Footer";
 import { useAuth } from "@/contexts/AuthContext";
-import { getProductBySlug } from "@/lib/catalog";
+import type { Product } from "@/lib/catalog";
+import { fetchCatalogProductsBySlugs } from "@/lib/catalog-api";
 
 type Order = {
   id: string;
@@ -27,6 +28,7 @@ export default function MyOrdersPage() {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
+  const [catalogProducts, setCatalogProducts] = useState<Record<string, Product>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -52,6 +54,24 @@ export default function MyOrdersPage() {
 
     void loadOrders();
   }, [isAuthenticated, router]);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const slugs = Array.from(
+        new Set(orders.flatMap((order) => order.items.map((item) => item.productSlug)))
+      );
+
+      const products = await fetchCatalogProductsBySlugs(slugs);
+      setCatalogProducts(
+        products.reduce<Record<string, Product>>((accumulator, product) => {
+          accumulator[product.slug] = product;
+          return accumulator;
+        }, {})
+      );
+    };
+
+    void loadProducts();
+  }, [orders]);
 
   const totalItems = useMemo(
     () =>
@@ -144,7 +164,7 @@ export default function MyOrdersPage() {
 
                   <div className="mt-5 flex flex-col gap-3 border-t border-white/8 pt-5">
                     {order.items.map((item) => {
-                      const product = getProductBySlug(item.productSlug);
+                      const product = catalogProducts[item.productSlug];
                       return (
                         <div
                           key={`${order.id}-${item.productSlug}`}

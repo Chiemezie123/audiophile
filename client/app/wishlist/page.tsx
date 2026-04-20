@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Heart, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 import Footer from "@/features/Footer";
 import Header from "@/features/Header";
-import { getProductBySlug } from "@/lib/catalog";
+import { getProductImageSrc, type Product } from "@/lib/catalog";
+import { fetchCatalogProductsBySlugs } from "@/lib/catalog-api";
 import { useAuth } from "@/contexts/AuthContext";
 
 type WishlistItem = {
@@ -20,6 +20,7 @@ export default function WishlistPage() {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const [items, setItems] = useState<WishlistItem[]>([]);
+  const [catalogProducts, setCatalogProducts] = useState<Record<string, Product>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,17 +52,34 @@ export default function WishlistPage() {
       items
         .map((item) => ({
           ...item,
-          product: getProductBySlug(item.productSlug),
+          product: catalogProducts[item.productSlug],
         }))
         .filter(
           (
             entry
           ): entry is WishlistItem & {
-            product: NonNullable<ReturnType<typeof getProductBySlug>>;
+            product: Product;
           } => Boolean(entry.product)
         ),
-    [items]
+    [catalogProducts, items]
   );
+
+  useEffect(() => {
+    const loadCatalogProducts = async () => {
+      const products = await fetchCatalogProductsBySlugs(
+        items.map((item) => item.productSlug)
+      );
+
+      setCatalogProducts(
+        products.reduce<Record<string, Product>>((accumulator, product) => {
+          accumulator[product.slug] = product;
+          return accumulator;
+        }, {})
+      );
+    };
+
+    void loadCatalogProducts();
+  }, [items]);
 
   const handleRemove = async (productSlug: string) => {
     try {
@@ -141,8 +159,8 @@ export default function WishlistPage() {
                 >
                   <div className="flex items-center gap-4">
                     <div className="flex h-20 w-20 items-center justify-center rounded-[1.2rem] bg-[#efe8de] p-3">
-                      <Image
-                        src={product.cardImage}
+                      <img
+                        src={getProductImageSrc(product.cardImage)}
                         alt={product.name}
                         className="max-h-full w-auto object-contain"
                       />

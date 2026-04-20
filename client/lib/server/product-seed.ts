@@ -5,6 +5,24 @@ export const productSeed = [
     name: "XX99 Mark II Headphones",
     shortName: "XX99 Mark II",
     price: 2999,
+    imageUrls: [],
+    tagline: "Flagship clarity for serious listeners",
+    description:
+      "The XX99 Mark II is tuned for listeners who want studio-level detail with luxurious all-day comfort.",
+    isNew: true,
+    features: [
+      "Acoustically balanced enclosure with premium driver architecture.",
+      "Soft-touch memory foam and low-distortion wireless playback.",
+    ],
+    includes: [
+      "1x Headphone unit",
+      "2x Replacement earcups",
+      "1x Travel case",
+      "1x 3.5mm audio cable",
+      "1x Charging cable",
+    ],
+    relatedSlugs: ["xx99-mark-i-headphones", "xx59-headphones", "zx9-speaker"],
+    accent: "oklch(0.74 0.11 45)",
   },
   {
     slug: "xx99-mark-i-headphones",
@@ -12,6 +30,27 @@ export const productSeed = [
     name: "XX99 Mark I Headphones",
     shortName: "XX99 Mark I",
     price: 1750,
+    imageUrls: [],
+    tagline: "Classic gold-standard performance",
+    description:
+      "A long-standing favorite for engineers and enthusiasts, the XX99 Mark I delivers articulate mids and controlled low end.",
+    isNew: false,
+    features: [
+      "Tonal balance and consistency for critical listening.",
+      "Durable metal frame and refined cushioning.",
+    ],
+    includes: [
+      "1x Headphone unit",
+      "2x Replacement earcups",
+      "1x Travel pouch",
+      "1x 6.3mm adapter",
+    ],
+    relatedSlugs: [
+      "xx99-mark-ii-headphones",
+      "xx59-headphones",
+      "yx1-wireless-earphones",
+    ],
+    accent: "oklch(0.68 0.08 55)",
   },
   {
     slug: "xx59-headphones",
@@ -19,6 +58,22 @@ export const productSeed = [
     name: "XX59 Headphones",
     shortName: "XX59",
     price: 899,
+    imageUrls: [],
+    tagline: "Versatile wireless performance",
+    description:
+      "The XX59 offers energetic sound, lightweight comfort, and a durable wireless form factor.",
+    isNew: false,
+    features: [
+      "Strong battery life with clear stereo imaging.",
+      "Compact silhouette and fast pairing.",
+    ],
+    includes: ["1x Headphone unit", "1x Carrying pouch", "1x USB-C cable"],
+    relatedSlugs: [
+      "xx99-mark-i-headphones",
+      "xx99-mark-ii-headphones",
+      "zx7-speaker",
+    ],
+    accent: "oklch(0.69 0.07 35)",
   },
   {
     slug: "zx9-speaker",
@@ -26,6 +81,24 @@ export const productSeed = [
     name: "ZX9 Speaker",
     shortName: "ZX9",
     price: 4500,
+    imageUrls: [],
+    tagline: "Statement sound with wireless freedom",
+    description:
+      "The ZX9 is our flagship active speaker with bookshelf precision and room-filling scale.",
+    isNew: true,
+    features: [
+      "Deep bass extension and crisp high frequencies.",
+      "Powerful amplification stage with sculpted cabinet control.",
+    ],
+    includes: [
+      "2x Speaker units",
+      "2x Speaker cloth panels",
+      "1x Remote control",
+      "1x User guide",
+      "2x Power cables",
+    ],
+    relatedSlugs: ["zx7-speaker", "xx99-mark-ii-headphones", "yx1-wireless-earphones"],
+    accent: "oklch(0.76 0.12 50)",
   },
   {
     slug: "zx7-speaker",
@@ -33,6 +106,23 @@ export const productSeed = [
     name: "ZX7 Speaker",
     shortName: "ZX7",
     price: 3500,
+    imageUrls: [],
+    tagline: "Compact bookshelf precision",
+    description:
+      "The ZX7 distills the power and tuning philosophy of the ZX9 into a smaller footprint.",
+    isNew: false,
+    features: [
+      "Audiophile-grade internal components and controlled dispersion.",
+      "Compact cabinet with preserved authority and precision.",
+    ],
+    includes: [
+      "2x Speaker units",
+      "2x Speaker cloth panels",
+      "1x Remote control",
+      "2x Power cables",
+    ],
+    relatedSlugs: ["zx9-speaker", "xx59-headphones", "yx1-wireless-earphones"],
+    accent: "oklch(0.63 0.07 43)",
   },
   {
     slug: "yx1-wireless-earphones",
@@ -40,6 +130,23 @@ export const productSeed = [
     name: "YX1 Wireless Earphones",
     shortName: "YX1",
     price: 599,
+    imageUrls: [],
+    tagline: "Portable detail with active noise control",
+    description:
+      "The YX1 is built for mobility without sacrificing depth, with active noise cancellation and secure fit.",
+    isNew: true,
+    features: [
+      "Compact form with mature tuning and responsive balance.",
+      "Adaptive noise control and ergonomic shell for portability.",
+    ],
+    includes: [
+      "2x Earphone units",
+      "6x Multi-size eartips",
+      "1x Charging case",
+      "1x USB-C cable",
+    ],
+    relatedSlugs: ["xx59-headphones", "zx7-speaker", "xx99-mark-i-headphones"],
+    accent: "oklch(0.73 0.09 35)",
   },
 ] as const;
 

@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -9,7 +8,8 @@ import SizeInputHandler from "./sizeInputHandler";
 import { Button } from "./button";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { clearCart, removeFromCart, updateCartItemQuantity } from "@/store/cartSlice";
-import { getCartProducts } from "@/lib/cart";
+import { fetchCatalogProductsBySlugs } from "@/lib/catalog-api";
+import { getProductImageSrc, type Product } from "@/lib/catalog";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface CartModalProps {
@@ -22,8 +22,51 @@ const CartModal = ({ handleModalCloser }: CartModalProps) => {
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuth();
   const cartItems = useAppSelector((state) => state.cart.items);
+  const [catalogProducts, setCatalogProducts] = useState<Record<string, Product>>({});
 
-  const items = useMemo(() => getCartProducts(cartItems), [cartItems]);
+  useEffect(() => {
+    const loadProducts = async () => {
+      const products = await fetchCatalogProductsBySlugs(
+        cartItems.map((item) => item.productSlug)
+      );
+
+      setCatalogProducts(
+        products.reduce<Record<string, Product>>((accumulator, product) => {
+          accumulator[product.slug] = product;
+          return accumulator;
+        }, {})
+      );
+    };
+
+    void loadProducts();
+  }, [cartItems]);
+
+  const items = useMemo(
+    () =>
+      cartItems
+        .map((item) => {
+          const product = catalogProducts[item.productSlug];
+          if (!product) {
+            return null;
+          }
+
+          return {
+            product,
+            quantity: item.quantity,
+            lineTotal: product.price * item.quantity,
+          };
+        })
+        .filter(
+          (
+            item
+          ): item is {
+            product: Product;
+            quantity: number;
+            lineTotal: number;
+          } => Boolean(item)
+        ),
+    [cartItems, catalogProducts]
+  );
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = items.reduce((sum, item) => sum + item.lineTotal, 0);
 
@@ -94,8 +137,8 @@ const CartModal = ({ handleModalCloser }: CartModalProps) => {
                     className="flex items-center gap-4 rounded-[1.3rem] bg-[#f7f4ef] p-4"
                   >
                     <div className="flex h-16 w-16 items-center justify-center rounded-[1rem] bg-[#ece4d8] p-2">
-                      <Image
-                        src={product.cardImage}
+                      <img
+                        src={getProductImageSrc(product.cardImage)}
                         alt={product.name}
                         className="max-h-full w-auto object-contain"
                       />

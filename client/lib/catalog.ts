@@ -23,6 +23,10 @@ import DisplaySpeakers3 from "@/assets/DisplaySpeakers3.webp";
 export const categories = ["headphones", "speakers", "earphones"] as const;
 
 export type CategorySlug = (typeof categories)[number];
+export type ProductImage = StaticImageData | string;
+
+export const getProductImageSrc = (image: ProductImage) =>
+  typeof image === "string" ? image : image.src;
 
 export type Product = {
   id: string;
@@ -34,9 +38,9 @@ export type Product = {
   price: number;
   isNew: boolean;
   description: string;
-  heroImage: StaticImageData;
-  cardImage: StaticImageData;
-  gallery: [StaticImageData, StaticImageData, StaticImageData];
+  heroImage: ProductImage;
+  cardImage: ProductImage;
+  gallery: ProductImage[];
   features: string[];
   includes: Array<{ quantity: number; item: string }>;
   relatedSlugs: string[];

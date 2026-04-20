@@ -1,7 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 
-import type { Product } from "@/lib/catalog";
+import { getProductImageSrc, type Product } from "@/lib/catalog";
 
 type ProductCardProps = {
   product: Product;
@@ -21,8 +20,8 @@ const ProductCard = ({ product, compact = false }: ProductCardProps) => {
       />
       <div className="relative flex h-full flex-col">
         <div className="relative flex min-h-[14rem] items-center justify-center rounded-[1.5rem] bg-[#f6f3ee] p-6">
-          <Image
-            src={product.cardImage}
+          <img
+            src={getProductImageSrc(product.cardImage)}
             alt={product.name}
             className="max-h-52 w-auto object-contain drop-shadow-[0_26px_26px_rgba(0,0,0,0.16)] transition duration-300 group-hover:scale-[1.04]"
           />

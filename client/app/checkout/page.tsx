@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import React from "react";
 import { toast } from "react-toastify";
 
@@ -13,7 +12,8 @@ import CheckoutModal from "@/components/ui/CheckoutModal";
 import Footer from "@/features/Footer";
 import Header from "@/features/Header";
 import { useAuth } from "@/contexts/AuthContext";
-import { getCartProducts } from "@/lib/cart";
+import { fetchCatalogProductsBySlugs } from "@/lib/catalog-api";
+import { getProductImageSrc, type Product } from "@/lib/catalog";
 import { clearCart } from "@/store/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
@@ -39,7 +39,33 @@ const Page = () => {
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuth();
   const cartItems = useAppSelector((state) => state.cart.items);
-  const items = useMemo(() => getCartProducts(cartItems), [cartItems]);
+  const [catalogProducts, setCatalogProducts] = useState<Record<string, Product>>({});
+  const items = useMemo(
+    () =>
+      cartItems
+        .map((item) => {
+          const product = catalogProducts[item.productSlug];
+          if (!product) {
+            return null;
+          }
+
+          return {
+            product,
+            quantity: item.quantity,
+            lineTotal: product.price * item.quantity,
+          };
+        })
+        .filter(
+          (
+            item
+          ): item is {
+            product: Product;
+            quantity: number;
+            lineTotal: number;
+          } => Boolean(item)
+        ),
+    [cartItems, catalogProducts]
+  );
   const subtotal = items.reduce((sum, item) => sum + item.lineTotal, 0);
   const vat = Math.round(subtotal * 0.2);
   const grandTotal = subtotal + SHIPPING_COST;
@@ -49,6 +75,23 @@ const Page = () => {
       router.replace("/signup");
     }
   }, [isAuthenticated, router]);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const products = await fetchCatalogProductsBySlugs(
+        cartItems.map((item) => item.productSlug)
+      );
+
+      setCatalogProducts(
+        products.reduce<Record<string, Product>>((accumulator, product) => {
+          accumulator[product.slug] = product;
+          return accumulator;
+        }, {})
+      );
+    };
+
+    void loadProducts();
+  }, [cartItems]);
 
   const handleInputChange =
     (field: keyof typeof checkoutData) =>
@@ -239,8 +282,8 @@ const Page = () => {
                   >
                     <div className="flex items-center gap-4">
                       <div className="flex h-[64px] w-[64px] items-center justify-center rounded-[8px] bg-[#F1F1F1]">
-                        <Image
-                          src={product.cardImage}
+                        <img
+                          src={getProductImageSrc(product.cardImage)}
                           alt={product.name}
                           className="max-h-[40px] w-auto object-contain"
                         />

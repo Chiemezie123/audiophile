@@ -10,6 +10,7 @@ import ProductCard from "@/components/ui/ProductCard";
 import {
   allProducts,
   featuredProducts,
+  getProductImageSrc,
   homeCategoryCards,
 } from "@/lib/catalog";
 import { Button } from "@/components/ui/button";
@@ -93,8 +94,8 @@ export default function Home() {
                         className="flex items-center gap-4 rounded-[1.2rem] bg-white/5 px-4 py-3 transition hover:bg-white/8"
                       >
                         <div className="flex h-14 w-14 items-center justify-center rounded-[1rem] bg-[#f4efe8] p-2">
-                          <Image
-                            src={product.cardImage}
+                          <img
+                            src={getProductImageSrc(product.cardImage)}
                             alt={product.name}
                             className="max-h-full w-auto object-contain"
                           />
@@ -113,8 +114,8 @@ export default function Home() {
                 </div>
 
                 <div className="relative flex min-h-[18rem] items-end justify-center rounded-[2rem] bg-[#efe8de] p-8">
-                  <Image
-                    src={featuredProducts.hero.heroImage}
+                  <img
+                    src={getProductImageSrc(featuredProducts.hero.heroImage)}
                     alt={featuredProducts.hero.name}
                     className="max-h-[20rem] w-auto object-contain drop-shadow-[0_30px_32px_rgba(0,0,0,0.2)]"
                   />
@@ -144,8 +145,8 @@ export default function Home() {
               <div className="absolute -left-10 -top-6 h-48 w-48 rounded-full border border-white/12" />
               <div className="relative grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
                 <div className="flex items-center justify-center">
-                  <Image
-                    src={featuredProducts.statement.heroImage}
+                  <img
+                    src={getProductImageSrc(featuredProducts.statement.heroImage)}
                     alt={featuredProducts.statement.name}
                     className="max-h-[22rem] w-auto object-contain drop-shadow-[0_30px_34px_rgba(0,0,0,0.24)]"
                   />

@@ -1,11 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 
 import { Button } from "./button";
-import type { Product } from "@/lib/catalog";
+import { getProductImageSrc, type Product } from "@/lib/catalog";
 
 interface CheckoutModalProps {
   handleModalCloser: () => void;
@@ -46,8 +45,8 @@ const CheckoutModal = ({
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div className="flex h-14 w-14 items-center justify-center rounded-[1rem] bg-white p-2">
-                    <Image
-                      src={firstItem.product.cardImage}
+                    <img
+                      src={getProductImageSrc(firstItem.product.cardImage)}
                       alt={firstItem.product.name}
                       className="max-h-full w-auto object-contain"
                     />

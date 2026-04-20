@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
 
 import ProductDetail from "@/features/ProductDetail";
-import { allProducts, getProductBySlug, getRelatedProducts } from "@/lib/catalog";
+import {
+  getCatalogProductBySlug,
+  getRelatedCatalogProducts,
+} from "@/lib/server/catalog-store";
 
-export function generateStaticParams() {
-  return allProducts.map((product) => ({ slug: product.slug }));
-}
+export const dynamic = "force-dynamic";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
@@ -13,11 +14,13 @@ type ProductPageProps = {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getCatalogProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
-  return <ProductDetail product={product} relatedProducts={getRelatedProducts(product)} />;
+  const relatedProducts = await getRelatedCatalogProducts(product);
+
+  return <ProductDetail product={product} relatedProducts={relatedProducts} />;
 }

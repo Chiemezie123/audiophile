@@ -1,7 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -15,7 +14,8 @@ import {
 
 import AccountModal from "./accountModal";
 import CartModal from "@/components/ui/CartModal";
-import { searchProducts } from "@/lib/catalog";
+import { getProductImageSrc, type Product } from "@/lib/catalog";
+import { searchCatalog } from "@/lib/catalog-api";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/store/hooks";
 import { useAuth } from "@/contexts/AuthContext";
@@ -34,12 +34,25 @@ const Header = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
   const { user, isAuthenticated } = useAuth();
   const cartCount = useAppSelector((state) =>
     state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
   );
 
-  const searchResults = useMemo(() => searchProducts(query), [query]);
+  useEffect(() => {
+    const timeoutId = window.setTimeout(async () => {
+      if (!query.trim()) {
+        setSearchResults([]);
+        return;
+      }
+
+      const products = await searchCatalog(query);
+      setSearchResults(products);
+    }, 180);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [query]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/8 bg-[#111215]/92 backdrop-blur-xl">
@@ -196,8 +209,8 @@ const Header = () => {
                       }}
                     >
                       <div className="flex h-16 w-16 items-center justify-center rounded-[1.1rem] bg-[#f4efe8] p-2">
-                        <Image
-                          src={product.cardImage}
+                        <img
+                          src={getProductImageSrc(product.cardImage)}
                           alt={product.name}
                           className="max-h-full w-auto object-contain"
                         />
