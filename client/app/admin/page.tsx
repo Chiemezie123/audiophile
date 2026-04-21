@@ -187,6 +187,11 @@ export default function AdminPage() {
     setSelectedFiles((current) => current.filter((_, currentIndex) => currentIndex !== index));
   };
 
+  function toSlug(str: string) {
+    return str.trim().split(' ').join('-');
+  }
+
+
   const handleSubmitProduct = async () => {
     const pendingImageCount = currentImageUrls.length + selectedFiles.length;
 
@@ -239,7 +244,7 @@ export default function AdminPage() {
           credentials: "include",
           body: JSON.stringify({
             categorySlug: form.categorySlug,
-            slug: form.slug.trim(),
+            slug: toSlug(form.slug),
             name: form.name.trim(),
             shortName: form.shortName.trim(),
             price: Number(form.price),
@@ -332,6 +337,8 @@ export default function AdminPage() {
     }
   };
 
+
+ 
   if (!isAuthResolved || loading) {
     return (
       <div className="min-h-screen bg-[#f7f4ef] text-[#131418]">
@@ -701,7 +708,7 @@ export default function AdminPage() {
             <h2 className="text-2xl font-black uppercase tracking-[0.08em] text-[#24262d]">
               Existing Products
             </h2>
-            <div className="mt-6 flex flex-col gap-4">
+            <div className="mt-6 flex flex-col gap-4 overflow-y-auto max-h-[1000px] no-scrollbar">
               {products.map((product) => (
                 <div
                   key={product.slug}
@@ -723,7 +730,7 @@ export default function AdminPage() {
                         {product.imageUrls.length} image(s)
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 ">
                       <button
                         type="button"
                         onClick={() => handleEditProduct(product)}

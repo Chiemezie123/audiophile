@@ -41,6 +41,7 @@ const ProductDetail = ({ product, relatedProducts }: ProductDetailProps) => {
 
   const handleAddToCart = () => {
     dispatch(addToCart({ productSlug: product.slug, quantity }));
+    toast.success(`${product.slug} added to cart.`);
   };
 
   useEffect(() => {

@@ -9,7 +9,8 @@ type ProductCardProps = {
 
 const ProductCard = ({ product, compact = false }: ProductCardProps) => {
   return (
-    <article
+    <Link
+      href={`/products/${product.slug}`}
       className={`group relative overflow-hidden rounded-[2rem] border border-black/6 bg-white shadow-[0_24px_60px_rgba(16,18,25,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_32px_70px_rgba(16,18,25,0.12)] ${
         compact ? "p-5" : "p-6"
       }`}
@@ -58,16 +59,13 @@ const ProductCard = ({ product, compact = false }: ProductCardProps) => {
               </p>
             </div>
 
-            <Link
-              href={`/products/${product.slug}`}
-              className="rounded-full bg-[#15161a] px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-white transition hover:bg-[#d87d4a]"
-            >
+            <span className="rounded-full bg-[#15161a] px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-white transition group-hover:bg-[#d87d4a]">
               View
-            </Link>
+            </span>
           </div>
         </div>
       </div>
-    </article>
+    </Link>
   );
 };
 

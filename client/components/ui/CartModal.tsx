@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, Trash2 } from "lucide-react";
+import { ArrowRight, Loader2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import SizeInputHandler from "./sizeInputHandler";
@@ -18,6 +18,7 @@ interface CartModalProps {
 
 const CartModal = ({ handleModalCloser }: CartModalProps) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuth();
@@ -26,6 +27,7 @@ const CartModal = ({ handleModalCloser }: CartModalProps) => {
 
   useEffect(() => {
     const loadProducts = async () => {
+      setLoading(true);
       const products = await fetchCatalogProductsBySlugs(
         cartItems.map((item) => item.productSlug)
       );
@@ -36,6 +38,7 @@ const CartModal = ({ handleModalCloser }: CartModalProps) => {
           return accumulator;
         }, {})
       );
+      setLoading(false);
     };
 
     void loadProducts();
@@ -107,7 +110,13 @@ const CartModal = ({ handleModalCloser }: CartModalProps) => {
           className="ml-auto w-full max-w-[28rem] rounded-[2rem] bg-white p-6 shadow-[0_28px_70px_rgba(16,18,25,0.22)] sm:p-8"
           onClick={(event) => event.stopPropagation()}
         >
-          <div className="flex items-center justify-between gap-4">
+         {loading ? (
+          <div className="flex items-center justify-center">
+            <Loader2 className="h-4 w-4 animate-spin" />
+          </div>
+         ) : (
+          <>
+           <div className="flex items-center justify-between gap-4">
             <h2 className="text-lg font-black uppercase tracking-[0.1em] text-[#15161a]">
               Cart ({itemCount})
             </h2>
@@ -195,6 +204,8 @@ const CartModal = ({ handleModalCloser }: CartModalProps) => {
               </Button>
             </>
           )}
+          </>
+         )}
         </div>
       </div>
     </div>
