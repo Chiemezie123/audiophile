@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, PackageCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 import Header from "@/features/Header";
 import Footer from "@/features/Footer";
@@ -54,6 +55,12 @@ export default function MyOrdersPage() {
 
     void loadOrders();
   }, [isAuthenticated, router]);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("paystack") === "success") {
+      toast.success("Paystack payment verified. Your order has been recorded.");
+    }
+  }, []);
 
   useEffect(() => {
     const loadProducts = async () => {

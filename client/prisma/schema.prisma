@@ -122,6 +122,7 @@ model Order {
   id              String      @id
   userId          String      @map("user_id")
   status          String      @default("placed")
+  paymentReference String?    @unique @map("payment_reference")
   billingName     String      @map("billing_name")
   billingEmail    String      @map("billing_email")
   billingPhone    String      @map("billing_phone")
@@ -134,6 +135,7 @@ model Order {
   shippingFee     Int         @map("shipping_fee")
   vat             Int
   grandTotal      Int         @map("grand_total")
+  paidAt          DateTime?   @map("paid_at")
   createdAt       DateTime    @default(now()) @map("created_at")
   updatedAt       DateTime    @updatedAt @map("updated_at")
   user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)

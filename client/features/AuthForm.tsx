@@ -98,7 +98,7 @@ const AuthForm = ({
       : "Manage your FuzzyBeats account with a cleaner, faster flow.");
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#fcfaf6_0%,#f4efe8_100%)] px-3 py-3 sm:px-4 sm:py-4 md:px-6 lg:px-8">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fcfaf6_0%,#f4efe8_100%)] px-3 py-3 sm:px-4 sm:py-4 md:px-6 lg:px-8 flex items-center justify-center">
       <div className="mx-auto grid max-w-[1280px] overflow-hidden rounded-[1.6rem] border border-black/6 bg-white shadow-[0_24px_80px_rgba(16,18,25,0.1)] lg:min-h-[min(880px,calc(100vh-2rem))] lg:grid-cols-[0.88fr_1.12fr] lg:rounded-[2rem]">
         <section className="relative hidden overflow-hidden bg-[#111215] text-white lg:flex">
           {slides.map((slide, index) => (

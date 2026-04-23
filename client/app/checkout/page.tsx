@@ -22,8 +22,8 @@ const SHIPPING_COST = 50;
 const Page = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"e-money" | "cash">(
-    "e-money"
+  const [paymentMethod, setPaymentMethod] = useState<"paystack" | "cash">(
+    "paystack"
   );
   const [checkoutData, setCheckoutData] = useState({
     billingName: "",
@@ -77,6 +77,18 @@ const Page = () => {
   }, [isAuthenticated, router]);
 
   useEffect(() => {
+    const paystackStatus = new URLSearchParams(window.location.search).get("paystack");
+
+    if (paystackStatus === "failed") {
+      toast.error("Paystack could not verify your payment.");
+    }
+
+    if (paystackStatus === "cancelled") {
+      toast.info("Paystack checkout was cancelled.");
+    }
+  }, []);
+
+  useEffect(() => {
     const loadProducts = async () => {
       const products = await fetchCatalogProductsBySlugs(
         cartItems.map((item) => item.productSlug)
@@ -127,7 +139,10 @@ const Page = () => {
         body: JSON.stringify({ items: cartItems }),
       });
 
-      const response = await fetch("/api/v1/orders", {
+      const endpoint =
+        paymentMethod === "paystack" ? "/api/v1/paystack/initialize" : "/api/v1/orders";
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -142,7 +157,17 @@ const Page = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        toast.error(result.message || "Unable to place order.");
+        toast.error(
+          result.message ||
+            (paymentMethod === "paystack"
+              ? "Unable to initialize Paystack payment."
+              : "Unable to place order.")
+        );
+        return;
+      }
+
+      if (paymentMethod === "paystack") {
+        window.location.href = result.authorizationUrl;
         return;
       }
 
@@ -240,11 +265,11 @@ const Page = () => {
                 <h6 className="text-[12px] font-Bold">Payment Method</h6>
                 <div className="flex flex-col gap-4">
                   <RadioButton
-                    label="e-Money"
-                    value="e-money"
-                    isActive={paymentMethod === "e-money"}
+                    label="Paystack (Test)"
+                    value="paystack"
+                    isActive={paymentMethod === "paystack"}
                     onClick={(value) =>
-                      setPaymentMethod(value as "e-money" | "cash")
+                      setPaymentMethod(value as "paystack" | "cash")
                     }
                   />
                   <RadioButton
@@ -252,15 +277,17 @@ const Page = () => {
                     value="cash"
                     isActive={paymentMethod === "cash"}
                     onClick={(value) =>
-                      setPaymentMethod(value as "e-money" | "cash")
+                      setPaymentMethod(value as "paystack" | "cash")
                     }
                   />
                 </div>
               </div>
-              {paymentMethod === "e-money" ? (
+              {paymentMethod === "paystack" ? (
                 <div className="flex flex-col gap-4 md:flex-row">
-                  <Input placeholder="238521993" label="e-Money Number" />
-                  <Input placeholder="6891" label="e-Money PIN" />
+                  <div className="rounded-[8px] border border-[#cfcfcf] bg-[#faf7f2] px-6 py-5 text-sm leading-7 text-black/60">
+                    Paystack test checkout will open after you confirm. Use your Paystack test
+                    card details on the hosted payment page.
+                  </div>
                 </div>
               ) : null}
             </div>
@@ -341,7 +368,11 @@ const Page = () => {
               disabled={items.length === 0 || isSubmitting}
               onClick={handlePlaceOrder}
             >
-              {isSubmitting ? "Processing..." : "Continue & Pay"}
+              {isSubmitting
+                ? "Processing..."
+                : paymentMethod === "paystack"
+                  ? "Continue to Paystack"
+                  : "Confirm Order"}
             </Button>
             {modalOpen ? (
               <CheckoutModal

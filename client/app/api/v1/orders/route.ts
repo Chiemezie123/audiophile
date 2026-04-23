@@ -45,6 +45,13 @@ export async function POST(request: Request) {
     }
   }
 
+  if (body.paymentMethod !== "cash") {
+    return NextResponse.json(
+      { message: "Unsupported payment method for direct order creation." },
+      { status: 400 }
+    );
+  }
+
   const order = await createOrderFromCartForUser(user.id, body);
 
   if (!order) {
