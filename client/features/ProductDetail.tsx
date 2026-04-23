@@ -131,7 +131,7 @@ const ProductDetail = ({ product, relatedProducts }: ProductDetailProps) => {
               className="absolute inset-x-16 top-10 h-24 rounded-full opacity-80 blur-3xl"
               style={{ backgroundColor: product.accent }}
             />
-            <div className="relative">
+            <div className="relative hidden md:block">
               <Image
                 src={activeGalleryImage}
                 alt={`${product.name} view ${activeGalleryIndex + 1}`}
@@ -170,13 +170,13 @@ const ProductDetail = ({ product, relatedProducts }: ProductDetailProps) => {
               ) : null}
             </div>
 
-            <div className="relative mt-8 grid gap-4 sm:grid-cols-3">
+            <div className="relative mt-8 flex overflow-x-auto no-scrollbar gap-4">
               {galleryImages.map((image, index) => (
                 <button
                   key={`${product.slug}-thumb-${index}`}
                   type="button"
                   onClick={() => setActiveGalleryIndex(index)}
-                  className={`relative overflow-hidden rounded-[1.3rem] border bg-white/65 p-2 transition ${
+                  className={`relative overflow-hidden rounded-[1.3rem] border bg-white/65 p-2 transition min-w-[300px] min-h-[300px] ${
                     index === activeGalleryIndex
                       ? "border-[#d87d4a] shadow-[0_18px_32px_rgba(216,125,74,0.18)]"
                       : "border-black/8 hover:border-[#d87d4a]/40"
@@ -188,7 +188,7 @@ const ProductDetail = ({ product, relatedProducts }: ProductDetailProps) => {
                       src={image}
                       alt={`${product.name} thumbnail ${index + 1}`}
                       fill
-                      className="object-cover"
+                      className="object-contain sm:object-cover"
                     />
                   </div>
                 </button>
