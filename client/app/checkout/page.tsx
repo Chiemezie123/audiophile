@@ -105,9 +105,7 @@ const Page = () => {
     void loadProducts();
   }, [cartItems]);
 
-  const handleInputChange =
-    (field: keyof typeof checkoutData) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (field: keyof typeof checkoutData) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setCheckoutData((current) => ({
         ...current,
         [field]: event.target.value,

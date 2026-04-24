@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   const user = await getSessionUserFromRequest(request);
 
   if (!user) {
-    return NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
+    return NextResponse.json({ message: "Unauthenticated."}, { status: 401 });
   }
 
   const body = await request.json();

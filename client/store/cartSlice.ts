@@ -6,7 +6,7 @@ type CartItem = {
 };
 
 type CartState = {
-  items: CartItem[];
+items: CartItem[];
   hydrated: boolean;
 };
 

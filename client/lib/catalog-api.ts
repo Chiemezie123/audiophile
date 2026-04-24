@@ -21,6 +21,16 @@ export async function fetchCatalogProductsBySlugs(slugs: string[]) {
   return Array.isArray(result.products) ? (result.products as Product[]) : [];
 }
 
+
+
+
+
+
+
+
+
+
+
 export async function searchCatalog(query: string) {
   if (!query.trim()) {
     return [] as Product[];

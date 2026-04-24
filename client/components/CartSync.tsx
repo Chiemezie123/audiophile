@@ -78,6 +78,8 @@ const CartSync = () => {
     void initializeCart();
   }, [dispatch, isAuthenticated, isAuthResolved]);
 
+
+
   useEffect(() => {
     if (!hydrated || !hasInitialized.current || !isAuthResolved) {
       return;

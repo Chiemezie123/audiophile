@@ -81,6 +81,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, [dispatch, reduxUser.id]);
 
+
+
+  
   const user = reduxUser.id
     ? ({
         id: reduxUser.id,
