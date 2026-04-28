@@ -3,9 +3,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import AudioModel from "@/assets/portrait.webp";
-import HeadphonesHero from "@/assets/Headphones3.webp";
+import Ebuka from "@/assets/ebuka.webp";
 import EarphonesLifestyle from "@/assets/Earphones2.webp";
-import InstagramColored from "@/assets/svg/InstagramColored.svg";
+import Mika from "@/assets/mika.webp";
 import { Input } from "@/components/ui/textIpnut";
 import type { InputProps } from "@/components/ui/textIpnut";
 import { Button } from "@/components/ui/button";
@@ -57,14 +57,14 @@ const AuthForm = ({
           "Discover premium audio with a warmer, more human shopping experience.",
       },
       {
-        image: HeadphonesHero,
+        image: Ebuka,
         eyebrow: "Headphone essentials",
         title: "Reference-grade sound for everyday listening and deep focus.",
         description:
           "Move from browse to checkout with a cleaner path across the full catalog.",
       },
       {
-        image: EarphonesLifestyle,
+        image: Mika,
         eyebrow: "Portable audio",
         title: "Wireless comfort for earphones, speakers, and everything in between.",
         description:
