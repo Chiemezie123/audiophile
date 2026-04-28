@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import AudioModel from "@/assets/portrait.webp";
 import Ebuka from "@/assets/ebuka.webp";
-import EarphonesLifestyle from "@/assets/Earphones2.webp";
+import Daddy from "@/assets/daddy.webp";
 import Mika from "@/assets/mika.webp";
 import { Input } from "@/components/ui/textIpnut";
 import type { InputProps } from "@/components/ui/textIpnut";
@@ -66,6 +66,13 @@ const AuthForm = ({
       {
         image: Mika,
         eyebrow: "Portable audio",
+        title: "Sound made seamless, from first click to final checkout.",
+        description:
+          "A polished sign-in experience that feels native to the Audiophile brand.",
+      },
+      {
+        image: Daddy,
+        eyebrow: "Portable ",
         title: "Wireless comfort for earphones, speakers, and everything in between.",
         description:
           "A polished auth experience that feels like part of the store, not an afterthought.",
