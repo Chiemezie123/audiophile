@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import AudioModel from "@/assets/Audio Model.webp";
+import AudioModel from "@/assets/portrait.webp";
 
 const ActionCard = () => {
   return (
