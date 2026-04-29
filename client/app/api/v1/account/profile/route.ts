@@ -1,25 +1,29 @@
 import { NextResponse } from "next/server";
 
 import {
-  getSessionTokenFromRequest,
-  getSessionUserFromRequest,
+  applySessionCookies,
+  resolveSessionFromRequest,
 } from "@/lib/server/session";
 import { updateUserProfileFromToken } from "@/lib/server/auth-store";
 
 export async function GET(request: Request) {
-  const user = await getSessionUserFromRequest(request);
+  const session = await resolveSessionFromRequest(request);
+  const user = session.user;
 
   if (!user) {
     return NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
   }
 
-  return NextResponse.json({ user, status: "success" });
+  const response = NextResponse.json({ user, status: "success" });
+  applySessionCookies(response, session);
+  return response;
 }
 
 export async function PATCH(request: Request) {
-  const token = getSessionTokenFromRequest(request);
+  const session = await resolveSessionFromRequest(request);
+  const token = session.tokenForUser;
 
-  if (!token) {
+  if (!token || !session.user) {
     return NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
   }
 
@@ -53,7 +57,9 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
     }
 
-    return NextResponse.json({ user, status: "success" });
+    const response = NextResponse.json({ user, status: "success" });
+    applySessionCookies(response, session);
+    return response;
   } catch {
     return NextResponse.json(
       { message: "Failed to update profile." },

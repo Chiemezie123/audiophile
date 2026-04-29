@@ -4,21 +4,28 @@ import {
   addWishlistItemForUser,
   getWishlistItemsForUser,
 } from "@/lib/server/commerce-store";
-import { getSessionUserFromRequest } from "@/lib/server/session";
+import {
+  applySessionCookies,
+  resolveSessionFromRequest,
+} from "@/lib/server/session";
 
 export async function GET(request: Request) {
-  const user = await getSessionUserFromRequest(request);
+  const session = await resolveSessionFromRequest(request);
+  const user = session.user;
 
   if (!user) {
     return NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
   }
 
   const items = await getWishlistItemsForUser(user.id);
-  return NextResponse.json({ items, status: "success" });
+  const response = NextResponse.json({ items, status: "success" });
+  applySessionCookies(response, session);
+  return response;
 }
 
 export async function POST(request: Request) {
-  const user = await getSessionUserFromRequest(request);
+  const session = await resolveSessionFromRequest(request);
+  const user = session.user;
 
   if (!user) {
     return NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
@@ -33,5 +40,7 @@ export async function POST(request: Request) {
   }
 
   const items = await addWishlistItemForUser(user.id, productSlug);
-  return NextResponse.json({ items, status: "success" });
+  const response = NextResponse.json({ items, status: "success" });
+  applySessionCookies(response, session);
+  return response;
 }

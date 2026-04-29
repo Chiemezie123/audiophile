@@ -6,7 +6,11 @@ const OTP_TTL_MS = 10 * 60 * 1000;
 const SECRET = process.env.AUTH_SECRET || "fuzzybeats-local-auth-secret";
 
 export const SESSION_COOKIE_NAME = "fuzzybeats_session";
-export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
+export const SECOND_SESSION_COOKIE_NAME = "fuzzybeats_session_second";
+export const SESSION_MAX_AGE_SECONDS = 60 * 15;
+export const SESSION_REFRESH_MAX_AGE_SECONDS =
+  Number.parseInt(process.env.SESSION_MAX_AGE_SECONDS_REFRESH || "", 10) ||
+  60 * 60 * 24 * 7;
 
 type PrismaUserShape = {
   id: string;
@@ -49,11 +53,12 @@ async function verifyPassword(password: string, storedHash?: string | null) {
   );
 }
 
-function signToken(payload: { userId: string; email: string }) {
+function signToken(payload: { userId: string; email: string; maxAge: number }) {
   const encodedPayload = Buffer.from(
     JSON.stringify({
       ...payload,
       iat: Date.now(),
+      exp: Date.now() + payload.maxAge * 1000,
     })
   ).toString("base64url");
 
@@ -65,8 +70,16 @@ function signToken(payload: { userId: string; email: string }) {
   return `${encodedPayload}.${signature}`;
 }
 
-export function createSessionTokenForUser(user: { id: string; email: string }) {
-  return signToken({ userId: user.id, email: user.email });
+export function createSessionTokenForUser(user: {
+  id: string;
+  email: string;
+  maxAge?: number;
+}) {
+  return signToken({
+    userId: user.id,
+    email: user.email,
+    maxAge: user.maxAge ?? SESSION_MAX_AGE_SECONDS,
+  });
 }
 
 export function verifyToken(token: string) {
@@ -92,6 +105,7 @@ export function verifyToken(token: string) {
       userId: string;
       email: string;
       iat: number;
+      exp: number;
     };
   } catch {
     return null;
@@ -222,7 +236,7 @@ export async function createOrUpdatePasswordUser(email: string, password: string
 
   return {
     user: sanitizedUser,
-    token: signToken({ userId: sanitizedUser.id, email: sanitizedUser.email }),
+    token: signToken({ userId: sanitizedUser.id, email: sanitizedUser.email, maxAge: SESSION_MAX_AGE_SECONDS }),
   };
 }
 
@@ -342,7 +356,7 @@ export async function loginUser(email: string, password: string) {
 
   return {
     user: sanitizedUser,
-    token: signToken({ userId: sanitizedUser.id, email: sanitizedUser.email }),
+    token: signToken({ userId: sanitizedUser.id, email: sanitizedUser.email, maxAge: SESSION_MAX_AGE_SECONDS }),
   };
 }
 

@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 
+import { updateUserProfileFromToken } from "@/lib/server/auth-store";
 import {
-  SESSION_COOKIE_NAME,
-  updateUserProfileFromToken,
-} from "@/lib/server/auth-store";
+  applySessionCookies,
+  resolveSessionFromRequest,
+} from "@/lib/server/session";
 
 export async function POST(request: Request) {
   try {
@@ -11,14 +12,8 @@ export async function POST(request: Request) {
     const bearerToken = authorization?.startsWith("Bearer ")
       ? authorization.split(" ")[1]
       : null;
-    const cookieToken =
-      request.headers
-        .get("cookie")
-        ?.split(";")
-        .map((part) => part.trim())
-        .find((part) => part.startsWith(`${SESSION_COOKIE_NAME}=`))
-        ?.split("=")[1] || null;
-    const token = bearerToken || cookieToken;
+    const session = bearerToken ? null : await resolveSessionFromRequest(request);
+    const token = bearerToken || session?.tokenForUser || null;
 
     if (!token) {
       return NextResponse.json(
@@ -48,7 +43,11 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ user, status: "success" });
+    const response = NextResponse.json({ user, status: "success" });
+    if (session) {
+      applySessionCookies(response, session);
+    }
+    return response;
   } catch {
     return NextResponse.json(
       { message: "Failed to complete profile." },

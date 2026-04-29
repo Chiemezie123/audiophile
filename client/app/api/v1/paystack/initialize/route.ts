@@ -6,7 +6,10 @@ import {
   deletePendingOrderByPaymentReference,
 } from "@/lib/server/commerce-store";
 import { initializePaystackTransaction } from "@/lib/server/paystack";
-import { getSessionUserFromRequest } from "@/lib/server/session";
+import {
+  applySessionCookies,
+  resolveSessionFromRequest,
+} from "@/lib/server/session";
 
 const requiredFields = [
   "billingName",
@@ -19,7 +22,8 @@ const requiredFields = [
 ] as const;
 
 export async function POST(request: Request) {
-  const user = await getSessionUserFromRequest(request);
+  const session = await resolveSessionFromRequest(request);
+  const user = session.user;
 
   if (!user) {
     return NextResponse.json({ message: "Unauthenticated."}, { status: 401 });
@@ -68,7 +72,7 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         authorizationUrl: result.authorization_url,
         reference: result.reference,
@@ -77,6 +81,8 @@ export async function POST(request: Request) {
       },
       { status: 201 }
     );
+    applySessionCookies(response, session);
+    return response;
   } catch (error) {
     await deletePendingOrderByPaymentReference(paymentReference);
 

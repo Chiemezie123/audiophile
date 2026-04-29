@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 
 import {
+  createSessionTokenForUser,
+  SECOND_SESSION_COOKIE_NAME,
   createOrUpdatePasswordUser,
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE_SECONDS,
+  SESSION_REFRESH_MAX_AGE_SECONDS,
 } from "@/lib/server/auth-store";
 
 export async function POST(request: Request) {
@@ -29,6 +32,11 @@ export async function POST(request: Request) {
       { user: result.user, status: "success" },
       { status: 201 }
     );
+    const refreshToken = createSessionTokenForUser({
+      id: result.user.id,
+      email: result.user.email,
+      maxAge: SESSION_REFRESH_MAX_AGE_SECONDS,
+    });
 
     response.cookies.set({
       name: SESSION_COOKIE_NAME,
@@ -38,6 +46,15 @@ export async function POST(request: Request) {
       secure: process.env.NODE_ENV === "production",
       path: "/",
       maxAge: SESSION_MAX_AGE_SECONDS,
+    });
+    response.cookies.set({
+      name: SECOND_SESSION_COOKIE_NAME,
+      value: refreshToken,
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: SESSION_REFRESH_MAX_AGE_SECONDS,
     });
 
     return response;

@@ -4,21 +4,28 @@ import {
   createOrderFromCartForUser,
   getOrdersForUser,
 } from "@/lib/server/commerce-store";
-import { getSessionUserFromRequest } from "@/lib/server/session";
+import {
+  applySessionCookies,
+  resolveSessionFromRequest,
+} from "@/lib/server/session";
 
 export async function GET(request: Request) {
-  const user = await getSessionUserFromRequest(request);
+  const session = await resolveSessionFromRequest(request);
+  const user = session.user;
 
   if (!user) {
     return NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
   }
 
   const orders = await getOrdersForUser(user.id);
-  return NextResponse.json({ orders, status: "success" });
+  const response = NextResponse.json({ orders, status: "success" });
+  applySessionCookies(response, session);
+  return response;
 }
 
 export async function POST(request: Request) {
-  const user = await getSessionUserFromRequest(request);
+  const session = await resolveSessionFromRequest(request);
+  const user = session.user;
 
   if (!user) {
     return NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
@@ -61,5 +68,10 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ order, status: "success" }, { status: 201 });
+  const response = NextResponse.json(
+    { order, status: "success" },
+    { status: 201 }
+  );
+  applySessionCookies(response, session);
+  return response;
 }

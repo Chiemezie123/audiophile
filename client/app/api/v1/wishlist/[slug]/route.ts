@@ -1,19 +1,27 @@
 import { NextResponse } from "next/server";
 
 import { removeWishlistItemForUser } from "@/lib/server/commerce-store";
-import { getSessionUserFromRequest } from "@/lib/server/session";
+import {
+  applySessionCookies,
+  clearAuthCookies,
+  resolveSessionFromRequest,
+} from "@/lib/server/session";
 
 export async function DELETE(
   request: Request,
   context: { params: Promise<{ slug: string }> }
 ) {
-  const user = await getSessionUserFromRequest(request);
+  const session = await resolveSessionFromRequest(request);
+  const user = session.user;
 
   if (!user) {
-    return NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
+    const res = NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
+    return clearAuthCookies(res);
   }
 
   const { slug } = await context.params;
   const items = await removeWishlistItemForUser(user.id, slug);
-  return NextResponse.json({ items, status: "success" });
+  const response = NextResponse.json({ items, status: "success" });
+  applySessionCookies(response, session);
+  return response;
 }
