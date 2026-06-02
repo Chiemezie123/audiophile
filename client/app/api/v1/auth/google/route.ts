@@ -15,6 +15,8 @@ export async function GET(request: Request) {
     process.env.GOOGLE_REDIRECT_URI ||
     new URL("/api/v1/auth/google/callback", request.url).toString();
   const state = crypto.randomUUID();
+
+  
   const googleUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
 
   googleUrl.searchParams.set("client_id", clientId);

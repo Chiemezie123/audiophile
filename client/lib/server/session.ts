@@ -9,6 +9,11 @@ import {
 } from "./auth-store";
 import { NextResponse } from "next/server";
 
+export const clearAuthCookies = (response: NextResponse): NextResponse => {
+  response.cookies.delete(SESSION_COOKIE_NAME);
+  response.cookies.delete(SECOND_SESSION_COOKIE_NAME);
+  return response;
+};
 
 export function getSessionTokenFromRequest(request: Request) {
   const cookieHeader = request.headers.get("cookie");
@@ -117,36 +122,6 @@ export async function resolveSessionFromRequest(
       user,
       accessTokenToSet: nextAccessToken,
       refreshTokenToSet: null,
-      tokenForUser: nextAccessToken,
-    };
-  }
-
-  if (accessPayload) {
-    const user = await getUserFromToken(accessToken!);
-    if (!user) {
-      return {
-        user: null,
-        accessTokenToSet: null,
-        refreshTokenToSet: null,
-        tokenForUser: null,
-      };
-    }
-
-    const nextRefreshToken = createSessionTokenForUser({
-      id: user.id,
-      email: user.email,
-      maxAge: SESSION_REFRESH_MAX_AGE_SECONDS,
-    });
-    const nextAccessToken = createSessionTokenForUser({
-      id: user.id,
-      email: user.email,
-      maxAge: SESSION_MAX_AGE_SECONDS,
-    });
-
-    return {
-      user,
-      accessTokenToSet: nextAccessToken,
-      refreshTokenToSet: nextRefreshToken,
       tokenForUser: nextAccessToken,
     };
   }

@@ -13,7 +13,7 @@ export function getPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
-    throw new Error("DATABASE_URL is required to initialize Prisma.");
+    throw new Error("DATABASE_URL is required to initialize Prisma with Supabase Postgres.");
   }
 
   const adapter = new PrismaPg({ connectionString });

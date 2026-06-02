@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { mergeCartItemsForUser } from "@/lib/server/commerce-store";
 import {
   applySessionCookies,
+  clearAuthCookies,
   resolveSessionFromRequest,
 } from "@/lib/server/session";
 
@@ -11,7 +12,8 @@ export async function POST(request: Request) {
   const user = session.user;
 
   if (!user) {
-    return NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
+    const res = NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
+    return clearAuthCookies(res);
   }
 
   const body = await request.json();

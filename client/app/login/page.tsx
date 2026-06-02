@@ -45,6 +45,7 @@ const Page = () => {
     const message =
       oauthMessages[oauth] || "Google sign-in failed. Please try again.";
     toastUtils.error(message);
+    
     router.replace("/login", { scroll: false });
   }, [router]);
 

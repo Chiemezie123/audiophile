@@ -106,6 +106,8 @@ export async function GET(request: Request) {
       photo: userInfo.picture,
       googleId: userInfo.sub,
     });
+
+    
     const refreshToken = createSessionTokenForUser({
       id: result.user.id,
       email: result.user.email,
@@ -113,6 +115,7 @@ export async function GET(request: Request) {
     });
 
     const response = NextResponse.redirect(new URL("/", request.url));
+
     response.cookies.set({
       name: SESSION_COOKIE_NAME,
       value: result.token,
@@ -122,6 +125,8 @@ export async function GET(request: Request) {
       path: "/",
       maxAge: SESSION_MAX_AGE_SECONDS,
     });
+
+
     response.cookies.set({
       name: SECOND_SESSION_COOKIE_NAME,
       value: refreshToken,
@@ -131,6 +136,9 @@ export async function GET(request: Request) {
       path: "/",
       maxAge: SESSION_REFRESH_MAX_AGE_SECONDS,
     });
+
+
+
     response.cookies.set({
       name: "fuzzybeats_google_oauth_state",
       value: "",

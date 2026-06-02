@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import {
   applySessionCookies,
+  clearAuthCookies,
   resolveSessionFromRequest,
 } from "@/lib/server/session";
 import { updateUserProfileFromToken } from "@/lib/server/auth-store";
@@ -24,7 +25,8 @@ export async function PATCH(request: Request) {
   const token = session.tokenForUser;
 
   if (!token || !session.user) {
-    return NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
+    const res = NextResponse.json({ message: "Unauthenticated." }, { status: 401 });
+    return clearAuthCookies(res);
   }
 
   try {

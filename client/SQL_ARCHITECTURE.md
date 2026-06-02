@@ -15,7 +15,7 @@ Examples:
 
 ## Active database
 
-The Next.js app now targets PostgreSQL through Prisma.
+The Next.js app targets Supabase PostgreSQL through Prisma.
 
 Prisma schema:
 - `prisma/schema.prisma`
@@ -94,10 +94,24 @@ The active backend logic lives inside the Next app under:
 ## Deployment
 
 For local development or Vercel deployment:
-- create a PostgreSQL database
-- set `DATABASE_URL`
+- create a Supabase project
+- copy the Supabase PostgreSQL connection string into `DATABASE_URL`
 - run `npm run prisma:generate`
 - run `npm run prisma:push`
 
-On Vercel, use a managed Postgres provider such as Neon and add the same
-environment variables in the project settings.
+On Vercel, add the same Supabase environment variables in the project settings.
+Use Supabase's pooled connection string for `DATABASE_URL` in serverless
+deployments.
+
+Example:
+
+```bash
+DATABASE_URL="postgresql://postgres.PROJECT_REF:PASSWORD@aws-0-REGION.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
+```
+
+Supabase setup steps:
+- open Supabase project settings
+- go to Database -> Connection string
+- choose the pooled/session connection string for app runtime
+- replace `PROJECT_REF`, `REGION`, and `PASSWORD` in `.env.local`
+- run `npm run prisma:push` from the `client` folder to create the tables
