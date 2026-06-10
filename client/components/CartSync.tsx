@@ -19,6 +19,10 @@ const CartSync = () => {
   const prevAuthState = useRef<boolean | null>(null);
   const skipNextPersist = useRef(false);
 
+
+
+
+
   useEffect(() => {
     if (!isAuthResolved || hasInitialized.current) {
       return;
@@ -80,8 +84,18 @@ const CartSync = () => {
 
 
 
+
+
+
+
+
+
   useEffect(() => {
     if (!hydrated || !hasInitialized.current || !isAuthResolved) {
+      return;
+    }
+
+    if (prevAuthState.current !== isAuthenticated) {
       return;
     }
 
@@ -112,6 +126,18 @@ const CartSync = () => {
 
     void persistRemoteCart();
   }, [hydrated, isAuthenticated, isAuthResolved, items]);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
